@@ -39,6 +39,12 @@ const std::vector<Preset>& factoryPresets()
     return list;
 }
 
+const Snapshot& legacyNeutral()
+{
+    static const Snapshot neutral { { id::detune, 0.0f }, { id::stereoDelay, 0.0f } };
+    return neutral;
+}
+
 Snapshot captureSnapshot (const juce::AudioProcessorValueTreeState& state)
 {
     Snapshot s;
@@ -142,6 +148,10 @@ bool presetFromXml (const juce::String& xml, Preset& out, juce::String& error)
         if (known.contains (pid) && std::isfinite (value))
             out.values[pid] = value;
     }
+    if (! out.values.empty())
+        for (const auto& [pid, value] : legacyNeutral())
+            if (out.values.find (pid) == out.values.end())
+                out.values[pid] = value;
     if (out.values.empty())
     {
         error = "Preset contains no PowerBass parameters";

@@ -489,6 +489,18 @@ void testNoAllocation()
     expect (allocCount.load() == 0, "no heap allocation in the audio thread (" + juce::String (allocCount.load()) + ")");
 }
 
+void testLegacyPresetMigration()
+{
+    // Presets saved before DETUNE / stereo DELAY existed must not pick up today's defaults.
+    const juce::String xml = "<PowerBassPreset format=\"1\" name=\"Old\" category=\"User\">"
+                             "<Param id=\"shape\" value=\"2\"/><Param id=\"cutoff\" value=\"900\"/></PowerBassPreset>";
+    Preset p;
+    juce::String err;
+    expect (presetFromXml (xml, p, err), "old preset parses");
+    expect (p.values.count (id::detune) && std::abs (p.values[id::detune]) < 1e-6f, "old preset: DETUNE off");
+    expect (p.values.count (id::stereoDelay) && std::abs (p.values[id::stereoDelay]) < 1e-6f, "old preset: stereo DELAY off");
+}
+
 void testPresetFiles()
 {
     Snapshot s = factoryPresets()[3].values;
@@ -607,6 +619,7 @@ int main (int argc, char** argv)
     testDriveSweepIsSmooth();
     testStereoDelay();
     testNoAllocation();
+    testLegacyPresetMigration();
     testPresetFiles();
     std::cout << (failures == 0 ? "PASS " : "FAILED ") << (checks - failures) << "/" << checks << " checks\n";
     return failures == 0 ? 0 : 1;

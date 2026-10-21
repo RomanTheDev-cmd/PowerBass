@@ -96,6 +96,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
     addFloat (l, id::fltDecay, "Filter Env Decay", skewed (10.0f, 3000.0f, 250.0f), 15.97f, ms);
     addUnit (l, id::velSens, "Velocity Sens", 0.5f);
     addUnit (l, id::detune, "Detune", 0.8572f);
+    {
+        Range r (0.0f, 15.0f, 0.01f, 0.6f);
+        addFloat (l, id::stereoDelay, "Stereo Delay", r, 0.0f, [] (float v, int) { return juce::String (v, 2) + " ms"; });
+    }
     addFloat (l, id::bendRange, "Bend Range", Range (0.0f, 12.0f, 1.0f), 2.0f, [] (float v, int) { return juce::String (juce::roundToInt (v)) + " st"; });
     return l;
 }

@@ -28,7 +28,7 @@ public:
     int getNumPrograms() override { return 1; }
     int getCurrentProgram() override { return 0; }
     void setCurrentProgram (int) override {}
-    const juce::String getProgramName (int) override { return currentPresetName; }
+    const juce::String getProgramName (int) override { return getPresetName(); }
     void changeProgramName (int, const juce::String&) override {}
 
     void getStateInformation (juce::MemoryBlock& destData) override;
@@ -38,7 +38,9 @@ public:
 
     juce::AudioProcessorValueTreeState state;
     pb::PresetLibrary library;
-    juce::String currentPresetName { "Reese Core" };
+    // The preset name is read by the host from its own thread: guarded.
+    juce::String getPresetName() const { const juce::SpinLock::ScopedLockType l (nameLock); return presetName; }
+    void setPresetName (const juce::String& n) { const juce::SpinLock::ScopedLockType l (nameLock); presetName = n; }
 
     // Oscilloscope: the audio thread writes, the editor reads (lock-free ring).
     static constexpr int scopeSize = 4096;
@@ -48,9 +50,12 @@ public:
     std::atomic<bool> previewRequested { false };
 
 private:
+    juce::String presetName { "Reese Core" };
+    mutable juce::SpinLock nameLock;
     pb::dsp::BassEngine engine;
     int reportedLatency = -1;
     int previewSamplesLeft = 0;
+    double preparedRate = 48000.0;
     juce::AudioBuffer<float> monoScratch;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PowerBassProcessor)

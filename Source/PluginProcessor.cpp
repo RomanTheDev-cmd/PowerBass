@@ -5,7 +5,7 @@ PowerBassProcessor::PowerBassProcessor()
     : AudioProcessor (BusesProperties().withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
       state (*this, nullptr, "PowerBass", pb::createLayout())
 {
-    if (const int i = library.indexOf (currentPresetName); i >= 0)
+    if (const int i = library.indexOf (getPresetName()); i >= 0)
         pb::applySnapshot (state, library.all()[(size_t) i].values);
 }
 
@@ -17,6 +17,7 @@ bool PowerBassProcessor::isBusesLayoutSupported (const BusesLayout& layouts) con
 
 void PowerBassProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    preparedRate = sampleRate; // not getSampleRate(): it is only valid if the host set it first
     engine.prepare (sampleRate, std::max (32, std::min (samplesPerBlock, 1024)));
     monoScratch.setSize (1, std::max (512, samplesPerBlock));
     reportedLatency = -1;
@@ -31,7 +32,7 @@ void PowerBassProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     if (previewRequested.exchange (false))
     {
         midi.addEvent (juce::MidiMessage::noteOn (1, 36, 0.9f), 0);
-        previewSamplesLeft = (int) (getSampleRate() * 0.4);
+        previewSamplesLeft = (int) (preparedRate * 0.4);
     }
     if (previewSamplesLeft > 0)
     {
@@ -86,7 +87,7 @@ void PowerBassProcessor::loadPreset (int index)
     if (index < 0 || index >= (int) all.size())
         return;
     pb::applySnapshot (state, all[(size_t) index].values);
-    currentPresetName = all[(size_t) index].name;
+    setPresetName (all[(size_t) index].name);
 }
 
 juce::AudioProcessorEditor* PowerBassProcessor::createEditor() { return new PowerBassEditor (*this); }
@@ -94,7 +95,7 @@ juce::AudioProcessorEditor* PowerBassProcessor::createEditor() { return new Powe
 void PowerBassProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     auto tree = state.copyState();
-    tree.setProperty ("presetName", currentPresetName, nullptr);
+    tree.setProperty ("presetName", getPresetName(), nullptr);
     if (auto xml = tree.createXml())
         copyXmlToBinary (*xml, destData);
 }
@@ -105,8 +106,16 @@ void PowerBassProcessor::setStateInformation (const void* data, int sizeInBytes)
         if (xml->hasTagName (state.state.getType()))
         {
             auto tree = juce::ValueTree::fromXml (*xml);
-            currentPresetName = tree.getProperty ("presetName", currentPresetName).toString();
+            setPresetName (tree.getProperty ("presetName", getPresetName()).toString());
+            // Parameters added after this project was saved come back neutral (old sound).
+            juce::StringArray missing;
+            for (const auto& [pid, value] : pb::legacyNeutral())
+                if (xml->getChildByAttribute ("id", pid) == nullptr)
+                    missing.add (pid);
             state.replaceState (tree);
+            for (const auto& pid : missing)
+                if (auto* param = state.getParameter (pid))
+                    param->setValueNotifyingHost (param->convertTo0to1 (pb::legacyNeutral().at (pid)));
         }
 }
 
