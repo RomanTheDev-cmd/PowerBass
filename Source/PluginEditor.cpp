@@ -328,6 +328,7 @@ PowerBassEditor::PowerBassEditor (PowerBassProcessor& p)
       punch (p.state, pb::id::punch, "PUNCH", "Short pitch and level hit at the start of each note"),
       width (p.state, pb::id::width, "WIDTH", "Stereo width of the harmonics above SPLIT; below stays mono"),
       splitFreq (p.state, pb::id::splitFreq, "SPLIT", "Everything below this frequency stays mono"),
+      stereoDelay (p.state, pb::id::stereoDelay, "DELAY", "Time offset between left and right above SPLIT; the mono sum is unchanged"),
       attack (p.state, pb::id::attack, "ATTACK", "Amp envelope attack"),
       decay (p.state, pb::id::decay, "DECAY", "Amp envelope decay"),
       sustain (p.state, pb::id::sustain, "SUSTAIN", "Amp envelope sustain level"),
@@ -344,7 +345,7 @@ PowerBassEditor::PowerBassEditor (PowerBassProcessor& p)
 
     for (auto* c : std::initializer_list<juce::Component*> {
              &shape, &sub, &oscDrive, &fmAmount, &fmRatio, &fmDecay, &oscMix, &cutoff, &resonance, &envAmount, &distDrive, &distTone,
-             &distMix, &dark, &bite, &punch, &width, &splitFreq, &attack, &decay, &sustain, &release, &glide, &master, &filterMode,
+             &distMix, &dark, &bite, &punch, &width, &splitFreq, &stereoDelay, &attack, &decay, &sustain, &release, &glide, &master, &filterMode,
              &distType, &glideMode, &scope, &meter, &prevButton, &nextButton, &presetButton, &saveButton, &advancedButton, &menuButton,
              &previewButton })
         addAndMakeVisible (c);
@@ -460,7 +461,7 @@ void PowerBassEditor::resized()
     dist.removeFromTop (S (6));
     knobRow (dist, { &distDrive, &distTone, &distMix });
     knobRow (chr.withTrimmedTop (S (14)), { &dark, &bite, &punch });
-    knobRow (st.withTrimmedTop (S (14)), { &width, &splitFreq });
+    knobRow (st.withTrimmedTop (S (14)), { &width, &splitFreq, &stereoDelay });
 
     // Row 3: ENVELOPE | GLIDE | OUTPUT (scope + master + meter)
     auto row3 = body;
@@ -487,7 +488,9 @@ void PowerBassEditor::timerCallback()
     meter.setLevels (proc.meterL.load(), proc.meterR.load());
     scope.refresh();
     width.repaint();
-    splitFreq.setEnabled (proc.state.getRawParameterValue (pb::id::width)->load() > 0.0f);
+    const bool stereoOn = proc.state.getRawParameterValue (pb::id::width)->load() > 0.0f;
+    splitFreq.setEnabled (stereoOn);
+    stereoDelay.setEnabled (stereoOn);
 }
 
 //==============================================================================
@@ -507,13 +510,30 @@ void PowerBassEditor::showPresetMenu()
     const auto& all = proc.library.all();
     juce::PopupMenu menu;
     juce::StringArray cats;
-    for (const auto& p : all) cats.addIfNotAlreadyThere (p.category);
+    for (const auto& p : all)
+        cats.addIfNotAlreadyThere (p.category);
     for (const auto& c : cats)
     {
+        // Category -> optional sub-group -> preset (300 presets stay browsable).
+        juce::StringArray groups;
+        for (const auto& p : all)
+            if (p.category == c) groups.addIfNotAlreadyThere (p.group);
         juce::PopupMenu sub;
-        for (size_t i = 0; i < all.size(); ++i)
-            if (all[i].category == c)
-                sub.addItem ((int) i + 1, all[i].name, true, all[i].name == proc.currentPresetName);
+        const bool nested = groups.size() > 1;
+        for (const auto& g : groups)
+        {
+            juce::PopupMenu items;
+            bool ticked = false;
+            for (size_t i = 0; i < all.size(); ++i)
+                if (all[i].category == c && all[i].group == g)
+                {
+                    const bool current = all[i].name == proc.currentPresetName;
+                    ticked = ticked || current;
+                    (nested && g.isNotEmpty() ? items : sub).addItem ((int) i + 1, all[i].name, true, current);
+                }
+            if (nested && g.isNotEmpty())
+                sub.addSubMenu (g, items, true, nullptr, ticked);
+        }
         menu.addSubMenu (c, sub);
     }
     menu.showMenuAsync (juce::PopupMenu::Options().withTargetComponent (&presetButton),

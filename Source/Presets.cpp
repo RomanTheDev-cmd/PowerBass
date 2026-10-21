@@ -10,7 +10,7 @@ juce::String sanitiseName (juce::String name)
     return name.isEmpty() ? juce::String ("Untitled") : name.substring (0, 64);
 }
 
-struct Def { const char* name; const char* category; std::initializer_list<std::pair<const char*, float>> values; };
+struct Def { const char* name; const char* category; std::initializer_list<std::pair<const char*, float>> values; const char* group = ""; };
 
 // Distortion types: 0 Saturate, 1 Hard Clip, 2 Fold, 3 Destroy, 4 Crush.
 // Filter modes: 0 LP24, 1 LP12, 2 BP, 3 HP. FM ratio is an index into fmRatios:
@@ -29,6 +29,7 @@ const std::vector<Preset>& factoryPresets()
         for (const auto& d : defs)
         {
             Preset p { d.name, d.category, {}, {} };
+            p.group = d.group;
             for (const auto& [key, value] : d.values)
                 p.values[key] = value;
             v.push_back (std::move (p));
@@ -98,6 +99,7 @@ SynthParams paramsFromSnapshot (const Snapshot& s)
     p.velSens = get (id::velSens, p.velSens);
     p.bendRange = get (id::bendRange, p.bendRange);
     p.detune = get (id::detune, p.detune);
+    p.stereoDelayMs = get (id::stereoDelay, p.stereoDelayMs);
     return p;
 }
 

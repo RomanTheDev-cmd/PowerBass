@@ -51,6 +51,7 @@ public:
         sSplit.prepare (sr, 0.0005); // ticked once per 32 samples: ~16 ms glide
         dc.set (10.0, sr);
         decor.prepare (sr);
+        haas.prepare ((int) (0.016 * sr) + 8);
         reset();
     }
 
@@ -297,7 +298,12 @@ private:
             setFilter (cut, q);
 
             const double g = dbToGain (drive * 36.0 + bite * 9.0);
-            const double norm = shaperNorm (g, actDist);
+            // Cached: Destroy's peak search is only redone when the gain really moves.
+            if (actDist != normType || std::abs (g - normG) > 0.002 * normG)
+            {
+                normG = g; normType = actDist; normValue = shaperNorm (g, actDist);
+            }
+            const double norm = normValue;
             // TONE: one gentle 12 dB/oct low-pass, 600 Hz .. ~22 kHz. Measured reference
             // basses keep their "air" (-21 dB at 3-8 kHz), so no steep second stage.
             const double toneHz = 600.0 * std::exp2 (juce::jlimit (0.0, 1.0, tone - 0.3 * dark + 0.2 * bite) * 5.2);
@@ -375,7 +381,8 @@ private:
             for (auto& b : eq) y = b.tick (y);
             const double gain = sMaster.tick (dbToGain (p.masterDb)) * fadeGain;
             double l, r;
-            stereo (y, sWidth.tick (p.width), l, r);
+            delayRamp.setTarget (juce::jlimit (0.0, 15.0, (double) p.stereoDelayMs) * 0.001 * sr, (int) (0.05 * sr));
+            stereo (y, sWidth.tick (p.width), delayRamp.next(), l, r);
             l *= gain;
             r *= gain;
             // Linked peak safety: one gain for both channels, so limiting never
@@ -452,12 +459,32 @@ public:
         }
         return v;
     }
+    // True peak of the shaper over inputs in [-1, 1]. Monotonic curves peak at the edge; Fold
+    // (a sine) reaches 1 as soon as its argument passes pi/2; Destroy is sampled densely.
+    // (The old 4-point estimate could land on Fold's zeros: ~11 dB jumps, found by Codex.)
+    static double shaperPeak (double g, DistType t) noexcept
+    {
+        switch (t)
+        {
+            case DistType::fold:
+                return 1.25 * g >= pi * 0.5 ? 1.0 : std::sin (1.25 * g);
+            case DistType::destroy:
+            {
+                double peak = 0.0;
+                for (int i = 1; i <= 128; ++i)
+                {
+                    const double x = i / 128.0;
+                    peak = std::max ({ peak, std::abs (shape (x, g, t)), std::abs (shape (-x, g, t)) });
+                }
+                return peak;
+            }
+            default:
+                return std::max (std::abs (shape (1.0, g, t)), std::abs (shape (-1.0, g, t)));
+        }
+    }
     static double shaperNorm (double g, DistType t) noexcept
     {
-        double peak = 0.0;
-        for (double x : { 0.25, 0.5, 0.75, 1.0 })
-            peak = std::max ({ peak, std::abs (shape (x, g, t)), std::abs (shape (-x, g, t)) });
-        return juce::jlimit (0.2, 4.0, 0.85 / std::max (peak, 1.0e-6));
+        return juce::jlimit (0.2, 4.0, 0.85 / std::max (shaperPeak (g, t), 1.0e-6));
     }
 
 private:
@@ -518,7 +545,7 @@ private:
         }
     };
 
-    void stereoReset() { split.reset(); decor.reset(); for (auto& h : sideHp) h.reset(); }
+    void stereoReset() { split.reset(); decor.reset(); haas.reset(); delayRamp.reset (0.0); for (auto& h : sideHp) h.reset(); }
     void updateSplit() noexcept
     {
         const double f = std::exp (sSplit.tick (std::log (lastSplitTarget)));
@@ -531,14 +558,18 @@ private:
             splitApplied = f;
         }
     }
-    void stereo (double x, double width, double& l, double& r) noexcept
+    void stereo (double x, double width, double delaySamples, double& l, double& r) noexcept
     {
         double low, high;
         split.split (x, low, high);
         const double theta = width * 0.65;
+        // DELAY: a real time offset between the channels above SPLIT, built as a side term
+        // (HIGH - HIGH delayed) / 2 -- it cancels exactly in the mono sum. Zero at DELAY 0.
+        haas.push (high);
+        const double haasSide = delaySamples > 0.5 ? 0.5 * (high - haas.read (delaySamples)) : 0.0;
         // The side signal gets its own extra 8th-order high-pass (mono sum unaffected): the sub
         // stays out of the stereo field even with a resonant peak right above SPLIT.
-        double side = decor.tick (high);
+        double side = decor.tick (high) + 2.0 * haasSide;
         for (auto& h : sideHp) side = h.tick (side);
         side *= std::sin (theta);
         const double centre = low + std::cos (theta) * high;
@@ -577,11 +608,15 @@ private:
     int crushCount = 0;
     double fadeGain = 1.0;
     int postCountdown = 0;
+    double normG = -1.0, normValue = 1.0;
+    DistType normType = DistType::saturate;
 
     DcBlock dc;
     Biquad eq[3];
     LR4 split;
     Biquad sideHp[4];
+    DelayLine haas;
+    Ramp delayRamp;
     Decorrelator decor;
     double lastSplitTarget = 300.0, splitApplied = -1.0;
     Smooth sShape, sSub, sOscDrive, sFm, sMix, sCut, sRes, sEnvAmt, sDrive, sTone, sDistMix, sDark, sBite, sMaster, sWidth, sSplit;
