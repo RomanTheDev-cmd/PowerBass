@@ -79,3 +79,14 @@ target_link_libraries(powerbass_tests
 
 enable_testing()
 add_test(NAME powerbass_tests COMMAND powerbass_tests)
+
+# Wrapper tests: processor, state, presets through the host path and the editor, linked
+# against the plug-in's shared code. (Shared code exports JUCE_STANDALONE_APPLICATION=0.)
+juce_add_console_app(powerbass_wrapper_tests PRODUCT_NAME "PowerBass wrapper tests")
+get_target_property(POWERBASS_WRAP_DEFS powerbass_wrapper_tests COMPILE_DEFINITIONS)
+list(REMOVE_ITEM POWERBASS_WRAP_DEFS "JUCE_STANDALONE_APPLICATION=1")
+set_target_properties(powerbass_wrapper_tests PROPERTIES COMPILE_DEFINITIONS "${POWERBASS_WRAP_DEFS}")
+target_sources(powerbass_wrapper_tests PRIVATE Tests/WrapperTests.cpp)
+target_include_directories(powerbass_wrapper_tests PRIVATE Source)
+target_link_libraries(powerbass_wrapper_tests PRIVATE PowerBass juce::juce_audio_utils)
+add_test(NAME powerbass_wrapper_tests COMMAND powerbass_wrapper_tests)

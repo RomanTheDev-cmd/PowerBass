@@ -115,7 +115,7 @@ private:
     void savePreset();
     void askForName (const juce::String& title, const juce::String& initial, std::function<void (juce::String)> done);
     void showError (const juce::String& message);
-    void refreshHeader() { presetButton.setButtonText (proc.currentPresetName); }
+    void refreshHeader() { presetButton.setButtonText (proc.getPresetName()); }
 
     PowerBassProcessor& proc;
     pb::ui::LookAndFeel lnf;
