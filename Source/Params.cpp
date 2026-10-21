@@ -39,60 +39,63 @@ const juce::StringArray& allParamIds()
                                          id::cutoff, id::resonance, id::envAmount, id::filterMode, id::distType, id::distDrive,
                                          id::distTone, id::distMix, id::dark, id::bite, id::punch, id::width, id::splitFreq,
                                          id::attack, id::decay, id::sustain, id::release, id::glide, id::glideMode, id::master,
-                                         id::filterPos, id::oversample, id::fltDecay, id::velSens, id::bendRange };
+                                         id::filterPos, id::oversample, id::fltDecay, id::velSens, id::bendRange, id::detune };
     return ids;
 }
 
+// Parameter defaults equal the default preset "Reese Core" (fitted to the largest reference cluster),
+// so a fresh instance and every double-click reset give the same full bass.
 juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
 {
     juce::AudioProcessorValueTreeState::ParameterLayout l;
 
-    addFloat (l, id::shape, "Shape", Range (0.0f, 3.0f), 2.0f, [] (float v, int)
+    addFloat (l, id::shape, "Shape", Range (0.0f, 3.0f), 1.008f, [] (float v, int)
     {
         static const char* names[] = { "SINE", "TRI", "SAW", "SQUARE" };
         const int i = juce::jlimit (0, 3, juce::roundToInt (v));
         return std::abs (v - (float) i) < 0.05f ? juce::String (names[i])
                                                  : juce::String (names[(int) v]) + juce::String::fromUTF8 ("\xe2\x86\x92") + names[std::min (3, (int) v + 1)];
     });
-    addUnit (l, id::sub, "Sub", 0.5f);
-    addUnit (l, id::oscDrive, "Osc Drive", 0.2f);
-    addUnit (l, id::fmAmount, "FM Amount", 0.0f);
-    addFloat (l, id::fmRatio, "FM Ratio", Range (0.0f, (float) (numFmRatios - 1), 1.0f), 5.0f, [] (float v, int)
+    addUnit (l, id::sub, "Sub", 0.3127f);
+    addUnit (l, id::oscDrive, "Osc Drive", 0.9958f);
+    addUnit (l, id::fmAmount, "FM Amount", 0.08019f);
+    addFloat (l, id::fmRatio, "FM Ratio", Range (0.0f, (float) (numFmRatios - 1), 1.0f), 15.0f, [] (float v, int)
     { return juce::String::fromUTF8 ("\xc3\x97") + juce::String (fmRatios[juce::jlimit (0, numFmRatios - 1, juce::roundToInt (v))], 2).trimCharactersAtEnd ("0").trimCharactersAtEnd ("."); });
-    addFloat (l, id::fmDecay, "FM Decay", skewed (5.0f, 3000.0f, 200.0f), 200.0f, ms);
-    addUnit (l, id::oscMix, "Analog/FM Mix", 0.0f);
+    addFloat (l, id::fmDecay, "FM Decay", skewed (5.0f, 3000.0f, 200.0f), 44.27f, ms);
+    addUnit (l, id::oscMix, "Analog/FM Mix", 0.1837f);
 
-    addFloat (l, id::cutoff, "Cutoff", skewed (30.0f, 18000.0f, 800.0f), 800.0f, hz);
-    addUnit (l, id::resonance, "Resonance", 0.3f);
-    addFloat (l, id::envAmount, "Env Amount", Range (-1.0f, 1.0f), 0.4f, [] (float v, int)
+    addFloat (l, id::cutoff, "Cutoff", skewed (30.0f, 18000.0f, 800.0f), 1290.0f, hz);
+    addUnit (l, id::resonance, "Resonance", 0.9993f);
+    addFloat (l, id::envAmount, "Env Amount", Range (-1.0f, 1.0f), -0.2717f, [] (float v, int)
     { return (v > 0.0f ? "+" : "") + juce::String (juce::roundToInt (v * 100.0f)) + " %"; });
     l.add (std::make_unique<APC> (juce::ParameterID { id::filterMode, 1 }, "Filter Mode", juce::StringArray { "LP 24", "LP 12", "BP", "HP" }, 0));
 
     l.add (std::make_unique<APC> (juce::ParameterID { id::distType, 1 }, "Distortion Type",
-                                  juce::StringArray { "Saturate", "Hard Clip", "Fold", "Destroy", "Crush" }, 0));
-    addUnit (l, id::distDrive, "Distortion Drive", 0.3f);
-    addUnit (l, id::distTone, "Distortion Tone", 0.5f);
-    addUnit (l, id::distMix, "Distortion Mix", 1.0f);
+                                  juce::StringArray { "Saturate", "Hard Clip", "Fold", "Destroy", "Crush" }, 3));
+    addUnit (l, id::distDrive, "Distortion Drive", 0.7891f);
+    addUnit (l, id::distTone, "Distortion Tone", 0.9144f);
+    addUnit (l, id::distMix, "Distortion Mix", 0.75f);
 
-    addUnit (l, id::dark, "Dark", 0.0f);
-    addUnit (l, id::bite, "Bite", 0.0f);
-    addUnit (l, id::punch, "Punch", 0.3f);
+    addUnit (l, id::dark, "Dark", 0.2281f);
+    addUnit (l, id::bite, "Bite", 0.375f);
+    addUnit (l, id::punch, "Punch", 0.689f);
 
-    addUnit (l, id::width, "Width", 0.0f);
-    addFloat (l, id::splitFreq, "Split Freq", skewed (100.0f, 1000.0f, 300.0f), 300.0f, hz);
+    addUnit (l, id::width, "Width", 0.5778f);
+    addFloat (l, id::splitFreq, "Split Freq", skewed (100.0f, 1000.0f, 300.0f), 150.0f, hz);
 
-    addFloat (l, id::attack, "Attack", skewed (0.5f, 2000.0f, 30.0f), 1.0f, ms);
-    addFloat (l, id::decay, "Decay", skewed (5.0f, 5000.0f, 300.0f), 300.0f, ms);
-    addUnit (l, id::sustain, "Sustain", 0.8f);
-    addFloat (l, id::release, "Release", skewed (5.0f, 5000.0f, 200.0f), 80.0f, ms);
+    addFloat (l, id::attack, "Attack", skewed (0.5f, 2000.0f, 30.0f), 0.6137f, ms);
+    addFloat (l, id::decay, "Decay", skewed (5.0f, 5000.0f, 300.0f), 3000.0f, ms);
+    addUnit (l, id::sustain, "Sustain", 0.75f);
+    addFloat (l, id::release, "Release", skewed (5.0f, 5000.0f, 200.0f), 400.0f, ms);
     addFloat (l, id::glide, "Glide", skewed (0.0f, 1000.0f, 100.0f), 0.0f, ms);
     l.add (std::make_unique<APC> (juce::ParameterID { id::glideMode, 1 }, "Glide Mode", juce::StringArray { "Mono", "Legato" }, 1));
-    addFloat (l, id::master, "Master", Range (-30.0f, 6.0f, 0.1f), -6.0f, [] (float v, int) { return juce::String (v, 1) + " dB"; });
+    addFloat (l, id::master, "Master", Range (-30.0f, 6.0f, 0.1f), -12.47f, [] (float v, int) { return juce::String (v, 1) + " dB"; });
 
     l.add (std::make_unique<APB> (juce::ParameterID { id::filterPos, 1 }, "Filter After Distortion", false));
     l.add (std::make_unique<APC> (juce::ParameterID { id::oversample, 1 }, "Oversampling", juce::StringArray { "2x", "4x", "8x" }, 1));
-    addFloat (l, id::fltDecay, "Filter Env Decay", skewed (10.0f, 3000.0f, 250.0f), 250.0f, ms);
+    addFloat (l, id::fltDecay, "Filter Env Decay", skewed (10.0f, 3000.0f, 250.0f), 15.97f, ms);
     addUnit (l, id::velSens, "Velocity Sens", 0.5f);
+    addUnit (l, id::detune, "Detune", 0.8572f);
     addFloat (l, id::bendRange, "Bend Range", Range (0.0f, 12.0f, 1.0f), 2.0f, [] (float v, int) { return juce::String (juce::roundToInt (v)) + " st"; });
     return l;
 }
@@ -133,6 +136,7 @@ SynthParams readParams (const juce::AudioProcessorValueTreeState& s)
     p.fltDecayMs = v (id::fltDecay);
     p.velSens = v (id::velSens);
     p.bendRange = v (id::bendRange);
+    p.detune = v (id::detune);
     return p;
 }
 }

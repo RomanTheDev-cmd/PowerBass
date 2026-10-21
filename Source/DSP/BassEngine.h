@@ -190,7 +190,7 @@ private:
         // Phases restart only from silence, so retriggers never break the waveform.
         if (stage == Stage::idle || ampEnv < 1.0e-4)
         {
-            phase = 0.0; subPhase = 0.0; modPhase = 0.0; prevMod = 0.0;
+            phase = 0.0; subPhase = 0.0; modPhase = 0.0; prevMod = 0.0; phaseUp = 0.0; phaseDown = 0.0;
         }
         gate = true;
         stage = Stage::attack;
@@ -305,6 +305,11 @@ private:
             const double oscG = 1.0 + 6.0 * (oscDrive + 0.3 * dark), oscNorm = 1.0 / std::tanh (oscG);
             const double amp = ampEnv * velGain * punchAmp;
 
+            // DETUNE (reese): two extra voices at +/- up to 30 cents, level-normalised.
+            const double detuneW = std::min (1.0, p.detune * 3.0);
+            const double detuneRatio = std::exp2 (p.detune * 30.0 / 1200.0);
+            const double detuneNorm = 1.0 / std::sqrt (1.0 + 2.0 * detuneW * detuneW);
+
             // Waveform morph weights.
             const int si = juce::jlimit (0, 2, (int) shape);
             const double sf = juce::jlimit (0.0, 1.0, shape - si);
@@ -327,7 +332,15 @@ private:
 
                     double ph = phase + pm;
                     ph -= std::floor (ph);
-                    const double analog = morph (ph, inc, si, sf);
+                    double analog = morph (ph, inc, si, sf);
+                    if (detuneW > 0.0)
+                    {
+                        phaseUp += inc * detuneRatio;   phaseUp -= std::floor (phaseUp);
+                        phaseDown += inc / detuneRatio; phaseDown -= std::floor (phaseDown);
+                        double pu = phaseUp + pm, pd = phaseDown + pm;
+                        pu -= std::floor (pu); pd -= std::floor (pd);
+                        analog = (analog + detuneW * (morph (pu, inc * detuneRatio, si, sf) + morph (pd, inc / detuneRatio, si, sf))) * detuneNorm;
+                    }
                     const double fm = std::sin (2.0 * pi * phase + fmIndex * mod);
                     double osc = std::tanh (oscG * (analog * (1.0 - mix) + fm * mix)) * oscNorm * 0.8;
                     osc += subLvl * 0.85 * std::sin (2.0 * pi * subPhase);
@@ -505,15 +518,16 @@ private:
         }
     };
 
-    void stereoReset() { split.reset(); decor.reset(); sideHp1.reset(); sideHp2.reset(); }
+    void stereoReset() { split.reset(); decor.reset(); for (auto& h : sideHp) h.reset(); }
     void updateSplit() noexcept
     {
         const double f = std::exp (sSplit.tick (std::log (lastSplitTarget)));
         if (std::abs (f - splitApplied) > 0.5)
         {
             split.set (f, sr);
-            sideHp1.highpass (f, std::sqrt (0.5), sr);
-            sideHp2.highpass (f, std::sqrt (0.5), sr);
+            // 8th-order Butterworth high-pass on the side (Q values of the 4 sections).
+            static constexpr double q8[4] = { 0.5098, 0.6013, 0.9000, 2.5629 };
+            for (int k = 0; k < 4; ++k) sideHp[k].highpass (f, q8[k], sr);
             splitApplied = f;
         }
     }
@@ -522,9 +536,11 @@ private:
         double low, high;
         split.split (x, low, high);
         const double theta = width * 0.65;
-        // The side signal gets its own extra high-pass (mono sum unaffected): the sub
-        // stays out of the stereo field even with a low SPLIT.
-        const double side = std::sin (theta) * sideHp2.tick (sideHp1.tick (decor.tick (high)));
+        // The side signal gets its own extra 8th-order high-pass (mono sum unaffected): the sub
+        // stays out of the stereo field even with a resonant peak right above SPLIT.
+        double side = decor.tick (high);
+        for (auto& h : sideHp) side = h.tick (side);
+        side *= std::sin (theta);
         const double centre = low + std::cos (theta) * high;
         l = centre + side;
         r = centre - side;
@@ -549,7 +565,7 @@ private:
     bool gate = false, firstBlock = true;
     Stage stage = Stage::idle;
     double ampEnv = 0.0, attackStart = 0.0, attackPos = 0.0, fltEnv = 0.0, fmEnv = 0.0, punchT = 1.0e9;
-    double phase = 0.0, subPhase = 0.0, modPhase = 0.0, prevMod = 0.0;
+    double phase = 0.0, subPhase = 0.0, modPhase = 0.0, prevMod = 0.0, phaseUp = 0.0, phaseDown = 0.0;
     double logFreq = 0.0, targetLogFreq = 0.0, bend = 0.0;
 
     DistType actDist = DistType::saturate;
@@ -565,7 +581,7 @@ private:
     DcBlock dc;
     Biquad eq[3];
     LR4 split;
-    Biquad sideHp1, sideHp2;
+    Biquad sideHp[4];
     Decorrelator decor;
     double lastSplitTarget = 300.0, splitApplied = -1.0;
     Smooth sShape, sSub, sOscDrive, sFm, sMix, sCut, sRes, sEnvAmt, sDrive, sTone, sDistMix, sDark, sBite, sMaster, sWidth, sSplit;

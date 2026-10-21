@@ -5,7 +5,9 @@
 #include "Presets.h"
 #include <juce_audio_formats/juce_audio_formats.h>
 #include <atomic>
+#include <cstdio>
 #include <iostream>
+#include <sstream>
 #include <new>
 
 // Counts heap allocations while 'trackAllocs' is set (real-time safety check).
@@ -91,6 +93,25 @@ double bandRmsSteep (const std::vector<float>& x, double sr, double f1, double f
     return std::sqrt (sum / std::max<size_t> (1, x.size()));
 }
 
+// Energy in [f1, f2] from a Hann-windowed DFT (Goertzel per bin): practically no leakage from
+// strong content outside the band, unlike a filter. Returns RMS-equivalent amplitude.
+double bandRmsDft (const std::vector<float>& x, double sr, double f1, double f2)
+{
+    const int n = (int) x.size();
+    std::vector<double> w ((size_t) n);
+    double wsum = 0;
+    for (int i = 0; i < n; ++i) { w[(size_t) i] = 0.5 - 0.5 * std::cos (2.0 * 3.14159265358979 * i / (n - 1)); wsum += w[(size_t) i] * w[(size_t) i]; }
+    double e = 0;
+    for (int k = (int) std::ceil (f1 * n / sr); k <= (int) (f2 * n / sr); ++k)
+    {
+        const double c = 2.0 * std::cos (2.0 * 3.14159265358979 * k / n);
+        double s1 = 0, s2 = 0;
+        for (int i = 0; i < n; ++i) { const double s0 = x[(size_t) i] * w[(size_t) i] + c * s1 - s2; s2 = s1; s1 = s0; }
+        e += s1 * s1 + s2 * s2 - c * s1 * s2;
+    }
+    return std::sqrt (2.0 * e / (wsum * n));
+}
+
 std::vector<float> mid (const juce::AudioBuffer<float>& a, int from = 0, int to = -1)
 {
     if (to < 0) to = a.getNumSamples();
@@ -142,6 +163,20 @@ double zcFreq (const juce::AudioBuffer<float>& a, double sr, int from, int to)
     return count > 1 ? (count - 1) * sr / (last - first) : 0.0;
 }
 
+// Fixed test scenarios (copies of early factory presets), independent of the current preset library.
+SynthParams scenario (const juce::String& name)
+{
+    static const std::map<juce::String, std::vector<std::pair<const char*, float>>> table {
+        { "Acid Burn", { {"shape",2.0f},{"sub",.2f},{"cutoff",455},{"resonance",.8f},{"envAmount",.75f},{"fltDecay",180},{"filterMode",0},{"distType",0},{"distDrive",.55f},{"distTone",0.65f},{"glide",70},{"glideMode",1},{"decay",300},{"sustain",.7f},{"width",0.35f},{"splitFreq",250},{"master",-5.2f} } },
+        { "Chrome Snarl", { {"fmAmount",.8f},{"fmRatio",17},{"oscMix",.7f},{"fmDecay",90},{"cutoff",6500},{"resonance",.2f},{"envAmount",.2f},{"distType",2},{"distDrive",.5f},{"distTone",0.75f},{"bite",.6f},{"width",0.60f},{"splitFreq",300},{"master",-6.8f} } },
+        { "Raw Saw", { {"shape",2.0f},{"sub",.5f},{"cutoff",2160},{"resonance",.25f},{"envAmount",.3f},{"distType",0},{"distDrive",.3f},{"distTone",0.70f},{"punch",.3f},{"width",0.00f},{"splitFreq",300},{"master",-4.5f} } },
+        { "Total Collapse", { {"shape",2.5f},{"cutoff",2100},{"resonance",.4f},{"distType",3},{"distDrive",.95f},{"distTone",0.55f},{"bite",.8f},{"fmAmount",.3f},{"fmRatio",6},{"oscMix",.3f},{"width",0.50f},{"splitFreq",200},{"master",-9.7f} } },
+    };
+    Snapshot s;
+    for (const auto& [k, v] : table.at (name)) s[k] = v;
+    return paramsFromSnapshot (s);
+}
+
 SynthParams preset (const char* name)
 {
     for (const auto& p : factoryPresets())
@@ -170,7 +205,7 @@ void testPresets (bool report)
         expect (pk <= 1.0, pr.name + ": peak <= 0 dBFS");
         expect (pk > 0.2, pr.name + ": audible (" + juce::String (db (pk), 1) + " dB)");
         const auto m = mid (a), s = side (a);
-        const double subSide = db (bandRmsSteep (s, 48000, 20, 90)) - db (bandRms (m, 48000, 20, 16000));
+        const double subSide = db (bandRmsDft (s, 48000, 20, 90)) - db (bandRms (m, 48000, 20, 16000));
         expect (subSide < -50.0, pr.name + ": sub stays mono (" + juce::String (subSide, 1) + " dB)");
         double mean = 0;
         for (int i = 0; i < 28800; ++i) mean += a.getSample (0, i);
@@ -188,7 +223,7 @@ void testPresets (bool report)
 
 void testWidth()
 {
-    auto p = preset ("Chrome Snarl");
+    auto p = scenario ("Chrome Snarl");
     p.width = 0.0f;
     const auto a = render (p, oneNote, 0.8);
     double diff = 0;
@@ -223,14 +258,14 @@ void testRatesBlocksOversampling()
         for (int block : { 16, 173, 512, 2048 })
             for (int osIdx : { 0, 1, 2 })
             {
-                auto p = preset ("Total Collapse");
+                auto p = scenario ("Total Collapse");
                 p.oversampleIndex = osIdx;
                 const auto a = render (p, oneNote, 0.5, sr, block);
                 expect (finite (a) && peak (a) <= 1.0 && peak (a) > 0.2,
                         "sr " + juce::String (sr) + " block " + juce::String (block) + " os " + juce::String (2 << osIdx));
             }
-    const auto a = render (preset ("Acid Burn"), oneNote, 0.8, 48000, 64);
-    const auto b = render (preset ("Acid Burn"), oneNote, 0.8, 48000, 512);
+    const auto a = render (scenario ("Acid Burn"), oneNote, 0.8, 48000, 64);
+    const auto b = render (scenario ("Acid Burn"), oneNote, 0.8, 48000, 512);
     double diff = 0;
     for (int i = 0; i < a.getNumSamples(); ++i) diff = std::max (diff, (double) std::abs (a.getSample (0, i) - b.getSample (0, i)));
     expect (diff < 1.0e-3, "buffer-size independent (max diff " + juce::String (diff, 6) + ")");
@@ -239,7 +274,7 @@ void testRatesBlocksOversampling()
 void testNoClicks()
 {
     // Steady sustained note, then many parameters jump at once.
-    auto p = preset ("Raw Saw");
+    auto p = scenario ("Raw Saw");
     p.sustain = 1.0f;
     const std::vector<Note> held { { 0.0, 2.0, 36 } };
     const auto a = render (p, held, 1.0, 48000, 256, [] (double t, SynthParams& q)
@@ -263,7 +298,7 @@ void testNoClicks()
     expect (sw < st * 1.5, "no click on preset-style switch (" + juce::String (sw, 4) + " vs " + juce::String (st, 4) + ")");
 
     // Mono retrigger while sounding: no discontinuity.
-    auto q = preset ("Raw Saw");
+    auto q = scenario ("Raw Saw");
     q.glideMode = GlideMode::mono;
     const auto c = render (q, { { 0.0, 0.3, 36 }, { 0.3, 0.6, 38 } }, 0.6);
     const int rt = (int) (0.3 * 48000);
@@ -303,7 +338,7 @@ double brightness (const std::vector<float>& x) { return db (bandRms (x, 48000, 
 
 void testCharacterAndModes()
 {
-    auto base = preset ("Raw Saw");
+    auto base = scenario ("Raw Saw");
     const std::vector<Note> f1 { { 0.0, 0.6, 41 } };
     const auto ref = mid (render (base, f1, 0.6));
     const double b0 = brightness (ref), sub0 = bandRms (ref, 48000, 20, 60);
@@ -356,11 +391,47 @@ void testCharacterAndModes()
     distinct ("filter mode", prints);
 }
 
+void testDetune()
+{
+    // Reese: detuned voices make the sustained note beat; pitch centre and mono sub stay.
+    SynthParams p;
+    p.shape = 2.0f; p.sub = 0.0f; p.cutoffHz = 6000; p.envAmount = 0; p.distDrive = 0; p.distMix = 0; p.punch = 0;
+    p.sustain = 1.0f; p.attackMs = 1; p.width = 0;
+    const std::vector<Note> held { { 0.0, 1.5, 45 } };
+    auto beating = [] (const juce::AudioBuffer<float>& a)
+    {
+        std::vector<double> fr;
+        for (int i = (int) (0.3 * 48000); i + 480 < (int) (1.4 * 48000); i += 480) fr.push_back (db (rms (a, 0, i, i + 480)));
+        double m = 0; for (double v : fr) m += v; m /= (double) fr.size();
+        double var = 0; for (double v : fr) var += (v - m) * (v - m);
+        return std::sqrt (var / (double) fr.size());
+    };
+    p.detune = 0.0f;
+    const auto dry = render (p, held, 1.5);
+    p.detune = 0.6f;
+    const auto wet = render (p, held, 1.5);
+    expect (beating (wet) > beating (dry) + 1.0, "DETUNE makes the note beat (" + juce::String (beating (wet), 2) + " vs " + juce::String (beating (dry), 2) + " dB)");
+    // Spectral peak (Goertzel, 0.25 Hz steps over 1.1 s): zero crossings are unreliable on a beating sound.
+    const auto sine = [&] { auto q = p; q.shape = 0.0f; return render (q, held, 1.5); }();
+    double f = 0, best = -1;
+    for (double hz = 95; hz <= 125; hz += 0.25)
+    {
+        double re = 0, im = 0;
+        for (int i = (int) (0.3 * 48000); i < (int) (1.4 * 48000); ++i)
+        {
+            const double ph = 2.0 * 3.14159265358979 * hz * i / 48000.0;
+            re += sine.getSample (0, i) * std::cos (ph); im += sine.getSample (0, i) * std::sin (ph);
+        }
+        if (re * re + im * im > best) { best = re * re + im * im; f = hz; }
+    }
+    expect (std::abs (12.0 * std::log2 (f / 110.0)) < 0.3, "DETUNE keeps the pitch centre (" + juce::String (f, 1) + " Hz)");
+}
+
 void testNoAllocation()
 {
     dsp::BassEngine e;
     e.prepare (48000, 512);
-    auto p = preset ("Total Collapse");
+    auto p = scenario ("Total Collapse");
     juce::AudioBuffer<float> out (2, 512);
     juce::MidiBuffer m;
     m.ensureSize (256);
@@ -408,6 +479,63 @@ void testPresetFiles()
 int main (int argc, char** argv)
 {
     // No GUI initialisation: the tests are pure DSP and file I/O (and run under Wine).
+    if (argc > 1 && juce::String (argv[1]) == "--dump-presets")
+    {
+        for (const auto& pr : factoryPresets())
+        {
+            std::cout << pr.name << "|" << pr.category << "|";
+            for (const auto& [k, v] : pr.values) std::cout << k << "=" << v << " ";
+            std::cout << "\n";
+        }
+        return 0;
+    }
+    if (argc > 1 && juce::String (argv[1]) == "--serve")
+    {
+        // Render server for Tools/fit_bass.py. Each stdin line: "paramId=value ... _root=38 _bpm=150 _len=3 _pattern=0"
+        // _pattern 0: rolling 16ths off the kick (gate 75%), 1: legato 8th line. Writes float32 stereo interleaved.
+        std::string line;
+        std::vector<float> out;
+        while (std::getline (std::cin, line))
+        {
+            Snapshot s;
+            double len = 3.0, bpm = 150.0;
+            int root = 38, pattern = 0;
+            std::istringstream ss (line);
+            std::string tok;
+            while (ss >> tok)
+            {
+                const auto eq = tok.find ('=');
+                if (eq == std::string::npos) continue;
+                const auto key = juce::String (tok.substr (0, eq));
+                const float value = std::stof (tok.substr (eq + 1));
+                if (key == "_len") len = value;
+                else if (key == "_bpm") bpm = value;
+                else if (key == "_root") root = (int) value;
+                else if (key == "_pattern") pattern = (int) value;
+                else s[key] = value;
+            }
+            const double step = 60.0 / bpm / 4.0;
+            std::vector<Note> notes;
+            for (int k = 0; k * step < len - step; ++k)
+            {
+                if (pattern == 0 && k % 4 == 0) continue;           // leave the kick its beat
+                if (pattern == 1 && k % 2 == 0) continue;           // offbeat 8ths
+                const double gate = pattern == 0 ? 0.75 : 2.05;     // legato line overlaps the next note
+                const int note = root + ((k / 16) % 2 == 1 && k % 16 >= 12 ? 3 : 0);
+                notes.push_back ({ k * step, k * step + gate * step, note });
+            }
+            const auto audio = render (paramsFromSnapshot (s), notes, len, 48000.0, 512);
+            out.resize ((size_t) audio.getNumSamples() * 2);
+            for (int i = 0; i < audio.getNumSamples(); ++i)
+            {
+                out[(size_t) i * 2] = audio.getSample (0, i);
+                out[(size_t) i * 2 + 1] = audio.getSample (1, i);
+            }
+            std::fwrite (out.data(), sizeof (float), out.size(), stdout);
+            std::fflush (stdout);
+        }
+        return 0;
+    }
     if (argc > 2 && juce::String (argv[1]) == "--export")
     {
         // A short riff per preset for listening: C1 C1 D#1 C1 F1 with gaps.
@@ -434,6 +562,7 @@ int main (int argc, char** argv)
     testNoClicks();
     testGlideAndLegato();
     testCharacterAndModes();
+    testDetune();
     testNoAllocation();
     testPresetFiles();
     std::cout << (failures == 0 ? "PASS " : "FAILED ") << (checks - failures) << "/" << checks << " checks\n";

@@ -269,11 +269,12 @@ void Meter::paint (juce::Graphics& g)
 AdvancedPanel::AdvancedPanel (juce::AudioProcessorValueTreeState& s)
     : filterPos (s, pb::id::filterPos, { "PRE", "POST" }, "Filter before or after the distortion"),
       oversample (s, pb::id::oversample, { "2x", "4x", "8x" }, "Oversampling of the whole voice: higher = cleaner, more CPU"),
+      detune (s, pb::id::detune, "DETUNE", "Two extra detuned voices on the analog oscillator: reese movement"),
       fltDecay (s, pb::id::fltDecay, "FILTER DECAY", "Decay of the filter envelope used by ENV AMOUNT"),
       velSens (s, pb::id::velSens, "VELOCITY", "How much note velocity changes the level"),
       bend (s, pb::id::bendRange, "BEND", "Pitch-bend range in semitones")
 {
-    for (auto* c : std::initializer_list<juce::Component*> { &filterPos, &oversample, &fltDecay, &velSens, &bend })
+    for (auto* c : std::initializer_list<juce::Component*> { &filterPos, &oversample, &detune, &fltDecay, &velSens, &bend })
         addAndMakeVisible (c);
 }
 
@@ -299,7 +300,8 @@ void AdvancedPanel::resized()
     filterPos.setBounds (14, 50, 160, 26);
     oversample.setBounds (14, 100, 160, 26);
     auto r = getLocalBounds().withTrimmedLeft (190).reduced (6, 28);
-    const int w = r.getWidth() / 3;
+    const int w = r.getWidth() / 4;
+    detune.setBounds (r.removeFromLeft (w));
     fltDecay.setBounds (r.removeFromLeft (w));
     velSens.setBounds (r.removeFromLeft (w));
     bend.setBounds (r);
@@ -477,7 +479,7 @@ void PowerBassEditor::resized()
     out.removeFromRight (S (8));
     scope.setBounds (out);
 
-    advanced.setBounds (getWidth() - S (24) - 560, S (64), 560, 170);
+    advanced.setBounds (getWidth() - S (24) - 640, S (64), 640, 170);
 }
 
 void PowerBassEditor::timerCallback()
