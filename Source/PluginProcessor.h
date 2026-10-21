@@ -38,7 +38,7 @@ public:
 
     juce::AudioProcessorValueTreeState state;
     pb::PresetLibrary library;
-    juce::String currentPresetName { "Schranz Saw" };
+    juce::String currentPresetName { "Reese Core" };
 
     // Oscilloscope: the audio thread writes, the editor reads (lock-free ring).
     static constexpr int scopeSize = 4096;

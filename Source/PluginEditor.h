@@ -85,7 +85,7 @@ private:
     int holdFrames[2] {};
 };
 
-// Hidden settings: filter position, oversampling, filter envelope decay, velocity, bend.
+// Hidden settings: filter position, oversampling, detune (reese), filter envelope decay, velocity, bend.
 class AdvancedPanel : public juce::Component
 {
 public:
@@ -95,7 +95,7 @@ public:
 
 private:
     Segment filterPos, oversample;
-    Knob fltDecay, velSens, bend;
+    Knob detune, fltDecay, velSens, bend;
 };
 }
 

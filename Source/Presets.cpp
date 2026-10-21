@@ -97,6 +97,7 @@ SynthParams paramsFromSnapshot (const Snapshot& s)
     p.fltDecayMs = get (id::fltDecay, p.fltDecayMs);
     p.velSens = get (id::velSens, p.velSens);
     p.bendRange = get (id::bendRange, p.bendRange);
+    p.detune = get (id::detune, p.detune);
     return p;
 }
 
@@ -237,9 +238,10 @@ bool PresetLibrary::remove (int index, juce::String& error)
     }
     // Moved to the trash rather than destroyed, so a mistaken delete can be undone.
     const auto file = presets[(size_t) index].file;
-    if (! file.moveToTrash() && ! file.deleteFile())
+    // Only ever to the Trash: if that is impossible the file stays (never a silent hard delete).
+    if (! file.moveToTrash())
     {
-        error = "Delete failed";
+        error = "Could not move the preset to the Trash; nothing was deleted";
         return false;
     }
     rescan();

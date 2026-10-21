@@ -45,6 +45,7 @@ namespace id
     inline constexpr const char* fltDecay   = "fltDecay";
     inline constexpr const char* velSens    = "velSens";
     inline constexpr const char* bendRange  = "bendRange";
+    inline constexpr const char* detune     = "detune";
 }
 
 enum class FilterMode { lp24, lp12, bp, hp };
@@ -85,6 +86,7 @@ struct SynthParams
     float fltDecayMs = 250.0f;
     float velSens = 0.5f;
     float bendRange = 2.0f;
+    float detune = 0.0f;      // 0..1: two extra detuned voices on the analog osc (reese), 0..30 cents
 };
 
 juce::AudioProcessorValueTreeState::ParameterLayout createLayout();
