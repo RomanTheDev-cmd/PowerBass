@@ -427,6 +427,47 @@ void testDetune()
     expect (std::abs (12.0 * std::log2 (f / 110.0)) < 0.3, "DETUNE keeps the pitch centre (" + juce::String (f, 1) + " Hz)");
 }
 
+void testDriveSweepIsSmooth()
+{
+    // Found by Codex: Fold's level compensation sampled the curve at 4 points, which can all
+    // land on zeros (DRIVE ~72%), giving an ~11 dB jump. Level must follow DRIVE smoothly.
+    auto base = scenario ("Raw Saw");
+    base.masterDb = -30.0f; // stay far from the output protection
+    const std::vector<Note> held { { 0.0, 0.5, 38 } };
+    for (int t = 0; t < 5; ++t)
+    {
+        double prev = 0, worst = 0, at = 0;
+        for (int i = 0; i <= 40; ++i)
+        {
+            auto p = base; p.distType = (DistType) t; p.distMix = 1.0f; p.distDrive = 0.5f + 0.01f * (float) i;
+            const double level = db (rms (render (p, held, 0.5), 0, 4800, 24000));
+            if (i > 0 && std::abs (level - prev) > worst) { worst = std::abs (level - prev); at = p.distDrive; }
+            prev = level;
+        }
+        expect (worst <= 3.0, "distortion " + juce::String (t) + ": level follows DRIVE smoothly (max step "
+                                  + juce::String (worst, 2) + " dB at " + juce::String (at, 2) + ")");
+    }
+}
+
+void testStereoDelay()
+{
+    // DELAY: a real L/R time offset above SPLIT; the mono sum must not change at all.
+    auto p = scenario ("Chrome Snarl");
+    p.width = 1.0f; p.splitHz = 300.0f; p.masterDb = -18.0f; // well below the emergency ceiling
+    p.stereoDelayMs = 0.0f;
+    const auto a = render (p, oneNote, 0.8);
+    p.stereoDelayMs = 5.0f;
+    const auto b = render (p, oneNote, 0.8);
+    const auto sa = side (a), sb = side (b);
+    const double gain = db (bandRms (sb, 48000, 600, 16000)) - db (bandRms (sa, 48000, 600, 16000));
+    expect (gain >= 3.0, "DELAY 5 ms adds width above SPLIT (+" + juce::String (gain, 1) + " dB)");
+    double diff = 0;
+    for (int i = 0; i < a.getNumSamples(); ++i)
+        diff = std::max (diff, (double) std::abs ((a.getSample (0, i) + a.getSample (1, i)) - (b.getSample (0, i) + b.getSample (1, i))));
+    expect (diff < 1.0e-5, "DELAY leaves the mono sum unchanged (" + juce::String (diff, 8) + ")");
+    expect (db (bandRmsDft (sb, 48000, 20, 90)) - db (bandRms (mid (b), 48000, 20, 16000)) < -50.0, "DELAY keeps the sub mono");
+}
+
 void testNoAllocation()
 {
     dsp::BassEngine e;
@@ -563,6 +604,8 @@ int main (int argc, char** argv)
     testGlideAndLegato();
     testCharacterAndModes();
     testDetune();
+    testDriveSweepIsSmooth();
+    testStereoDelay();
     testNoAllocation();
     testPresetFiles();
     std::cout << (failures == 0 ? "PASS " : "FAILED ") << (checks - failures) << "/" << checks << " checks\n";

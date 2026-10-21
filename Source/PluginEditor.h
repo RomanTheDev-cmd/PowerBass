@@ -128,7 +128,7 @@ private:
     pb::ui::Knob cutoff, resonance, envAmount;
     pb::ui::Knob distDrive, distTone, distMix;
     pb::ui::Knob dark, bite, punch;
-    pb::ui::Knob width, splitFreq;
+    pb::ui::Knob width, splitFreq, stereoDelay;
     pb::ui::Knob attack, decay, sustain, release, glide, master;
     pb::ui::Segment filterMode, distType, glideMode;
     pb::ui::Scope scope;

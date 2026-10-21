@@ -39,7 +39,7 @@ const juce::StringArray& allParamIds()
                                          id::cutoff, id::resonance, id::envAmount, id::filterMode, id::distType, id::distDrive,
                                          id::distTone, id::distMix, id::dark, id::bite, id::punch, id::width, id::splitFreq,
                                          id::attack, id::decay, id::sustain, id::release, id::glide, id::glideMode, id::master,
-                                         id::filterPos, id::oversample, id::fltDecay, id::velSens, id::bendRange, id::detune };
+                                         id::filterPos, id::oversample, id::fltDecay, id::velSens, id::bendRange, id::detune, id::stereoDelay };
     return ids;
 }
 
@@ -137,6 +137,7 @@ SynthParams readParams (const juce::AudioProcessorValueTreeState& s)
     p.velSens = v (id::velSens);
     p.bendRange = v (id::bendRange);
     p.detune = v (id::detune);
+    p.stereoDelayMs = v (id::stereoDelay);
     return p;
 }
 }

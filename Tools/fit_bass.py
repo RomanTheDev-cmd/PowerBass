@@ -18,16 +18,16 @@ import numpy as np
 from bass_features import features, distance
 
 TESTS = os.path.expanduser("~/Library/Caches/PowerBassBuild/powerbass_tests_artefacts/Release/powerbass_tests")
-SR, LEN, BPM = 48000, 3.0, 150
+SR, LEN, BPM = 48000, float(os.environ.get("PK_LEN", 3.0)), 150
 FIT_MASTER, TARGET_PEAK = -12.0, -1.0
 
-# name: (lo, hi, log-scale)
+# name: (lo, hi, log-scale). splitFreq starts at 150 Hz: factory presets keep the sub mono (spec).
 SPACE = {
     "shape": (0, 3, False), "sub": (0, 1, False), "oscDrive": (0, 1, False), "fmAmount": (0, 1, False),
     "fmDecay": (5, 3000, True), "oscMix": (0, 1, False), "cutoff": (40, 16000, True), "resonance": (0, 1, False),
     "envAmount": (-1, 1, False), "fltDecay": (10, 3000, True), "distDrive": (0, 1, False), "distTone": (0, 1, False),
     "distMix": (0, 1, False), "dark": (0, 1, False), "bite": (0, 1, False), "punch": (0, 1, False),
-    "width": (0, 1, False), "splitFreq": (100, 1000, True), "attack": (0.5, 40, True), "decay": (20, 3000, True),
+    "width": (0, 1, False), "splitFreq": (150, 1000, True), "attack": (0.5, 40, True), "decay": (20, 3000, True),
     "sustain": (0, 1, False), "release": (5, 400, True), "detune": (0, 1, False),
 }
 CHOICES = {"fmRatio": 18, "filterMode": 4, "distType": 5, "filterPos": 2}
@@ -59,7 +59,7 @@ class Renderer:
 
 
 def load_refs():
-    return pickle.load(open(os.path.join(HERE, "..", "Референсы", "bass_features.pkl"), "rb"))
+    return pickle.load(open(os.path.join(HERE, "..", "Референсы", os.environ.get("PK_REFS", "bass_features.pkl")), "rb"))
 
 
 def load_presets():
@@ -211,8 +211,33 @@ def fit(out_path, k):
     print("done in %.0f s" % (time.time() - t0))
 
 
+def fit_extra(out_path, alloc, exclude_path):
+    """More presets: k-medoids with k = alloc[category] over loops not already used as targets."""
+    used = {m["medoid"] for m in json.load(open(exclude_path))}
+    refs, presets = load_refs(), load_presets()
+    starts = [v for _, c, v in presets]
+    jobs, meta = [], []
+    for cat, k in alloc.items():
+        pool = [x for x in refs if x["category"] == cat and x["file"] not in used]
+        k = min(k, len(pool))
+        med, lab = kmedoids([x["feat"] for x in pool], k)
+        for j, m in enumerate(med):
+            jobs.append((pool[m]["feat"], starts, 3000 + len(jobs), int(os.environ.get("FIT_ITERS", 100))))
+            meta.append({"category": cat, "cluster_size": int(np.sum(lab == j)), "medoid": pool[m]["file"]})
+    t0 = time.time()
+    with ProcessPoolExecutor(max_workers=int(os.environ.get("FIT_WORKERS", 9))) as ex:
+        results = list(ex.map(fit_one, jobs, chunksize=1))
+    for m, (p, c, parts) in zip(meta, results):
+        m.update({"params": p, "distance": c, "parts": parts})
+    json.dump(meta, open(out_path, "w"), indent=1, ensure_ascii=False)
+    d = [m["distance"] for m in meta]
+    print("%d extra presets in %.0f s, distance median %.1f, p90 %.1f" % (len(meta), time.time() - t0, np.median(d), np.percentile(d, 90)))
+
+
 if __name__ == "__main__":
     if sys.argv[1] == "audit":
         audit()
+    elif sys.argv[1] == "fit-extra":
+        fit_extra(sys.argv[2], json.loads(os.environ["FIT_ALLOC"]), sys.argv[3])
     else:
         fit(sys.argv[2], int(os.environ.get("FIT_K", 5)))
