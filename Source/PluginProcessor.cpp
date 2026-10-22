@@ -20,6 +20,8 @@ void PowerBassProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     preparedRate = sampleRate; // not getSampleRate(): it is only valid if the host set it first
     engine.prepare (sampleRate, std::max (32, std::min (samplesPerBlock, 1024)), pb::readParams (state));
     monoScratch.setSize (1, std::max (512, samplesPerBlock));
+    for (int i = 0; i < 3; ++i)
+        latencyByOversampling[(size_t) i] = engine.getLatencySamplesFor (i);
     reportedLatency = engine.getLatencySamples();
     setLatencySamples (reportedLatency);
 }
@@ -117,6 +119,11 @@ void PowerBassProcessor::setStateInformation (const void* data, int sizeInBytes)
             for (const auto& pid : missing)
                 if (auto* param = state.getParameter (pid))
                     param->setValueNotifyingHost (param->convertTo0to1 (pb::legacyNeutral().at (pid)));
+            // A host may restore the project after prepareToPlay: report the restored oversampling's
+            // latency now, not only after the first block (processBlock keeps it in sync afterwards).
+            const auto restored = (size_t) juce::jlimit (0, 2, pb::readParams (state).oversampleIndex);
+            if (latencyByOversampling[restored] >= 0)
+                setLatencySamples (latencyByOversampling[restored]);
         }
 }
 
