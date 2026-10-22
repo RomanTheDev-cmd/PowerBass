@@ -130,6 +130,98 @@ void testPresetSwitchingWhilePlaying()
     expect (worst <= 1.0, "switching presets while playing stays under 0 dBFS (" + juce::String (worst, 3) + ")");
 }
 
+void testReprepareMatchesFresh()
+{
+    for (double startRate : { 44100.0, 48000.0, 96000.0 })
+        for (float width : { 0.0f, 1.0f })
+        {
+            const double finalRate = startRate == 96000.0 ? 44100.0 : 96000.0;
+            PowerBassProcessor reused, fresh;
+            setPlain (reused, pb::id::width, width);
+            setPlain (fresh, pb::id::width, width);
+            reused.prepareToPlay (startRate, 512);
+            play (reused, 8);
+            reused.prepareToPlay (finalRate, 512);
+            fresh.prepareToPlay (finalRate, 512);
+            double error = 0.0;
+            for (int b = 0; b < 32; ++b)
+            {
+                juce::AudioBuffer<float> a (2, 512), c (2, 512);
+                a.clear(); c.clear();
+                juce::MidiBuffer ma, mc;
+                if (b == 0)
+                {
+                    ma.addEvent (juce::MidiMessage::noteOn (1, 36, 0.9f), 37);
+                    mc = ma;
+                }
+                reused.processBlock (a, ma);
+                fresh.processBlock (c, mc);
+                for (int ch = 0; ch < 2; ++ch)
+                    for (int i = 0; i < 512; ++i)
+                        error = std::max (error, (double) std::abs (a.getSample (ch, i) - c.getSample (ch, i)));
+            }
+            expect (error < 1.0e-6, "reprepare " + juce::String (startRate) + " -> " + juce::String (finalRate)
+                    + " / WIDTH " + juce::String (width) + " matches fresh (error " + juce::String (error, 9) + ")");
+        }
+}
+
+void testLatencyAvailableBeforeFirstBlock()
+{
+    // The host configures PDC before it asks for audio, including on a restored project.
+    for (double sr : { 44100.0, 48000.0, 96000.0 })
+        for (int os = 0; os < 3; ++os)
+        {
+            PowerBassProcessor p;
+            setPlain (p, pb::id::oversample, (float) os);
+            p.prepareToPlay (sr, 512);
+            const int before = p.getLatencySamples();
+            juce::dsp::Oversampling<float> reference (1, (size_t) (os + 1),
+                juce::dsp::Oversampling<float>::filterHalfBandPolyphaseIIR, true, true);
+            reference.initProcessing (512);
+            const int expected = (int) std::lround (reference.getLatencyInSamples());
+            play (p, 2);
+            expect (before == expected && before == p.getLatencySamples(),
+                    "PDC available before first audio at " + juce::String (sr) + " / OS " + juce::String (os)
+                    + " (before " + juce::String (before) + ", after " + juce::String (p.getLatencySamples()) + ")");
+        }
+}
+
+void testStateRestoredAfterPrepareStartsExact()
+{
+    // Some hosts restore the project after prepareToPlay. The first block must still start on the
+    // restored values, not glide to them from the defaults that were current at prepare time.
+    PowerBassProcessor source;
+    setPlain (source, pb::id::master, -18.0f);
+    setPlain (source, pb::id::cutoff, 300.0f);
+    setPlain (source, pb::id::width, 1.0f);
+    setPlain (source, pb::id::oversample, 2.0f);
+    juce::MemoryBlock saved;
+    source.getStateInformation (saved);
+
+    PowerBassProcessor late, early;
+    late.prepareToPlay (48000, 512);
+    late.setStateInformation (saved.getData(), (int) saved.getSize());
+    early.setStateInformation (saved.getData(), (int) saved.getSize());
+    early.prepareToPlay (48000, 512);
+    double error = 0.0;
+    for (int b = 0; b < 8; ++b)
+    {
+        juce::AudioBuffer<float> a (2, 512), c (2, 512);
+        a.clear(); c.clear();
+        juce::MidiBuffer ma, mc;
+        if (b == 0) { ma.addEvent (juce::MidiMessage::noteOn (1, 36, 0.9f), 0); mc = ma; }
+        late.processBlock (a, ma);
+        early.processBlock (c, mc);
+        for (int ch = 0; ch < 2; ++ch)
+            for (int i = 0; i < 512; ++i)
+                error = std::max (error, (double) std::abs (a.getSample (ch, i) - c.getSample (ch, i)));
+    }
+    expect (error < 1.0e-6, "state restored after prepare starts exactly on the restored values (error "
+            + juce::String (error, 9) + ")");
+    expect (late.getLatencySamples() == early.getLatencySamples(),
+            "state restored after prepare reports the restored oversampling latency");
+}
+
 void testOversamplingLatency()
 {
     PowerBassProcessor p;
@@ -217,6 +309,9 @@ int main()
     testStateRoundTrip();
     testLegacyProjectMigration();
     testPresetSwitchingWhilePlaying();
+    testReprepareMatchesFresh();
+    testLatencyAvailableBeforeFirstBlock();
+    testStateRestoredAfterPrepareStartsExact();
     testOversamplingLatency();
     testAutomation();
     testMonoBus();
