@@ -1,6 +1,7 @@
 // Headless checks of the PowerBass engine and presets.
 // Run: powerbass_tests [--report] | --export <dir>
 
+#include <set>
 #include "DSP/BassEngine.h"
 #include "Presets.h"
 #include <juce_audio_formats/juce_audio_formats.h>
@@ -191,11 +192,22 @@ const std::vector<Note> oneNote { { 0.0, 0.6, 36 } };
 void testPresets (bool report)
 {
     const auto& f = factoryPresets();
-    expect (f.size() == 50, "50 factory presets, got " + juce::String ((int) f.size()));
+    expect (f.size() == 300, "300 factory presets, got " + juce::String ((int) f.size()));
     std::map<juce::String, int> cats;
-    for (const auto& p : f) ++cats[p.category];
+    std::set<juce::String> names;
+    for (const auto& p : f)
+    {
+        ++cats[p.category];
+        expect (names.insert (p.name).second, "unique preset name: " + p.name);
+        expect (juce::StringArray { "Reese", "FM", "Plucks", "Sustained" }.contains (p.group), p.name + ": browser group (" + p.group + ")");
+    }
     expect (cats.size() == 10, "10 categories");
-    for (auto& [c, n] : cats) expect (n == 5, c + " has 5 presets");
+    // Rolling basses are the core of the library (100 of 300).
+    const std::map<juce::String, int> expected { { "Rolling Techno Bass", 100 }, { "Dark Underground Bass", 60 },
+        { "Hard Techno Rumble Bass", 55 }, { "Raw Analog Bass", 20 }, { "Acid-Inspired Bass", 13 }, { "Destroyed Bass", 13 },
+        { "Schranz Distorted Bass", 12 }, { "Metallic Bass", 12 }, { "Industrial FM Bass", 10 }, { "Deep Sub Bass", 5 } };
+    for (auto& [c, n] : expected)
+        expect (cats[c] == n, c + " has " + juce::String (n) + " presets (got " + juce::String (cats[c]) + ")");
 
     for (const auto& pr : f)
     {
@@ -207,6 +219,13 @@ void testPresets (bool report)
         const auto m = mid (a), s = side (a);
         const double subSide = db (bandRmsDft (s, 48000, 20, 90)) - db (bandRms (m, 48000, 20, 16000));
         expect (subSide < -50.0, pr.name + ": sub stays mono (" + juce::String (subSide, 1) + " dB)");
+        // ...over the whole bass range, not only at C2 (low notes put harmonics near SPLIT).
+        for (int note : { 28, 48 })
+        {
+            const auto b = render (paramsFromSnapshot (pr.values), std::vector<Note> { { 0.0, 0.6, note } }, 0.8);
+            const double ss = db (bandRmsDft (side (b), 48000, 20, 90)) - db (bandRms (mid (b), 48000, 20, 16000));
+            expect (ss < -50.0, pr.name + ": sub stays mono at note " + juce::String (note) + " (" + juce::String (ss, 1) + " dB)");
+        }
         double mean = 0;
         for (int i = 0; i < 28800; ++i) mean += a.getSample (0, i);
         mean /= 28800.0;
@@ -545,7 +564,8 @@ int main (int argc, char** argv)
     if (argc > 1 && juce::String (argv[1]) == "--serve")
     {
         // Render server for Tools/fit_bass.py. Each stdin line: "paramId=value ... _root=38 _bpm=150 _len=3 _pattern=0"
-        // _pattern 0: rolling 16ths off the kick (gate 75%), 1: legato 8th line. Writes float32 stereo interleaved.
+        // _pattern 0: rolling 16ths off the kick (gate 75%), 1: legato 8th line, 2: one held note (0.6 s).
+        // Writes float32 stereo interleaved.
         std::string line;
         std::vector<float> out;
         while (std::getline (std::cin, line))
@@ -569,7 +589,9 @@ int main (int argc, char** argv)
             }
             const double step = 60.0 / bpm / 4.0;
             std::vector<Note> notes;
-            for (int k = 0; k * step < len - step; ++k)
+            if (pattern == 2)
+                notes.push_back ({ 0.0, 0.6, root });                 // one held note (as testPresets plays)
+            for (int k = 0; pattern != 2 && k * step < len - step; ++k)
             {
                 if (pattern == 0 && k % 4 == 0) continue;           // leave the kick its beat
                 if (pattern == 1 && k % 2 == 0) continue;           // offbeat 8ths

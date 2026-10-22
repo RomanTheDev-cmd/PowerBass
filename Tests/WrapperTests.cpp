@@ -52,6 +52,27 @@ Run play (PowerBassProcessor& p, int blocks, std::function<void (int)> between =
     return r;
 }
 
+void testDefaultsMatchDefaultPreset()
+{
+    // A fresh instance and every double-click reset must sound like the default preset.
+    PowerBassProcessor p;
+    const pb::Preset* def = nullptr;
+    for (const auto& pr : pb::factoryPresets())
+        if (pr.name == "Reese Core") def = &pr;
+    expect (def != nullptr, "default preset Reese Core exists");
+    if (def == nullptr) return;
+    expect (p.getPresetName() == "Reese Core", "a fresh instance shows Reese Core");
+    for (const auto& pid : pb::allParamIds())
+    {
+        auto* prm = p.state.getParameter (pid);
+        const auto it = def->values.find (pid);
+        if (it == def->values.end()) continue; // unlisted: the default by definition
+        const float want = prm->convertTo0to1 (it->second), have = prm->getDefaultValue(); // double-click reset target
+        expect (std::abs (want - have) < 0.002f, "default " + pid + " = Reese Core (" + juce::String (prm->convertFrom0to1 (have), 3)
+                                                 + " vs " + juce::String (it->second, 3) + ")");
+    }
+}
+
 void testStateRoundTrip()
 {
     PowerBassProcessor a;
@@ -192,6 +213,7 @@ void testEditor()
 
 int main()
 {
+    testDefaultsMatchDefaultPreset();
     testStateRoundTrip();
     testLegacyProjectMigration();
     testPresetSwitchingWhilePlaying();
