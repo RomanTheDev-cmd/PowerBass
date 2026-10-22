@@ -271,6 +271,27 @@ void testWidth()
     }
 }
 
+// Test written by Codex (2026-10-22): the stereo stage must not delay the lows. With WIDTH 0 the
+// centre is the input itself, so SPLIT cannot change the mono waveform.
+void testSplitDoesNotMoveTheMonoSignal()
+{
+    auto p = scenario ("Chrome Snarl");
+    p.width = 0.0f;
+    p.masterDb = -40.0f; // keep the ceiling out of a comparison of stereo-stage phase
+    p.splitHz = 150.0f;
+    const auto reference = render (p, oneNote, 0.8);
+    for (float split : { 300.0f, 1000.0f })
+    {
+        p.splitHz = split;
+        const auto actual = render (p, oneNote, 0.8);
+        double error = 0.0;
+        for (int i = 0; i < actual.getNumSamples(); ++i)
+            error = std::max (error, (double) std::abs (actual.getSample (0, i) - reference.getSample (0, i)));
+        expect (error < 1.0e-7, "SPLIT must not disperse the centre when WIDTH is zero (error "
+                                  + juce::String (error, 9) + ")");
+    }
+}
+
 void testRatesBlocksOversampling()
 {
     for (double sr : { 44100.0, 48000.0, 96000.0, 192000.0 })
@@ -633,6 +654,7 @@ int main (int argc, char** argv)
     const bool report = argc > 1 && juce::String (argv[1]) == "--report";
     testPresets (report);
     testWidth();
+    testSplitDoesNotMoveTheMonoSignal();
     testRatesBlocksOversampling();
     testNoClicks();
     testGlideAndLegato();
