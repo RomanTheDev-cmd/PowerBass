@@ -17,7 +17,7 @@ if os.environ.get("PK_NUMPY_PATH"):
 import numpy as np
 from bass_features import features, distance
 
-TESTS = os.path.expanduser("~/Library/Caches/PowerBassBuild/powerbass_tests_artefacts/Release/powerbass_tests")
+TESTS = os.environ.get("PB_TESTS", os.path.expanduser("~/Library/Caches/PowerBassBuild/powerbass_tests_artefacts/Release/powerbass_tests"))
 SR, LEN, BPM = 48000, float(os.environ.get("PK_LEN", 3.0)), 150
 FIT_MASTER, TARGET_PEAK = -12.0, -1.0
 
