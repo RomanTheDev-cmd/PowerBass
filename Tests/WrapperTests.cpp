@@ -451,6 +451,69 @@ void testPresetBrowser()
 #endif
 }
 
+// Main window as a chain of blocks along the signal path: SOURCE -> FM -> FILTER on the first row,
+// DRIVE -> AMP -> OUTPUT on the second, a full-width scope on top. One large primary knob per block
+// carries the accent; the others are smaller and neutral. Checked at the minimum, default and maximum size.
+void testBlockLayout()
+{
+#if JUCE_MAC
+    juce::ScopedJuceInitialiser_GUI gui;
+    PowerBassProcessor p;
+    std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
+    const juce::StringArray primary { "shape", "fmAmount", "cutoff", "distDrive", "master" };
+    const juce::StringArray secondary { "sub", "oscDrive", "oscMix", "fmRatio", "fmDecay", "resonance", "envAmount", "distTone",
+                                        "distMix", "dark", "bite", "attack", "decay", "sustain", "release", "punch", "glide",
+                                        "width", "splitFreq", "stereoDelay" };
+    for (auto size : { juce::Rectangle<int> (0, 0, 864, 576), juce::Rectangle<int> (0, 0, 1080, 720), juce::Rectangle<int> (0, 0, 1620, 1080) })
+    {
+        ed->setBoundsConstrained (size);
+        const juce::String at = " at " + juce::String (ed->getWidth()) + "x" + juce::String (ed->getHeight());
+        std::vector<juce::Component*> knobs;
+        bool found = true;
+        for (const auto& ids : { primary, secondary })
+            for (const auto& id : ids)
+            {
+                auto* k = ed->findChildWithID (id);
+                found = found && k != nullptr;
+                if (k != nullptr) knobs.push_back (k);
+            }
+        expect (found, "every knob is on the main window" + at);
+        bool inside = true, apart = true;
+        for (size_t i = 0; i < knobs.size(); ++i)
+        {
+            inside = inside && ed->getLocalBounds().contains (knobs[i]->getBounds());
+            for (size_t j = i + 1; j < knobs.size(); ++j)
+                apart = apart && ! knobs[i]->getBounds().intersects (knobs[j]->getBounds());
+        }
+        expect (inside && apart, "knobs stay inside the window and never overlap" + at);
+        auto dial = [&ed] (const juce::String& id)
+        {
+            auto* k = dynamic_cast<pb::ui::Knob*> (ed->findChildWithID (id));
+            return k != nullptr ? std::min (k->slider.getWidth(), k->slider.getHeight()) : 0;
+        };
+        int smallest = 1 << 20, largest = 0;
+        for (const auto& id : primary) smallest = std::min (smallest, dial (id));
+        for (const auto& id : secondary) largest = std::max (largest, dial (id));
+        expect (smallest >= largest * 3 / 2, "primary knobs are at least 1.5x the others (" + juce::String (smallest) + " vs "
+                + juce::String (largest) + ")" + at);
+        bool accents = true;
+        for (const auto& id : primary)
+            if (auto* k = dynamic_cast<pb::ui::Knob*> (ed->findChildWithID (id))) accents = accents && (bool) k->slider.getProperties()["primary"];
+        for (const auto& id : secondary)
+            if (auto* k = dynamic_cast<pb::ui::Knob*> (ed->findChildWithID (id))) accents = accents && ! (bool) k->slider.getProperties()["primary"];
+        expect (accents, "only the primary knobs carry the accent" + at);
+        auto* scope = ed->findChildWithID ("scope");
+        expect (scope != nullptr && scope->getWidth() >= ed->getWidth() * 9 / 10, "the scope spans the window width" + at);
+        auto centre = [&ed] (const juce::String& id) { auto* k = ed->findChildWithID (id); return k != nullptr ? k->getBounds().getCentre() : juce::Point<int>(); };
+        const bool chain = centre ("shape").x < centre ("fmAmount").x && centre ("fmAmount").x < centre ("cutoff").x
+                           && centre ("distDrive").x < centre ("attack").x && centre ("attack").x < centre ("master").x
+                           && centre ("shape").y < centre ("distDrive").y && centre ("cutoff").y < centre ("master").y;
+        expect (chain, "blocks follow the signal path: SOURCE, FM, FILTER, then DRIVE, AMP, OUTPUT" + at);
+    }
+    ed.reset();
+#endif
+}
+
 void testEditor()
 {
 #if JUCE_MAC
@@ -482,6 +545,17 @@ int snapshot (const juce::File& dir)
         juce::PNGImageFormat().writeImageToStream (img, os);
     };
     save ("main.png");
+    ed->setBoundsConstrained ({ 0, 0, 864, 576 });
+    save ("main_small.png");
+    ed->setBoundsConstrained ({ 0, 0, 1620, 1080 });
+    save ("main_large.png");
+    ed->setBoundsConstrained ({ 0, 0, 1080, 720 });
+    if (auto* adv = dynamic_cast<juce::Button*> (ed->findChildWithID ("advancedButton")))
+    {
+        adv->setToggleState (true, juce::sendNotification);
+        save ("advanced.png");
+        adv->setToggleState (false, juce::sendNotification);
+    }
     auto* button = dynamic_cast<juce::Button*> (ed->findChildWithID ("presetButton"));
     auto* browser = dynamic_cast<pb::ui::PresetBrowser*> (ed->findChildWithID ("presetBrowser"));
     if (button != nullptr && browser != nullptr)
@@ -523,6 +597,7 @@ int main (int argc, char** argv)
     testMonoBus();
     testPreview();
     testEditor();
+    testBlockLayout();
     testPresetBrowser();
     std::cout << (failures == 0 ? "PASS " : "FAILED ") << (checks - failures) << "/" << checks << " wrapper checks\n";
     return failures == 0 ? 0 : 1;

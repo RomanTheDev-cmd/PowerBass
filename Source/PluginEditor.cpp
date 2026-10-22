@@ -67,7 +67,9 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g, int x, int y, int w, int 
     {
         juce::Path val;
         val.addCentredArc (c.x, c.y, r, r, 0.0f, std::min (from, angle), std::max (from, angle), true);
-        g.setColour (s.isEnabled() ? colours::accent : colours::faint);
+        // The accent marks the primary knob of each block; the others draw a quieter neutral arc.
+        const bool primary = (bool) s.getProperties()["primary"];
+        g.setColour (! s.isEnabled() ? colours::faint : (primary ? colours::accent : colours::text.withAlpha (0.62f)));
         g.strokePath (val, juce::PathStrokeType (track, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
     }
     g.setColour (colours::text);
@@ -107,13 +109,20 @@ void LookAndFeel::drawPopupMenuBackground (juce::Graphics& g, int w, int h)
     g.drawRect (0, 0, w, h);
 }
 
-juce::Font LookAndFeel::getTextButtonFont (juce::TextButton&, int h) { return uiFont (std::min (12.5f, (float) h * 0.46f), true).withExtraKerningFactor (0.06f); }
+juce::Font LookAndFeel::getTextButtonFont (juce::TextButton& b, int h)
+{
+    // Grows with the window like the knob labels (1080 px wide = 1.0).
+    const auto* top = b.getTopLevelComponent();
+    const float s = top != nullptr && top->getWidth() > 0 ? (float) top->getWidth() / 1080.0f : 1.0f;
+    return uiFont (std::min (12.5f * s, (float) h * 0.46f), true).withExtraKerningFactor (0.06f);
+}
 juce::Font LookAndFeel::getPopupMenuFont() { return uiFont (14.0f); }
 
 //==============================================================================
 Knob::Knob (juce::AudioProcessorValueTreeState& s, const juce::String& paramId, const juce::String& t, const juce::String& tooltip)
     : title (t)
 {
+    setComponentID (paramId);
     slider.setSliderStyle (juce::Slider::RotaryVerticalDrag);
     slider.setTextBoxStyle (juce::Slider::NoTextBox, false, 0, 0);
     slider.setRotaryParameters (juce::MathConstants<float>::pi * 1.25f, juce::MathConstants<float>::pi * 2.75f, true);
@@ -128,26 +137,45 @@ Knob::Knob (juce::AudioProcessorValueTreeState& s, const juce::String& paramId, 
     setTooltip (tooltip);
 }
 
+void Knob::setPrimary (bool p)
+{
+    slider.getProperties().set ("primary", p);
+    resized();
+    repaint();
+}
+
+float Knob::scale() const
+{
+    const auto* top = getTopLevelComponent();
+    return top != nullptr && top->getWidth() > 0 ? (float) top->getWidth() / 1080.0f : 1.0f;
+}
+
+int Knob::labelHeight() const { return juce::roundToInt ((isPrimary() ? 20.0f : 17.0f) * scale()); }
+
 void Knob::resized()
 {
-    auto r = getLocalBounds();
-    r.removeFromTop (18);
-    r.removeFromBottom (18);
-    int d = std::min (r.getWidth(), r.getHeight());
-    if (auto* top = getTopLevelComponent()) // same knob size in every section
-        d = std::min (d, juce::roundToInt ((float) top->getWidth() * 0.076f));
-    slider.setBounds (r.withSizeKeepingCentre (d, d));
+    // Name, dial and value as one group, centred in the knob's area.
+    const int label = labelHeight();
+    const int cap = juce::roundToInt ((isPrimary() ? 112.0f : 62.0f) * scale());
+    const int d = std::max (0, std::min ({ getWidth(), getHeight() - 2 * label, cap }));
+    auto group = getLocalBounds().withSizeKeepingCentre (getWidth(), d + 2 * label);
+    group.removeFromTop (label);
+    slider.setBounds (group.removeFromTop (d).withSizeKeepingCentre (d, d));
 }
 
 void Knob::paint (juce::Graphics& g)
 {
-    auto r = getLocalBounds();
-    g.setColour (colours::dim);
-    g.setFont (uiFont (11.0f, true).withExtraKerningFactor (0.12f));
-    g.drawText (title, r.removeFromTop (18), juce::Justification::centred);
+    const float s = scale();
+    const bool primary = isPrimary();
+    const int label = labelHeight();
+    const auto dial = slider.getBounds();
+    g.setColour (primary ? colours::text : colours::dim);
+    g.setFont (uiFont ((primary ? 12.0f : 10.5f) * s, true).withExtraKerningFactor (0.12f));
+    g.drawText (title, juce::Rectangle<int> (0, dial.getY() - label, getWidth(), label), juce::Justification::centred);
     g.setColour (colours::text);
-    g.setFont (uiFont (12.5f));
-    g.drawText (slider.getTextFromValue (slider.getValue()), r.removeFromBottom (18), juce::Justification::centred);
+    g.setFont (uiFont ((primary ? 14.0f : 12.0f) * s));
+    g.drawText (slider.getTextFromValue (slider.getValue()), juce::Rectangle<int> (0, dial.getBottom(), getWidth(), label),
+                juce::Justification::centred);
 }
 
 //==============================================================================
@@ -280,6 +308,8 @@ AdvancedPanel::AdvancedPanel (juce::AudioProcessorValueTreeState& s)
 
 void AdvancedPanel::paint (juce::Graphics& g)
 {
+    const float s = getWidth() / 640.0f; // scales with the window
+    auto S = [s] (float v) { return juce::roundToInt (v * s); };
     auto r = getLocalBounds().toFloat();
     g.setColour (juce::Colours::black.withAlpha (0.35f));
     g.fillRoundedRectangle (r.translated (0, 4), 12.0f);
@@ -287,19 +317,21 @@ void AdvancedPanel::paint (juce::Graphics& g)
     g.fillRoundedRectangle (r, 12.0f);
     g.setColour (colours::accent.withAlpha (0.6f));
     g.drawRoundedRectangle (r.reduced (0.5f), 12.0f, 1.0f);
-    g.setFont (uiFont (11.0f, true).withExtraKerningFactor (0.18f));
+    g.setFont (uiFont (11.0f * s, true).withExtraKerningFactor (0.18f));
     g.setColour (colours::dim);
-    auto t = getLocalBounds().reduced (16, 10);
-    g.drawText ("ADVANCED", t.removeFromTop (16), juce::Justification::centredLeft);
-    g.drawText ("FILTER POSITION", juce::Rectangle<int> (16, 34, 160, 14), juce::Justification::centredLeft);
-    g.drawText ("OVERSAMPLING", juce::Rectangle<int> (16, 84, 160, 14), juce::Justification::centredLeft);
+    auto t = getLocalBounds().reduced (S (16), S (10));
+    g.drawText ("ADVANCED", t.removeFromTop (S (16)), juce::Justification::centredLeft);
+    g.drawText ("FILTER POSITION", juce::Rectangle<int> (S (16), S (34), S (160), S (14)), juce::Justification::centredLeft);
+    g.drawText ("OVERSAMPLING", juce::Rectangle<int> (S (16), S (84), S (160), S (14)), juce::Justification::centredLeft);
 }
 
 void AdvancedPanel::resized()
 {
-    filterPos.setBounds (14, 50, 160, 26);
-    oversample.setBounds (14, 100, 160, 26);
-    auto r = getLocalBounds().withTrimmedLeft (190).reduced (6, 28);
+    const float s = getWidth() / 640.0f;
+    auto S = [s] (float v) { return juce::roundToInt (v * s); };
+    filterPos.setBounds (S (14), S (50), S (160), S (26));
+    oversample.setBounds (S (14), S (100), S (160), S (26));
+    auto r = getLocalBounds().withTrimmedLeft (S (190)).reduced (S (6), S (28));
     const int w = r.getWidth() / 4;
     detune.setBounds (r.removeFromLeft (w));
     fltDecay.setBounds (r.removeFromLeft (w));
@@ -715,7 +747,7 @@ PowerBassEditor::PowerBassEditor (PowerBassProcessor& p)
     : AudioProcessorEditor (p), proc (p),
       shape (p.state, pb::id::shape, "SHAPE", "Waveform: sine, triangle, saw, square, with smooth morphing"),
       sub (p.state, pb::id::sub, "SUB", "Sine one octave below"),
-      oscDrive (p.state, pb::id::oscDrive, "DRIVE", "Saturation inside the oscillator"),
+      oscDrive (p.state, pb::id::oscDrive, "OSC DRIVE", "Saturation inside the oscillator"),
       fmAmount (p.state, pb::id::fmAmount, "FM AMOUNT", "FM depth: from light colour to hard metallic harmonics"),
       fmRatio (p.state, pb::id::fmRatio, "FM RATIO", "Modulator ratio: harmonic, fractional and inharmonic steps"),
       fmDecay (p.state, pb::id::fmDecay, "FM DECAY", "How fast the FM brightness falls after each note"),
@@ -745,6 +777,8 @@ PowerBassEditor::PowerBassEditor (PowerBassProcessor& p)
 {
     setLookAndFeel (&lnf);
     envAmount.slider.getProperties().set ("bipolar", true);
+    for (auto* k : { &shape, &fmAmount, &cutoff, &distDrive, &master }) // one primary knob per block of the chain
+        k->setPrimary (true);
 
     for (auto* c : std::initializer_list<juce::Component*> {
              &shape, &sub, &oscDrive, &fmAmount, &fmRatio, &fmDecay, &oscMix, &cutoff, &resonance, &envAmount, &distDrive, &distTone,
@@ -753,6 +787,7 @@ PowerBassEditor::PowerBassEditor (PowerBassProcessor& p)
              &previewButton })
         addAndMakeVisible (c);
     addChildComponent (advanced);
+    scope.setComponentID ("scope");
     addChildComponent (browser); // over everything below the header when open
     presetButton.setComponentID ("presetButton");
     browser.setComponentID ("presetBrowser");
@@ -825,13 +860,28 @@ void PowerBassEditor::paint (juce::Graphics& g)
     g.setColour (colours::line);
     g.drawHorizontalLine (juce::roundToInt (60 * s), 0.0f, (float) getWidth());
 
+    // Blocks of the signal chain with a readable title each.
     for (const auto& sec : sections)
     {
         fillPanel (g, sec.area.toFloat(), 12.0f * s);
-        g.setFont (uiFont (10.5f * s, true).withExtraKerningFactor (0.2f));
-        g.setColour (colours::faint);
-        g.drawText (sec.title, sec.area.reduced (juce::roundToInt (14 * s), juce::roundToInt (8 * s)).removeFromTop (juce::roundToInt (14 * s)),
+        g.setFont (uiFont (12.0f * s, true).withExtraKerningFactor (0.2f));
+        g.setColour (colours::text);
+        g.drawText (sec.title, sec.area.reduced (juce::roundToInt (16 * s), juce::roundToInt (10 * s)).removeFromTop (juce::roundToInt (18 * s)),
                     juce::Justification::centredLeft);
+    }
+    g.setFont (uiFont (10.0f * s, true).withExtraKerningFactor (0.18f));
+    g.setColour (colours::faint);
+    for (const auto& sub : subtitles)
+        g.drawText (sub.title, sub.area, juce::Justification::centred);
+    // Signal flow between the blocks of a row.
+    g.setColour (colours::dim);
+    for (const auto& a : arrows)
+    {
+        const float len = 7.0f * s, head = 4.0f * s;
+        g.drawLine (a.x - len, a.y, a.x + len, a.y, 1.6f * s);
+        juce::Path tip;
+        tip.addTriangle (a.x + len + 1.5f * s, a.y, a.x + len - head, a.y - head, a.x + len - head, a.y + head);
+        g.fillPath (tip);
     }
 }
 
@@ -856,61 +906,86 @@ void PowerBassEditor::resized()
     presetButton.setBounds (centre.reduced (S (6), 0));
 
     auto body = getLocalBounds().withTrimmedTop (S (72)).reduced (S (20), 0).withTrimmedBottom (S (16));
-    auto knobRow = [&] (juce::Rectangle<int> area, std::initializer_list<Knob*> knobs)
-    {
-        const int w = area.getWidth() / (int) knobs.size();
-        for (auto* k : knobs) k->setBounds (area.removeFromLeft (w).reduced (S (4), 0));
-    };
-    auto section = [&] (const juce::String& title, juce::Rectangle<int> area)
-    {
-        sections.push_back ({ title, area });
-        return area.reduced (S (12), S (10)).withTrimmedTop (S (18));
-    };
-    const int gap = S (14);
+    subtitles.clear();
+    arrows.clear();
 
-    // Row 1: OSC / FM | FILTER
-    auto row1 = body.removeFromTop (S (196));
-    body.removeFromTop (gap);
-    auto osc = section ("OSC / FM", row1.removeFromLeft (S (690)));
-    row1.removeFromLeft (gap);
-    auto flt = section ("FILTER", row1);
-    knobRow (osc.withTrimmedTop (S (14)), { &shape, &sub, &oscDrive, &fmAmount, &fmRatio, &fmDecay, &oscMix });
+    // What the chain below produces, across the whole width.
+    scope.setBounds (body.removeFromTop (S (84)));
+    body.removeFromTop (S (14));
+
+    // Two rows of three blocks along the signal path: SOURCE -> FM -> FILTER, DRIVE -> AMP -> OUTPUT.
+    const int gutter = S (28), rowGap = S (14);
+    const int rowH = (body.getHeight() - rowGap) / 2;
+    auto rowA = body.removeFromTop (rowH);
+    body.removeFromTop (rowGap);
+    auto rowB = body;
+    const int blockW = (rowA.getWidth() - 2 * gutter) / 3;
+    auto blocks = [&] (juce::Rectangle<int> row, std::array<const char*, 3> titles)
+    {
+        std::array<juce::Rectangle<int>, 3> inner;
+        for (int i = 0; i < 3; ++i)
+        {
+            const auto area = i < 2 ? row.removeFromLeft (blockW) : row;
+            sections.push_back ({ titles[(size_t) i], area });
+            inner[(size_t) i] = area.reduced (S (14), S (10)).withTrimmedTop (S (24));
+            if (i < 2)
+                arrows.push_back (row.removeFromLeft (gutter).getCentre().toFloat().withY ((float) area.getCentreY()));
+        }
+        return inner;
+    };
+    // The primary knob on the left, the others in a grid on the right.
+    auto primaryAndGrid = [&] (juce::Rectangle<int> a, Knob& main, std::initializer_list<Knob*> others, int cols)
+    {
+        main.setBounds (a.removeFromLeft (a.getWidth() * 46 / 100));
+        a.removeFromLeft (S (6));
+        const int n = (int) others.size(), rows = std::max (1, (n + cols - 1) / cols), rowGap = S (8);
+        const int cw = a.getWidth() / cols, rh = (a.getHeight() - rowGap * (rows - 1)) / rows;
+        int i = 0;
+        for (auto* k : others)
+        {
+            k->setBounds (a.getX() + (i % cols) * cw, a.getY() + (i / cols) * (rh + rowGap), cw, rh);
+            ++i;
+        }
+    };
+
+    const auto a = blocks (rowA, { "SOURCE", "FM", "FILTER" });
+    primaryAndGrid (a[0], shape, { &sub, &oscDrive }, 1);
+    primaryAndGrid (a[1], fmAmount, { &fmRatio, &fmDecay, &oscMix }, 2); // MIX: analog <-> FM
+    auto flt = a[2];
     filterMode.setBounds (flt.removeFromTop (S (26)));
-    flt.removeFromTop (S (6));
-    knobRow (flt, { &cutoff, &resonance, &envAmount });
+    flt.removeFromTop (S (8));
+    primaryAndGrid (flt, cutoff, { &resonance, &envAmount }, 2);
 
-    // Row 2: DISTORTION | CHARACTER | STEREO
-    auto row2 = body.removeFromTop (S (196));
-    body.removeFromTop (gap);
-    auto dist = section ("DISTORTION", row2.removeFromLeft (S (430)));
-    row2.removeFromLeft (gap);
-    auto chr = section ("CHARACTER", row2.removeFromLeft (S (316)));
-    row2.removeFromLeft (gap);
-    auto st = section ("STEREO", row2);
-    distType.setBounds (dist.removeFromTop (S (26)));
-    dist.removeFromTop (S (6));
-    knobRow (dist, { &distDrive, &distTone, &distMix });
-    knobRow (chr.withTrimmedTop (S (14)), { &dark, &bite, &punch });
-    knobRow (st.withTrimmedTop (S (14)), { &width, &splitFreq, &stereoDelay });
+    const auto b = blocks (rowB, { "DRIVE", "AMP", "OUTPUT" });
+    auto drv = b[0];
+    distType.setBounds (drv.removeFromTop (S (26)));
+    drv.removeFromTop (S (8));
+    primaryAndGrid (drv, distDrive, { &distTone, &distMix, &dark, &bite }, 2);
 
-    // Row 3: ENVELOPE | GLIDE | OUTPUT (scope + master + meter)
-    auto row3 = body;
-    auto env = section ("ENVELOPE", row3.removeFromLeft (S (430)));
-    row3.removeFromLeft (gap);
-    auto gl = section ("GLIDE", row3.removeFromLeft (S (180)));
-    row3.removeFromLeft (gap);
-    auto out = section ("OUTPUT", row3);
-    knobRow (env.withTrimmedTop (S (6)), { &attack, &decay, &sustain, &release });
-    glideMode.setBounds (gl.removeFromBottom (S (26)));
-    gl.removeFromBottom (S (6));
-    glide.setBounds (gl);
-    meter.setBounds (out.removeFromRight (S (20)).reduced (0, S (6)));
-    out.removeFromRight (S (8));
-    master.setBounds (out.removeFromRight (S (92)));
-    out.removeFromRight (S (8));
-    scope.setBounds (out);
+    // AMP: the envelope on top, the attack hit and glide below.
+    auto amp = b[1];
+    auto envRow = amp.removeFromTop (amp.getHeight() / 2);
+    const int ew = envRow.getWidth() / 4;
+    for (auto* k : { &attack, &decay, &sustain, &release })
+        k->setBounds (envRow.removeFromLeft (ew));
+    const int pw = amp.getWidth() / 4;
+    punch.setBounds (amp.removeFromLeft (pw));
+    glide.setBounds (amp.removeFromLeft (pw));
+    glideMode.setBounds (amp.withSizeKeepingCentre (amp.getWidth() - S (8), S (26)));
 
-    advanced.setBounds (getWidth() - S (24) - 640, S (64), 640, 170);
+    // OUTPUT: level with its meter, stereo controls beside it.
+    auto out = b[2];
+    auto lvl = out.removeFromLeft (out.getWidth() * 46 / 100);
+    meter.setBounds (lvl.removeFromRight (S (14)).reduced (0, S (24)));
+    master.setBounds (lvl);
+    out.removeFromLeft (S (8));
+    subtitles.push_back ({ "STEREO", out.removeFromTop (S (14)) });
+    const int sw = out.getWidth() / 2, sh = out.getHeight() / 2;
+    width.setBounds (out.getX(), out.getY(), sw, sh);
+    splitFreq.setBounds (out.getX() + sw, out.getY(), sw, sh);
+    stereoDelay.setBounds (out.getX(), out.getY() + sh, sw, sh);
+
+    advanced.setBounds (getWidth() - S (24) - S (640), S (64), S (640), S (170));
     browser.setBounds (getLocalBounds().withTrimmedTop (S (60)).reduced (S (24), S (14)));
 }
 
