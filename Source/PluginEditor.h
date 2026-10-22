@@ -32,15 +32,21 @@ public:
     juce::Font getPopupMenuFont() override;
 };
 
+// A knob with its name above and its value below. The primary knob of a block is larger and
+// carries the accent; the others are smaller with a neutral arc. Text scales with the window.
 class Knob : public juce::Component, public juce::SettableTooltipClient
 {
 public:
     Knob (juce::AudioProcessorValueTreeState&, const juce::String& paramId, const juce::String& title, const juce::String& tooltip);
+    void setPrimary (bool);
+    bool isPrimary() const { return (bool) slider.getProperties()["primary"]; }
     void resized() override;
     void paint (juce::Graphics&) override;
     juce::Slider slider;
 
 private:
+    float scale() const;
+    int labelHeight() const;
     juce::String title;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attachment;
 };
@@ -207,7 +213,8 @@ private:
 
     std::unique_ptr<juce::FileChooser> chooser;
     struct Section { juce::String title; juce::Rectangle<int> area; };
-    std::vector<Section> sections;
+    std::vector<Section> sections, subtitles;
+    std::vector<juce::Point<float>> arrows; // signal-flow arrows between blocks
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PowerBassEditor)
 };
