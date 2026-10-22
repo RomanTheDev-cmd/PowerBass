@@ -79,6 +79,7 @@ public:
         for (auto& b : eq) b.reset();
         stereoReset();
         splitApplied = -1.0; // the same SPLIT value needs new coefficients after a sample-rate change
+        normG = -1.0;        // the shaper norm is recomputed for the restored drive
         fadeGain = 1.0;
         postCountdown = 0;
         firstBlock = true;
@@ -87,6 +88,13 @@ public:
     int getLatencySamples() const
     {
         return activeOs >= 0 ? (int) std::lround (os[(size_t) activeOs]->getLatencyInSamples()) : 0;
+    }
+
+    // Latency of an oversampling choice (0 = 2x, 1 = 4x, 2 = 8x) once prepared, -1 before.
+    int getLatencySamplesFor (int index) const
+    {
+        const auto& o = os[(size_t) juce::jlimit (0, 2, index)];
+        return o != nullptr ? (int) std::lround (o->getLatencyInSamples()) : -1;
     }
 
     // Renders numSamples; MIDI events at positions [midiOffset, midiOffset + numSamples)
@@ -120,6 +128,7 @@ private:
         lastSplitTarget = p.splitHz;
         applyDiscrete (p);
         updateEq();
+        splitApplied = -1.0; // a SPLIT within 0.5 Hz of the previous one must still be applied exactly
         updateSplit();
         firstBlock = false;
     }
@@ -587,7 +596,8 @@ private:
         // (~3.4 ms at 60 Hz for SPLIT 150 Hz). The share is taken with a gentle, critically damped
         // 2nd-order high-pass at half SPLIT: its phase stays small around SPLIT, so the centre keeps
         // the previous balance within +-0.3 dB at full WIDTH (lows delayed ~0.3 ms instead of
-        // ~3.4 ms at SPLIT 150 Hz), and it is exactly the input at WIDTH 0.
+        // ~3.4 ms at SPLIT 150 Hz; below SPLIT the centre may rise by up to +0.23 dB at full WIDTH,
+        // around 0.3 x SPLIT), and it is exactly the input at WIDTH 0.
         const double centre = x - (1.0 - std::cos (theta)) * centreHp.tick (x);
         l = centre + side;
         r = centre - side;

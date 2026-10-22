@@ -73,6 +73,50 @@ void testDefaultsMatchDefaultPreset()
     }
 }
 
+// Every factory preset loads in the plug-in exactly as the tests, the level grid and the fitting tools
+// render it (paramsFromSnapshot). A key missing from a preset must not fall back to a different value
+// in the plug-in than in those tools (found by review: five Deep Sub presets played with detune).
+void testFactoryPresetsLoadAsMeasured()
+{
+    PowerBassProcessor p;
+    const auto& factory = pb::factoryPresets();
+    int bad = 0;
+    juce::String first;
+    for (int i = 0; i < (int) factory.size(); ++i)
+    {
+        p.loadPreset (i);
+        const auto got = pb::paramsFromSnapshot (pb::captureSnapshot (p.state));
+        const auto want = pb::paramsFromSnapshot (factory[(size_t) i].values);
+        juce::String diff;
+        auto near = [&diff] (const char* what, double a, double b)
+        {
+            if (std::abs (a - b) > 0.051 + 0.01 * std::abs (b))
+                diff << what << " " << juce::String (a, 3) << " vs " << juce::String (b, 3) << "; ";
+        };
+        near ("shape", got.shape, want.shape); near ("sub", got.sub, want.sub); near ("oscDrive", got.oscDrive, want.oscDrive);
+        near ("fmAmount", got.fmAmount, want.fmAmount); near ("fmRatio", got.fmRatio, want.fmRatio);
+        near ("fmDecay", got.fmDecayMs, want.fmDecayMs); near ("oscMix", got.oscMix, want.oscMix);
+        near ("cutoff", got.cutoffHz, want.cutoffHz); near ("resonance", got.resonance, want.resonance);
+        near ("envAmount", got.envAmount, want.envAmount); near ("filterMode", (int) got.filterMode, (int) want.filterMode);
+        near ("distType", (int) got.distType, (int) want.distType); near ("distDrive", got.distDrive, want.distDrive);
+        near ("distTone", got.distTone, want.distTone); near ("distMix", got.distMix, want.distMix);
+        near ("dark", got.dark, want.dark); near ("bite", got.bite, want.bite); near ("punch", got.punch, want.punch);
+        near ("width", got.width, want.width); near ("split", got.splitHz, want.splitHz);
+        near ("attack", got.attackMs, want.attackMs); near ("decay", got.decayMs, want.decayMs);
+        near ("sustain", got.sustain, want.sustain); near ("release", got.releaseMs, want.releaseMs);
+        near ("glide", got.glideMs, want.glideMs); near ("glideMode", (int) got.glideMode, (int) want.glideMode);
+        near ("master", got.masterDb, want.masterDb); near ("filterPos", got.filterPostDist, want.filterPostDist);
+        near ("oversample", got.oversampleIndex, want.oversampleIndex); near ("fltDecay", got.fltDecayMs, want.fltDecayMs);
+        near ("velSens", got.velSens, want.velSens); near ("bendRange", got.bendRange, want.bendRange);
+        near ("stereoDelay", got.stereoDelayMs, want.stereoDelayMs); near ("detune", got.detune, want.detune);
+        if (diff.isNotEmpty())
+        {
+            if (bad++ < 3) first << factory[(size_t) i].name << ": " << diff;
+        }
+    }
+    expect (bad == 0, "factory presets load in the plug-in as measured (" + juce::String (bad) + " differ; " + first + ")");
+}
+
 void testStateRoundTrip()
 {
     PowerBassProcessor a;
@@ -194,7 +238,8 @@ void testStateRestoredAfterPrepareStartsExact()
     setPlain (source, pb::id::master, -18.0f);
     setPlain (source, pb::id::cutoff, 300.0f);
     setPlain (source, pb::id::width, 1.0f);
-    setPlain (source, pb::id::oversample, 2.0f);
+    setPlain (source, pb::id::splitFreq, 150.3f); // within 0.5 Hz of the default: must still take effect
+    setPlain (source, pb::id::oversample, 0.0f); // 2x: its latency differs from the default 4x
     juce::MemoryBlock saved;
     source.getStateInformation (saved);
 
@@ -203,6 +248,13 @@ void testStateRestoredAfterPrepareStartsExact()
     late.setStateInformation (saved.getData(), (int) saved.getSize());
     early.setStateInformation (saved.getData(), (int) saved.getSize());
     early.prepareToPlay (48000, 512);
+    PowerBassProcessor defaults;
+    defaults.prepareToPlay (48000, 512);
+    expect (early.getLatencySamples() != defaults.getLatencySamples(),
+            "the restored oversampling has a latency different from the default (else the next check is empty)");
+    expect (late.getLatencySamples() == early.getLatencySamples(),
+            "state restored after prepare reports its oversampling latency before the first block ("
+            + juce::String (late.getLatencySamples()) + " vs " + juce::String (early.getLatencySamples()) + ")");
     double error = 0.0;
     for (int b = 0; b < 8; ++b)
     {
@@ -306,6 +358,7 @@ void testEditor()
 int main()
 {
     testDefaultsMatchDefaultPreset();
+    testFactoryPresetsLoadAsMeasured();
     testStateRoundTrip();
     testLegacyProjectMigration();
     testPresetSwitchingWhilePlaying();

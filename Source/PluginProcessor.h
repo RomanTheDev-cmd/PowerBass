@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "DSP/BassEngine.h"
 #include "Presets.h"
@@ -54,6 +56,8 @@ private:
     mutable juce::SpinLock nameLock;
     pb::dsp::BassEngine engine;
     int reportedLatency = -1;
+    // Latency of each oversampling choice at the prepared rate, for a project restored after prepare.
+    std::array<int, 3> latencyByOversampling { -1, -1, -1 };
     int previewSamplesLeft = 0;
     double preparedRate = 48000.0;
     juce::AudioBuffer<float> monoScratch;

@@ -260,9 +260,11 @@ void testPresets (bool report)
     }
 }
 
-// Factory level (Tools/normalize_peaks.py): MASTER puts the loudest moment of both riffs on 5 roots and
-// of a held note on every semitone E1-C3 at -1 dBFS. So no note reaches the emergency ceiling (-0.9 dBFS)
-// and no preset is left quieter than the others. Measured 40 dB down (MASTER is the last, linear gain).
+// Factory level (Tools/normalize_peaks.py): MASTER puts the loudest moment of the level grid at -1 dBFS,
+// so no note or roll reaches the emergency ceiling (0.9 linear, -0.915 dBFS) and no preset is left quieter than the
+// others. The grid: both riffs at 150 BPM on 5 roots, a held note on every semitone E1-C3, and rolling
+// 16ths at 130/170 and 32nds at 130/150/170 BPM on the same roots -- a resonant filter peaks differently
+// on every note and, through its envelope, at every tempo. Measured 40 dB down (MASTER is linear).
 void testFactoryLevels()
 {
     const auto& f = factoryPresets();
@@ -276,16 +278,20 @@ void testFactoryLevels()
             const double master = p.masterDb;
             p.masterDb = -40.0f;
             double pk = 0.0;
-            auto take = [&] (int root, int pattern)
+            auto take = [&] (int root, int pattern, double bpm)
             {
-                const auto a = render (p, patternNotes (root, pattern, 150.0, 3.0), 3.0, 48000.0, 512);
+                const auto a = render (p, patternNotes (root, pattern, bpm, 3.0), 3.0, 48000.0, 512);
                 pk = std::max ({ pk, (double) a.getMagnitude (0, 0, a.getNumSamples()), (double) a.getMagnitude (1, 0, a.getNumSamples()) });
             };
             for (int root : { 28, 33, 38, 43, 48 })
+            {
                 for (int pattern : { 0, 1 })
-                    take (root, pattern);
+                    take (root, pattern, 150.0);
+                for (double bpm : { 130.0, 170.0, 260.0, 300.0, 340.0 }) // 32nds at T BPM = 16ths at 2T
+                    take (root, 0, bpm);
+            }
             for (int root = 28; root <= 48; ++root)
-                take (root, 2);
+                take (root, 2, 150.0);
             loudest[i] = db (pk) + 40.0 + master;
         }
     };
@@ -294,6 +300,12 @@ void testFactoryLevels()
         pool.emplace_back (work);
     for (auto& t : pool)
         t.join();
+    // MASTER moves in 0.1 dB steps in the plug-in: a finer value would be rounded on load.
+    int offStep = 0;
+    for (const auto& pr : f)
+        if (const auto it = pr.values.find (id::master); it != pr.values.end())
+            offStep += std::abs (it->second * 10.0f - std::round (it->second * 10.0f)) > 1.0e-3f ? 1 : 0;
+    expect (offStep == 0, "factory MASTER values sit on the 0.1 dB parameter step (" + juce::String (offStep) + " off)");
     int over = 0, under = 0;
     double hi = -100.0, lo = 100.0;
     juce::String hiName, loName;

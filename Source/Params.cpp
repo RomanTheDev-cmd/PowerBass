@@ -89,7 +89,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
     addFloat (l, id::release, "Release", skewed (5.0f, 5000.0f, 200.0f), 400.0f, ms);
     addFloat (l, id::glide, "Glide", skewed (0.0f, 1000.0f, 100.0f), 0.0f, ms);
     l.add (std::make_unique<APC> (juce::ParameterID { id::glideMode, 1 }, "Glide Mode", juce::StringArray { "Mono", "Legato" }, 1));
-    addFloat (l, id::master, "Master", Range (-30.0f, 6.0f, 0.1f), -9.60f, [] (float v, int) { return juce::String (v, 1) + " dB"; });
+    addFloat (l, id::master, "Master", Range (-30.0f, 6.0f, 0.1f), -10.1f, [] (float v, int) { return juce::String (v, 1) + " dB"; });
 
     l.add (std::make_unique<APB> (juce::ParameterID { id::filterPos, 1 }, "Filter After Distortion", false));
     l.add (std::make_unique<APC> (juce::ParameterID { id::oversample, 1 }, "Oversampling", juce::StringArray { "2x", "4x", "8x" }, 1));

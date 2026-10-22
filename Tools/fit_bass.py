@@ -44,9 +44,9 @@ class Renderer:
     def __init__(self):
         self.p = subprocess.Popen([TESTS, "--serve"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
-    def render(self, params, root, pattern):
+    def render(self, params, root, pattern, bpm=BPM):
         params = {**params, "master": params.get("master", FIT_MASTER)}
-        line = " ".join("%s=%g" % kv for kv in params.items()) + " _root=%d _bpm=%d _len=%g _pattern=%d\n" % (root, BPM, LEN, pattern)
+        line = " ".join("%s=%g" % kv for kv in params.items()) + " _root=%d _bpm=%g _len=%g _pattern=%d\n" % (root, bpm, LEN, pattern)
         self.p.stdin.write(line.encode()); self.p.stdin.flush()
         n = int(LEN * SR) * 2 * 4
         buf = b""
