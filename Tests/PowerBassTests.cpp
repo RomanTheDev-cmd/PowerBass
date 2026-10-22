@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <iostream>
 #include <sstream>
+#include <thread>
 #include <new>
 
 // Counts heap allocations while 'trackAllocs' is set (real-time safety check).
@@ -60,6 +61,25 @@ juce::AudioBuffer<float> render (SynthParams p, std::vector<Note> notes, double 
     }
     out.setSize (2, total, true);
     return out;
+}
+
+// The note patterns of the render server and of the factory level grid (Tools/normalize_peaks.py):
+// 0: rolling 16ths off the kick (gate 75%), 1: legato offbeat 8th line, 2: one held note (0.6 s).
+std::vector<Note> patternNotes (int root, int pattern, double bpm, double len)
+{
+    const double step = 60.0 / bpm / 4.0;
+    std::vector<Note> notes;
+    if (pattern == 2)
+        notes.push_back ({ 0.0, 0.6, root });                 // one held note (as testPresets plays)
+    for (int k = 0; pattern != 2 && k * step < len - step; ++k)
+    {
+        if (pattern == 0 && k % 4 == 0) continue;           // leave the kick its beat
+        if (pattern == 1 && k % 2 == 0) continue;           // offbeat 8ths
+        const double gate = pattern == 0 ? 0.75 : 2.05;     // legato line overlaps the next note
+        const int note = root + ((k / 16) % 2 == 1 && k % 16 >= 12 ? 3 : 0);
+        notes.push_back ({ k * step, k * step + gate * step, note });
+    }
+    return notes;
 }
 
 double rms (const juce::AudioBuffer<float>& b, int ch, int from, int to)
@@ -238,6 +258,56 @@ void testPresets (bool report)
                       << juce::String (db (rms (a, 0, 0, 12000)), 1) << "  side/mid " << juce::String (db (bandRms (s, 48000, 200, 16000)) - db (bandRms (m, 48000, 200, 16000)), 1)
                       << "  centroid " << juce::String (centroid (m, 48000), 2) << "\n";
     }
+}
+
+// Factory level (Tools/normalize_peaks.py): MASTER puts the loudest moment of both riffs on 5 roots and
+// of a held note on every semitone E1-C3 at -1 dBFS. So no note reaches the emergency ceiling (-0.9 dBFS)
+// and no preset is left quieter than the others. Measured 40 dB down (MASTER is the last, linear gain).
+void testFactoryLevels()
+{
+    const auto& f = factoryPresets();
+    std::vector<double> loudest (f.size(), 0.0);
+    std::atomic<size_t> next { 0 };
+    auto work = [&]
+    {
+        for (size_t i; (i = next++) < f.size();)
+        {
+            auto p = paramsFromSnapshot (f[i].values);
+            const double master = p.masterDb;
+            p.masterDb = -40.0f;
+            double pk = 0.0;
+            auto take = [&] (int root, int pattern)
+            {
+                const auto a = render (p, patternNotes (root, pattern, 150.0, 3.0), 3.0, 48000.0, 512);
+                pk = std::max ({ pk, (double) a.getMagnitude (0, 0, a.getNumSamples()), (double) a.getMagnitude (1, 0, a.getNumSamples()) });
+            };
+            for (int root : { 28, 33, 38, 43, 48 })
+                for (int pattern : { 0, 1 })
+                    take (root, pattern);
+            for (int root = 28; root <= 48; ++root)
+                take (root, 2);
+            loudest[i] = db (pk) + 40.0 + master;
+        }
+    };
+    std::vector<std::thread> pool;
+    for (unsigned t = 0; t < std::max (1u, std::thread::hardware_concurrency()); ++t)
+        pool.emplace_back (work);
+    for (auto& t : pool)
+        t.join();
+    int over = 0, under = 0;
+    double hi = -100.0, lo = 100.0;
+    juce::String hiName, loName;
+    for (size_t i = 0; i < f.size(); ++i)
+    {
+        if (loudest[i] > hi) { hi = loudest[i]; hiName = f[i].name; }
+        if (loudest[i] < lo) { lo = loudest[i]; loName = f[i].name; }
+        over += loudest[i] > -0.95 ? 1 : 0;
+        under += loudest[i] <= -1.1 ? 1 : 0;
+    }
+    expect (over == 0, "no factory preset gets near the emergency ceiling on any note E1-C3 (" + juce::String (over)
+                       + " over -0.95 dBFS, loudest " + hiName + " " + juce::String (hi, 2) + " dBFS)");
+    expect (under == 0, "every factory preset peaks at -1 dBFS over the level grid (" + juce::String (under)
+                        + " under -1.1 dBFS, quietest " + loName + " " + juce::String (lo, 2) + " dBFS)");
 }
 
 void testWidth()
@@ -608,19 +678,7 @@ int main (int argc, char** argv)
                 else if (key == "_pattern") pattern = (int) value;
                 else s[key] = value;
             }
-            const double step = 60.0 / bpm / 4.0;
-            std::vector<Note> notes;
-            if (pattern == 2)
-                notes.push_back ({ 0.0, 0.6, root });                 // one held note (as testPresets plays)
-            for (int k = 0; pattern != 2 && k * step < len - step; ++k)
-            {
-                if (pattern == 0 && k % 4 == 0) continue;           // leave the kick its beat
-                if (pattern == 1 && k % 2 == 0) continue;           // offbeat 8ths
-                const double gate = pattern == 0 ? 0.75 : 2.05;     // legato line overlaps the next note
-                const int note = root + ((k / 16) % 2 == 1 && k % 16 >= 12 ? 3 : 0);
-                notes.push_back ({ k * step, k * step + gate * step, note });
-            }
-            const auto audio = render (paramsFromSnapshot (s), notes, len, 48000.0, 512);
+            const auto audio = render (paramsFromSnapshot (s), patternNotes (root, pattern, bpm, len), len, 48000.0, 512);
             out.resize ((size_t) audio.getNumSamples() * 2);
             for (int i = 0; i < audio.getNumSamples(); ++i)
             {
@@ -653,6 +711,7 @@ int main (int argc, char** argv)
     }
     const bool report = argc > 1 && juce::String (argv[1]) == "--report";
     testPresets (report);
+    testFactoryLevels();
     testWidth();
     testSplitDoesNotMoveTheMonoSignal();
     testRatesBlocksOversampling();
