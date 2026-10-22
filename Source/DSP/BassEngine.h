@@ -553,13 +553,14 @@ private:
         }
     };
 
-    void stereoReset() { split.reset(); decor.reset(); haas.reset(); delayRamp.reset (0.0); for (auto& h : sideHp) h.reset(); }
+    void stereoReset() { split.reset(); centreHp.reset(); decor.reset(); haas.reset(); delayRamp.reset (0.0); for (auto& h : sideHp) h.reset(); }
     void updateSplit() noexcept
     {
         const double f = std::exp (sSplit.tick (std::log (lastSplitTarget)));
         if (std::abs (f - splitApplied) > 0.5)
         {
             split.set (f, sr);
+            centreHp.highpass (0.5 * f, 0.5, sr);
             // 8th-order Butterworth high-pass on the side (Q values of the 4 sections).
             static constexpr double q8[4] = { 0.5098, 0.6013, 0.9000, 2.5629 };
             for (int k = 0; k < 4; ++k) sideHp[k].highpass (f, q8[k], sr);
@@ -570,6 +571,7 @@ private:
     {
         double low, high;
         split.split (x, low, high);
+        juce::ignoreUnused (low);
         const double theta = width * 0.65;
         // DELAY: a real time offset between the channels above SPLIT, built as a side term
         // (HIGH - HIGH delayed) / 2 -- it cancels exactly in the mono sum. Zero at DELAY 0.
@@ -580,7 +582,13 @@ private:
         double side = decor.tick (high) + 2.0 * haasSide;
         for (auto& h : sideHp) side = h.tick (side);
         side *= std::sin (theta);
-        const double centre = low + std::cos (theta) * high;
+        // The centre is the input itself, minus the share of the top that moved to the side. The
+        // LR4 only shapes the side: low + high of an LR4 is an allpass that delayed the lows
+        // (~3.4 ms at 60 Hz for SPLIT 150 Hz). The share is taken with a gentle, critically damped
+        // 2nd-order high-pass at half SPLIT: its phase stays small around SPLIT, so the centre keeps
+        // the previous balance within +-0.3 dB at full WIDTH (lows delayed ~0.3 ms instead of
+        // ~3.4 ms at SPLIT 150 Hz), and it is exactly the input at WIDTH 0.
+        const double centre = x - (1.0 - std::cos (theta)) * centreHp.tick (x);
         l = centre + side;
         r = centre - side;
     }
@@ -622,6 +630,7 @@ private:
     DcBlock dc;
     Biquad eq[3];
     LR4 split;
+    Biquad centreHp;
     Biquad sideHp[4];
     DelayLine haas;
     Ramp delayRamp;
