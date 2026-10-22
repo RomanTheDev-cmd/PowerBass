@@ -18,9 +18,10 @@ bool PowerBassProcessor::isBusesLayoutSupported (const BusesLayout& layouts) con
 void PowerBassProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     preparedRate = sampleRate; // not getSampleRate(): it is only valid if the host set it first
-    engine.prepare (sampleRate, std::max (32, std::min (samplesPerBlock, 1024)));
+    engine.prepare (sampleRate, std::max (32, std::min (samplesPerBlock, 1024)), pb::readParams (state));
     monoScratch.setSize (1, std::max (512, samplesPerBlock));
-    reportedLatency = -1;
+    reportedLatency = engine.getLatencySamples();
+    setLatencySamples (reportedLatency);
 }
 
 void PowerBassProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)

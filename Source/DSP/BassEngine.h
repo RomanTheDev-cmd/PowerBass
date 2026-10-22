@@ -55,6 +55,13 @@ public:
         reset();
     }
 
+    void prepare (double sampleRate, int maxBlock, const SynthParams& initialParams)
+    {
+        prepare (sampleRate, maxBlock);
+        snapTo (initialParams); // the host needs the selected oversampler's latency before audio starts
+        firstBlock = true;      // a project restored after prepare must still start exactly on its values
+    }
+
     void reset()
     {
         for (auto& o : os) if (o) o->reset();
@@ -71,6 +78,7 @@ public:
         dc.reset();
         for (auto& b : eq) b.reset();
         stereoReset();
+        splitApplied = -1.0; // the same SPLIT value needs new coefficients after a sample-rate change
         fadeGain = 1.0;
         postCountdown = 0;
         firstBlock = true;
