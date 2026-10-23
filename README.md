@@ -4,19 +4,21 @@
 
 Форматы:
 
-- **macOS:** AU (для Logic) и VST3, универсальная сборка Apple Silicon + Intel, а также отдельное приложение Standalone.
+- **macOS:** AU (для Logic) и VST3, универсальная сборка Apple Silicon + Intel, а также отдельное приложение Standalone. macOS 10.13 и новее на Intel, macOS 11 и новее на Apple Silicon.
 - **Windows 10/11 x64:** VST3 и отдельное приложение.
 
 ## Установка
 
-**macOS.** Из папки `Сборки/macOS`:
+**Проще всего — установщики** из папки `Установщики`: `PowerBass-1.0.0-macOS.pkg` и `PowerBass-1.0.0-Windows-x64-Setup.exe`, по одному файлу на систему. Порядок — `Установщики/УСТАНОВКА.txt`.
+
+**macOS вручную.** Из папки `Сборки/macOS`:
 
 - `PowerBass.component` → `~/Library/Audio/Plug-Ins/Components/`
 - `PowerBass.vst3` → `~/Library/Audio/Plug-Ins/VST3/`
 
 На этом Mac плагин уже установлен. В Logic: AU Instruments → MyDarknessDays → PowerBass.
 
-**Windows.** Из `Сборки/PowerBass-1.0.0-Windows-x64.zip` скопируйте папку `PowerBass.vst3` целиком в `C:\Program Files\Common Files\VST3\`. Подробности — в `УСТАНОВКА.txt` внутри архива.
+**Windows вручную.** Из `Сборки/PowerBass-1.0.0-Windows-x64.zip` скопируйте папку `PowerBass.vst3` целиком в `C:\Program Files\Common Files\VST3\`. Подробности — в `УСТАНОВКА.txt` внутри архива.
 
 ## Быстрый путь к басу
 
@@ -129,7 +131,9 @@ cmake --build build-win -j
 
 `powerbass_tests --report` выводит уровни пресетов. `--export <папка>` рендерит рифф каждым пресетом в WAV. `Tools/normalize_peaks.py` выставляет MASTER пресетов по пику (запускать после пересборки тестов).
 
-**Установщики:** `bash Tools/make_installers.sh` собирает `Сборки/Установщики/PowerBass-<версия>-macOS.pkg` (AU, VST3, приложение) и `…-Windows-x64-Setup.exe` (NSIS: `brew install makensis`) из подписанных сборок в «Сборках»; инструкция — `Сборки/Установщики/УСТАНОВКА.txt`.
+**Установщики:** `bash Tools/make_installers.sh` собирает `Установщики/PowerBass-<версия>-macOS.pkg` (AU, VST3, приложение) и `…-Windows-x64-Setup.exe` (NSIS: `brew install makensis`) из подписанных сборок в «Сборках»; инструкция — `Установщики/УСТАНОВКА.txt`.
+
+**Проверка Windows-сборки без Windows:** `Tools/host_check` (в проекте PowerBass, годится для обоих плагинов) — маленький хост VST3: собирается тем же тулчейном, запускается под Wine, загружает `.vst3` как DAW и проверяет звук на 44,1/48/96 кГц, сохранение состояния, окно плагина (открытие, звук при открытом окне, закрытие). `cmake/patch_juce.cmake` перед сборкой исправляет в JUCE 8.0.12 зависание при закрытии окна плагина в Windows, когда `WaitForVBlank()` не работает (так под Wine).
 
 ## Референсы
 
