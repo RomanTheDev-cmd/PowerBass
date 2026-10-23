@@ -43,7 +43,9 @@ const std::vector<Preset>& factoryPresets()
 
 const Snapshot& legacyNeutral()
 {
-    static const Snapshot neutral { { id::detune, 0.0f }, { id::stereoDelay, 0.0f } };
+    // SMOOTH is the exception: projects and presets from before it get it off - a full attack on every note,
+    // as Roman asked for (2026-10-23), not the old flowing retrigger.
+    static const Snapshot neutral { { id::detune, 0.0f }, { id::stereoDelay, 0.0f }, { id::smoothStart, 0.0f } };
     return neutral;
 }
 
@@ -59,6 +61,11 @@ void applySnapshot (juce::AudioProcessorValueTreeState& state, const Snapshot& v
 {
     for (const auto& pid : allParamIds())
     {
+        // OVERSAMPLE is a quality setting of this instance, not part of a sound: presets (and A/B,
+        // variations) never change it. Factory presets do not store it, so a switch used to fall
+        // back to 4x and change the plug-in latency while the host was playing.
+        if (pid == id::oversample)
+            continue;
         auto* param = dynamic_cast<juce::RangedAudioParameter*> (state.getParameter (pid));
         if (param == nullptr)
             continue;
@@ -108,6 +115,7 @@ SynthParams paramsFromSnapshot (const Snapshot& s)
     p.bendRange = get (id::bendRange, p.bendRange);
     p.detune = get (id::detune, p.detune);
     p.stereoDelayMs = get (id::stereoDelay, p.stereoDelayMs);
+    p.smoothStart = get (id::smoothStart, 0.0f) > 0.5f;
     return p;
 }
 

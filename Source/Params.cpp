@@ -39,7 +39,8 @@ const juce::StringArray& allParamIds()
                                          id::cutoff, id::resonance, id::envAmount, id::filterMode, id::distType, id::distDrive,
                                          id::distTone, id::distMix, id::dark, id::bite, id::punch, id::width, id::splitFreq,
                                          id::attack, id::decay, id::sustain, id::release, id::glide, id::glideMode, id::master,
-                                         id::filterPos, id::oversample, id::fltDecay, id::velSens, id::bendRange, id::detune, id::stereoDelay };
+                                         id::filterPos, id::oversample, id::fltDecay, id::velSens, id::bendRange, id::detune, id::stereoDelay,
+                                         id::smoothStart };
     return ids;
 }
 
@@ -88,8 +89,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
     addUnit (l, id::sustain, "Sustain", 0.8287f);
     addFloat (l, id::release, "Release", skewed (5.0f, 5000.0f, 200.0f), 400.0f, ms);
     addFloat (l, id::glide, "Glide", skewed (0.0f, 1000.0f, 100.0f), 0.0f, ms);
-    l.add (std::make_unique<APC> (juce::ParameterID { id::glideMode, 1 }, "Glide Mode", juce::StringArray { "Mono", "Legato" }, 1));
-    addFloat (l, id::master, "Master", Range (-30.0f, 6.0f, 0.1f), -10.1f, [] (float v, int) { return juce::String (v, 1) + " dB"; });
+    // LEGATO button: on = a note played before the previous one is released continues it (and glides).
+    l.add (std::make_unique<APC> (juce::ParameterID { id::glideMode, 1 }, "Legato", juce::StringArray { "Off", "On" }, 1));
+    // SMOOTH button: on = a note on a still-sounding one continues from its level, without a new attack.
+    l.add (std::make_unique<juce::AudioParameterBool> (juce::ParameterID { id::smoothStart, 1 }, "Smooth Start", false));
+    addFloat (l, id::master, "Master", Range (-30.0f, 6.0f, 0.1f), -9.4f, [] (float v, int) { return juce::String (v, 1) + " dB"; });
 
     l.add (std::make_unique<APB> (juce::ParameterID { id::filterPos, 1 }, "Filter After Distortion", false));
     l.add (std::make_unique<APC> (juce::ParameterID { id::oversample, 1 }, "Oversampling", juce::StringArray { "2x", "4x", "8x" }, 1));
@@ -142,6 +146,7 @@ SynthParams readParams (const juce::AudioProcessorValueTreeState& s)
     p.bendRange = v (id::bendRange);
     p.detune = v (id::detune);
     p.stereoDelayMs = v (id::stereoDelay);
+    p.smoothStart = v (id::smoothStart) > 0.5f;
     return p;
 }
 }

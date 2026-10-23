@@ -290,6 +290,103 @@ void testOversamplingLatency()
     expect (! (lat[0] == lat[1] && lat[1] == lat[2]) || lat[0] == 0, "latency follows the oversampling setting");
 }
 
+// OVERSAMPLE is a quality setting of the instance, not part of a sound: loading a preset never
+// changes it (factory presets do not store it, so it used to fall back to 4x, and the plug-in
+// latency changed while the host was playing).
+void testPresetsKeepOversampling()
+{
+    PowerBassProcessor p;
+    p.prepareToPlay (48000, 512);
+    // Latency differs between 2x and 4x (4x and 8x round to the same samples), so the latency
+    // check runs at 2x; the setting itself is checked at 2x and 8x.
+    setPlain (p, pb::id::oversample, 1.0f);
+    play (p, 6);
+    const int latency4x = p.getLatencySamples();
+    const auto& all = p.library.all();
+    for (const int choice : { 0, 2 })
+    {
+        setPlain (p, pb::id::oversample, (float) choice);
+        play (p, 6);
+        const int latencyChosen = p.getLatencySamples();
+        if (choice == 0)
+            expect (latencyChosen != latency4x, "2x and 4x report different latencies, else the latency check is empty (2x "
+                    + juce::String (latencyChosen) + ", 4x " + juce::String (latency4x) + ")");
+        const juce::String name = juce::String (2 << choice) + "x";
+        int kept = 0, loaded = 0, withControl = 0;
+        for (int i = 0; i < (int) all.size(); ++i)
+        {
+            p.loadPreset (i);
+            if (juce::roundToInt (rawValue (p, pb::id::oversample)) == choice) ++kept;
+            // Control: the preset itself was applied.
+            if (const auto it = all[(size_t) i].values.find (pb::id::cutoff); it != all[(size_t) i].values.end())
+            {
+                ++withControl;
+                if (std::abs (rawValue (p, pb::id::cutoff) - it->second) <= 0.01f * it->second) ++loaded;
+            }
+        }
+        expect (kept == (int) all.size(), "every preset keeps OVERSAMPLE " + name + " (" + juce::String (kept) + "/" + juce::String ((int) all.size()) + ")");
+        expect (withControl > 0 && loaded == withControl, "the presets themselves were applied (CUTOFF " + juce::String (loaded) + "/" + juce::String (withControl) + ")");
+        play (p, 6);
+        expect (p.getLatencySamples() == latencyChosen, "latency at " + name + " unchanged by preset switches ("
+                + juce::String (p.getLatencySamples()) + " vs " + juce::String (latencyChosen) + ")");
+    }
+
+    // A saved preset that does contain OVERSAMPLE does not change it either.
+    pb::Snapshot saved { { pb::id::oversample, 0.0f }, { pb::id::cutoff, 500.0f } };
+    pb::applySnapshot (p.state, saved);
+    expect (juce::roundToInt (rawValue (p, pb::id::oversample)) == 2 && std::abs (rawValue (p, pb::id::cutoff) - 500.0f) < 5.0f,
+            "a snapshot with OVERSAMPLE 2x keeps 8x but applies its CUTOFF");
+}
+
+// AMP: two plain on/off buttons instead of the MONO / LEGATO pair (Roman found it confusing, 2026-10-23):
+// LEGATO ties overlapping notes, SMOOTH lets back-to-back notes continue without a new attack.
+void testNoteButtons()
+{
+#if JUCE_MAC
+    juce::ScopedJuceInitialiser_GUI gui;
+    PowerBassProcessor p;
+    auto button = [] (juce::AudioProcessorEditor& e, const char* id)
+    {
+        auto* c = e.findChildWithID (id);
+        return c != nullptr && c->getNumChildComponents() == 1 ? dynamic_cast<juce::Button*> (c->getChildComponent (0)) : nullptr;
+    };
+    {
+        std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
+        ed->setBoundsConstrained ({ 0, 0, 1080, 720 });
+        auto* legato = button (*ed, "legato");
+        auto* smooth = button (*ed, "smooth");
+        expect (legato != nullptr && legato->getButtonText() == "LEGATO" && smooth != nullptr && smooth->getButtonText() == "SMOOTH",
+                "AMP has single LEGATO and SMOOTH buttons");
+        if (legato == nullptr || smooth == nullptr)
+            return;
+        expect (legato->getToggleState() && ! smooth->getToggleState(), "defaults: LEGATO on, SMOOTH off (every note with its attack)");
+        legato->onClick();
+        smooth->onClick();
+        expect (juce::roundToInt (rawValue (p, pb::id::glideMode)) == 0 && rawValue (p, pb::id::smoothStart) > 0.5f,
+                "clicking switches LEGATO off and SMOOTH on");
+        smooth->onClick();
+        expect (rawValue (p, pb::id::smoothStart) < 0.5f, "a second click switches SMOOTH off again");
+        auto* l = ed->findChildWithID ("legato");
+        auto* m = ed->findChildWithID ("smooth");
+        bool clear = ! l->getBounds().intersects (m->getBounds());
+        for (auto* b : { l, m })
+        {
+            clear = clear && ed->getLocalBounds().contains (b->getBounds());
+            for (const char* id : { "attack", "decay", "sustain", "release", "punch", "glide" })
+                clear = clear && ! b->getBounds().intersects (ed->findChildWithID (id)->getBounds());
+        }
+        expect (clear, "the buttons sit apart, inside the window, off the AMP knobs");
+    }
+    setPlain (p, pb::id::glideMode, 1.0f);
+    setPlain (p, pb::id::smoothStart, 1.0f);
+    std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
+    auto* legato = button (*ed, "legato");
+    auto* smooth = button (*ed, "smooth");
+    expect (legato != nullptr && smooth != nullptr && legato->getToggleState() && smooth->getToggleState(),
+            "the buttons show their parameters (both on)");
+#endif
+}
+
 // The preset browser's filter: category, any of the selected groups, and words of a search text.
 void testPresetFilter()
 {
@@ -592,12 +689,14 @@ int main (int argc, char** argv)
     testLatencyAvailableBeforeFirstBlock();
     testStateRestoredAfterPrepareStartsExact();
     testOversamplingLatency();
+    testPresetsKeepOversampling();
     testPresetFilter();
     testAutomation();
     testMonoBus();
     testPreview();
     testEditor();
     testBlockLayout();
+    testNoteButtons();
     testPresetBrowser();
     std::cout << (failures == 0 ? "PASS " : "FAILED ") << (checks - failures) << "/" << checks << " wrapper checks\n";
     return failures == 0 ? 0 : 1;

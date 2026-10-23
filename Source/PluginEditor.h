@@ -205,7 +205,7 @@ private:
     pb::ui::Knob dark, bite, punch;
     pb::ui::Knob width, splitFreq, stereoDelay;
     pb::ui::Knob attack, decay, sustain, release, glide, master;
-    pb::ui::Segment filterMode, distType, glideMode;
+    pb::ui::Segment filterMode, distType, legato, smooth;
     pb::ui::Scope scope;
     pb::ui::Meter meter;
     pb::ui::AdvancedPanel advanced;
