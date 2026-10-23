@@ -223,43 +223,89 @@ void Segment::handleAsyncUpdate()
 }
 
 //==============================================================================
-void Scope::refresh()
+WaveformView::WaveformView()
 {
-    // Take the latest 2048 samples and align on a rising zero crossing so the
-    // waveform stands still for a held note.
-    constexpr int window = 2048;
-    const int end = proc.scopeWrite.load (std::memory_order_acquire);
-    std::array<float, window> buf {};
-    for (int i = 0; i < window; ++i)
-        buf[(size_t) i] = proc.scope[(size_t) ((end - window + i) & (PowerBassProcessor::scopeSize - 1))];
-    int start = 0;
-    for (int i = 1; i < window - (int) shown.size(); ++i)
-        if (buf[(size_t) i - 1] < 0.0f && buf[(size_t) i] >= 0.0f) { start = i; break; }
-    for (size_t i = 0; i < shown.size(); ++i)
-        shown[i] = buf[(size_t) start + i];
+    setTooltip ("Click to hear the sound (the C1 note PREVIEW plays)");
+    setMouseCursor (juce::MouseCursor::PointingHandCursor);
+}
+
+void WaveformView::setAudio (const juce::AudioBuffer<float>& mono, double sampleRate)
+{
+    const int columns = 600;
+    minV.assign (columns, 0.0f);
+    maxV.assign (columns, 0.0f);
+    const int n = mono.getNumSamples();
+    // Length of the audible sound (to -60 dB), shown top right.
+    const float peak = std::max (mono.getMagnitude (0, 0, n), 1.0e-9f);
+    int last = n - 1;
+    while (last > 0 && std::abs (mono.getSample (0, last)) < peak * 0.001f) --last;
+    lengthMs = 1000.0 * (last + 1) / sampleRate;
+    for (int c = 0; c < columns; ++c) // the whole render (fixed length): presets compare at a glance
+    {
+        const int from = (int) ((double) c * n / columns), to = std::max (from + 1, (int) ((double) (c + 1) * n / columns));
+        const auto range = juce::FloatVectorOperations::findMinAndMax (mono.getReadPointer (0, from), std::min (to, n) - from);
+        minV[(size_t) c] = range.getStart();
+        maxV[(size_t) c] = range.getEnd();
+    }
     repaint();
 }
 
-void Scope::paint (juce::Graphics& g)
+void WaveformView::decay()
+{
+    if (flashLevel > 0.0f)
+    {
+        flashLevel = std::max (0.0f, flashLevel - 0.08f);
+        repaint();
+    }
+}
+
+void WaveformView::mouseUp (const juce::MouseEvent& e)
+{
+    if (! e.mouseWasDraggedSinceMouseDown() && onClick != nullptr)
+        onClick();
+}
+
+void WaveformView::paint (juce::Graphics& g)
 {
     auto r = getLocalBounds().toFloat();
     fillPanel (g, r, 10.0f);
-    auto plot = r.reduced (10.0f, 12.0f);
+    auto plot = r.reduced (12.0f, 10.0f);
     const float mid = plot.getCentreY();
     g.setColour (juce::Colours::white.withAlpha (0.06f));
     g.drawHorizontalLine ((int) mid, plot.getX(), plot.getRight());
+    const double windowMs = 900.0; // the render length (see PowerBassEditor::renderWaveform)
+    for (double t = 100.0; t < windowMs; t += 100.0)
+        g.drawVerticalLine ((int) (plot.getX() + plot.getWidth() * (float) (t / windowMs)), plot.getY() + 4, plot.getBottom() - 4);
 
-    juce::Path p;
-    for (size_t i = 0; i < shown.size(); ++i)
+    if (! maxV.empty())
     {
-        const float x = plot.getX() + plot.getWidth() * (float) i / (float) (shown.size() - 1);
-        const float y = mid - juce::jlimit (-1.0f, 1.0f, shown[i]) * plot.getHeight() * 0.48f;
-        if (i == 0) p.startNewSubPath (x, y); else p.lineTo (x, y);
+        juce::Path p;
+        const auto cols = (int) maxV.size();
+        const float half = plot.getHeight() * 0.48f;
+        p.startNewSubPath (plot.getX(), mid);
+        for (int c = 0; c < cols; ++c)
+            p.lineTo (plot.getX() + plot.getWidth() * c / (cols - 1.0f), mid - juce::jlimit (-1.0f, 1.0f, maxV[(size_t) c]) * half);
+        for (int c = cols - 1; c >= 0; --c)
+            p.lineTo (plot.getX() + plot.getWidth() * c / (cols - 1.0f), mid - juce::jlimit (-1.0f, 1.0f, minV[(size_t) c]) * half);
+        p.closeSubPath();
+        // Accent at the centre fading into graphite at the peaks (as in PowerKick).
+        juce::ColourGradient fill (juce::Colour (0xff6f727a), 0, mid - half, juce::Colour (0xff6f727a), 0, mid + half, false);
+        fill.addColour (0.5, colours::accent);
+        g.setGradientFill (fill);
+        g.fillPath (p);
+        if (flashLevel > 0.0f)
+        {
+            g.setColour (juce::Colours::white.withAlpha (0.25f * flashLevel));
+            g.fillPath (p);
+        }
     }
-    juce::ColourGradient grad (colours::accent, 0, plot.getY(), colours::accent, 0, plot.getBottom(), false);
-    grad.addColour (0.5, colours::text);
-    g.setGradientFill (grad);
-    g.strokePath (p, juce::PathStrokeType (1.6f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+
+    const auto label = r.reduced (12.0f, 8.0f).removeFromTop (14.0f);
+    g.setFont (uiFont (11.0f, true).withExtraKerningFactor (0.1f));
+    g.setColour (colours::dim);
+    g.drawText (juce::String (juce::roundToInt (lengthMs)) + " MS", label, juce::Justification::topRight);
+    g.setColour (hover ? colours::text.withAlpha (0.85f) : colours::dim.withAlpha (0.7f));
+    g.drawText (juce::String::fromUTF8 ("CLICK TO PLAY \xe2\x96\xb6"), label, juce::Justification::topLeft);
 }
 
 //==============================================================================
@@ -781,21 +827,21 @@ PowerBassEditor::PowerBassEditor (PowerBassProcessor& p)
       smooth (p.state, pb::id::smoothStart, { "SMOOTH" },
               "On: notes that follow each other continue the sound without a new attack (the behaviour before October 2026). "
               "Off: every note starts with the full ATTACK"),
-      scope (p), advanced (p.state), browser (p)
+      advanced (p.state), browser (p)
 {
     setLookAndFeel (&lnf);
     envAmount.slider.getProperties().set ("bipolar", true);
-    for (auto* k : { &shape, &fmAmount, &cutoff, &distDrive, &master }) // one primary knob per block of the chain
+    for (auto* k : { &shape, &fmAmount, &cutoff, &distDrive, &width, &master }) // one per block, and the output level
         k->setPrimary (true);
 
     for (auto* c : std::initializer_list<juce::Component*> {
              &shape, &sub, &oscDrive, &fmAmount, &fmRatio, &fmDecay, &oscMix, &cutoff, &resonance, &envAmount, &distDrive, &distTone,
              &distMix, &dark, &bite, &punch, &width, &splitFreq, &stereoDelay, &attack, &decay, &sustain, &release, &glide, &master, &filterMode,
-             &distType, &legato, &smooth, &scope, &meter, &prevButton, &nextButton, &presetButton, &saveButton, &advancedButton, &menuButton,
+             &distType, &legato, &smooth, &waveform, &meter, &prevButton, &nextButton, &presetButton, &saveButton, &advancedButton, &menuButton,
              &previewButton })
         addAndMakeVisible (c);
     addChildComponent (advanced);
-    scope.setComponentID ("scope");
+    waveform.setComponentID ("waveform");
     legato.setComponentID ("legato");
     smooth.setComponentID ("smooth");
     addChildComponent (browser); // over everything below the header when open
@@ -826,7 +872,7 @@ PowerBassEditor::PowerBassEditor (PowerBassProcessor& p)
     };
     saveButton.onClick = [this] { savePreset(); };
     menuButton.onClick = [this] { showMainMenu(); };
-    previewButton.onClick = [this] { proc.previewRequested = true; };
+    previewButton.onClick = [this] { proc.previewRequested = true; waveform.flash(); };
     advancedButton.setClickingTogglesState (true);
     advancedButton.onClick = [this]
     {
@@ -845,10 +891,41 @@ PowerBassEditor::PowerBassEditor (PowerBassProcessor& p)
     getConstrainer()->setFixedAspectRatio (1080.0 / 720.0);
     setSize (1080, 720);
     refreshHeader();
+    waveform.onClick = [this] { proc.previewRequested = true; waveform.flash(); };
+    for (const auto& pid : pb::allParamIds())
+        proc.state.addParameterListener (pid, this);
+    renderWaveform();
     startTimerHz (30);
 }
 
-PowerBassEditor::~PowerBassEditor() { setLookAndFeel (nullptr); }
+PowerBassEditor::~PowerBassEditor()
+{
+    for (const auto& pid : pb::allParamIds())
+        proc.state.removeParameterListener (pid, this);
+    setLookAndFeel (nullptr);
+}
+
+// The note PREVIEW plays (C1, velocity 0.9, 0.4 s), rendered offline for the waveform: 0.9 s at 24 kHz.
+void PowerBassEditor::renderWaveform()
+{
+    constexpr double sr = 24000.0;
+    constexpr int block = 512, total = (int) (0.9 * sr), off = (int) (0.4 * sr);
+    const auto params = pb::readParams (proc.state);
+    pb::dsp::BassEngine engine;
+    engine.prepare (sr, block, params);
+    juce::AudioBuffer<float> st (2, total), mono (1, total);
+    for (int pos = 0; pos < total; pos += block)
+    {
+        const int n = std::min (block, total - pos);
+        juce::MidiBuffer midi;
+        if (pos == 0) midi.addEvent (juce::MidiMessage::noteOn (1, 36, 0.9f), 0);
+        if (off >= pos && off < pos + n) midi.addEvent (juce::MidiMessage::noteOff (1, 36), off - pos);
+        engine.process (st.getWritePointer (0, pos), st.getWritePointer (1, pos), n, midi, params);
+    }
+    for (int i = 0; i < total; ++i)
+        mono.setSample (0, i, 0.5f * (st.getSample (0, i) + st.getSample (1, i)));
+    waveform.setAudio (mono, sr);
+}
 
 void PowerBassEditor::paint (juce::Graphics& g)
 {
@@ -919,11 +996,17 @@ void PowerBassEditor::resized()
     subtitles.clear();
     arrows.clear();
 
-    // What the chain below produces, across the whole width.
-    scope.setBounds (body.removeFromTop (S (84)));
+    // Display: what the chain below produces, with OUTPUT (MASTER and its meter) at its right, as in PowerKick.
+    auto display = body.removeFromTop (S (140));
+    auto output = display.removeFromRight (S (150));
+    display.removeFromRight (S (14));
+    waveform.setBounds (display);
+    meter.setBounds (output.removeFromRight (S (14)).reduced (0, S (18)));
+    output.removeFromRight (S (6));
+    master.setBounds (output);
     body.removeFromTop (S (14));
 
-    // Two rows of three blocks along the signal path: SOURCE -> FM -> FILTER, DRIVE -> AMP -> OUTPUT.
+    // Two rows of three blocks along the signal path: SOURCE -> FM -> FILTER, DRIVE -> AMP -> STEREO.
     const int gutter = S (28), rowGap = S (14);
     const int rowH = (body.getHeight() - rowGap) / 2;
     auto rowA = body.removeFromTop (rowH);
@@ -966,7 +1049,7 @@ void PowerBassEditor::resized()
     flt.removeFromTop (S (8));
     primaryAndGrid (flt, cutoff, { &resonance, &envAmount }, 2);
 
-    const auto b = blocks (rowB, { "DRIVE", "AMP", "OUTPUT" });
+    const auto b = blocks (rowB, { "DRIVE", "AMP", "STEREO" });
     auto drv = b[0];
     distType.setBounds (drv.removeFromTop (S (26)));
     drv.removeFromTop (S (8));
@@ -974,7 +1057,8 @@ void PowerBassEditor::resized()
 
     // AMP: the envelope on top; the attack hit, glide and the LEGATO / SMOOTH buttons below.
     auto amp = b[1];
-    auto envRow = amp.removeFromTop (amp.getHeight() / 2);
+    auto envRow = amp.removeFromTop ((amp.getHeight() - S (8)) / 2);
+    amp.removeFromTop (S (8)); // breathing room between the envelope and the row below
     const int ew = envRow.getWidth() / 4;
     for (auto* k : { &attack, &decay, &sustain, &release })
         k->setBounds (envRow.removeFromLeft (ew));
@@ -986,17 +1070,8 @@ void PowerBassEditor::resized()
     modes.removeFromTop (S (8));
     smooth.setBounds (modes.removeFromTop (S (26)));
 
-    // OUTPUT: level with its meter, stereo controls beside it.
-    auto out = b[2];
-    auto lvl = out.removeFromLeft (out.getWidth() * 46 / 100);
-    meter.setBounds (lvl.removeFromRight (S (14)).reduced (0, S (24)));
-    master.setBounds (lvl);
-    out.removeFromLeft (S (8));
-    subtitles.push_back ({ "STEREO", out.removeFromTop (S (14)) });
-    const int sw = out.getWidth() / 2, sh = out.getHeight() / 2;
-    width.setBounds (out.getX(), out.getY(), sw, sh);
-    splitFreq.setBounds (out.getX() + sw, out.getY(), sw, sh);
-    stereoDelay.setBounds (out.getX(), out.getY() + sh, sw, sh);
+    // STEREO: width of the highs above SPLIT (mono below), and the left/right DELAY.
+    primaryAndGrid (b[2], width, { &splitFreq, &stereoDelay }, 1);
 
     advanced.setBounds (getWidth() - S (24) - S (640), S (64), S (640), S (170));
     browser.setBounds (getLocalBounds().withTrimmedTop (S (60)).reduced (S (24), S (14)));
@@ -1005,7 +1080,15 @@ void PowerBassEditor::resized()
 void PowerBassEditor::timerCallback()
 {
     meter.setLevels (proc.meterL.load(), proc.meterR.load());
-    scope.refresh();
+    waveform.decay();
+    // Redraw the sound once the knobs settle (a few timer ticks after the last change).
+    if (soundDirty.exchange (false))
+        dirtyAge = 0;
+    if (dirtyAge >= 0 && ++dirtyAge > 3)
+    {
+        dirtyAge = -1;
+        renderWaveform();
+    }
     width.repaint();
     const bool stereoOn = proc.state.getRawParameterValue (pb::id::width)->load() > 0.0f;
     splitFreq.setEnabled (stereoOn);
