@@ -45,6 +45,7 @@ public:
             os[i]->initProcessing ((size_t) blockSize);
         }
         mono.setSize (1, blockSize);
+        handoffGain.assign ((size_t) blockSize, 1.0);
         for (auto* s : { &sShape, &sSub, &sOscDrive, &sFm, &sMix, &sCut, &sRes, &sEnvAmt, &sDrive, &sTone, &sDistMix,
                          &sDark, &sBite, &sMaster, &sWidth, &sSplit })
             s->prepare (sr);
@@ -67,6 +68,10 @@ public:
         for (auto& o : os) if (o) o->reset();
         activeOs = -1;
         noteCount = 0;
+        strikes.fill (0);
+        handoffLeft = 0;
+        pendingStart = false;
+        postHandoffGain = 1.0;
         gate = false;
         ampEnv = fltEnv = fmEnv = 0.0;
         stage = Stage::idle;
@@ -107,8 +112,19 @@ public:
         auto it = midi.findNextSamplePosition (midiOffset);
         for (int done = 0; done < numSamples;)
         {
-            const int len = std::min (blockSize, numSamples - done);
-            renderChunk (outL + done, outR + done, len, midi, it, midiOffset + done, p);
+            int len = std::min (blockSize, numSamples - done);
+            const int start = midiOffset + done;
+            // A note-on opens its own chunk, and a hand-off ends on a chunk boundary, so the old
+            // signal can be cleared between chunks once its output has faded (as in PowerKick).
+            for (auto e = it; e != midi.cend() && (*e).samplePosition < start + len; ++e)
+                if ((*e).getMessage().isNoteOn())
+                {
+                    len = std::min (len, std::max (1, (*e).samplePosition - start));
+                    break;
+                }
+            if (handoffLeft > 1)
+                len = std::min (len, handoffLeft - 1);
+            renderChunk (outL + done, outR + done, len, midi, it, start, p);
             done += len;
         }
     }
@@ -161,7 +177,12 @@ private:
     {
         if (m.isNoteOn())
         {
+            const int key = m.getNoteNumber();
             const bool wasHeld = noteCount > 0;
+            // The same key struck again while held: back-to-back notes whose note-off comes after the
+            // next note-on. It is a new strike (restart), and the late note-off must not end it.
+            const bool restrike = strikes[(size_t) key] > 0;
+            strikes[(size_t) key] = (std::uint8_t) std::min (255, strikes[(size_t) key] + 1);
             removeNote (m.getNoteNumber());
             if (noteCount < (int) std::size (notes))
                 notes[noteCount++] = m.getNoteNumber();
@@ -170,12 +191,15 @@ private:
             const bool glideNow = p.glideMs > 0.5f && (p.glideMode == GlideMode::mono ? stage != Stage::idle : wasHeld);
             if (! glideNow)
                 logFreq = targetLogFreq;
-            if (! wasHeld || p.glideMode == GlideMode::mono)
+            if (! wasHeld || restrike || p.glideMode == GlideMode::mono)
                 trigger (p);
         }
         else if (m.isNoteOff())
         {
-            removeNote (m.getNoteNumber());
+            const int key = m.getNoteNumber();
+            if (strikes[(size_t) key] > 1) { --strikes[(size_t) key]; return; } // a newer strike of this key is down
+            strikes[(size_t) key] = 0;
+            removeNote (key);
             if (noteCount > 0)
             {
                 targetLogFreq = noteLog (notes[noteCount - 1]);
@@ -189,6 +213,7 @@ private:
         else if (m.isAllNotesOff() || m.isAllSoundOff())
         {
             noteCount = 0;
+            strikes.fill (0);
             releaseGate();
         }
     }
@@ -203,16 +228,57 @@ private:
         noteCount = w;
     }
 
+    // Every note starts from silence and runs the whole ATTACK. If the previous note still sounds
+    // (back-to-back notes, a long RELEASE), the output fades out in 1 ms, the whole signal path is
+    // cleared at a chunk boundary and the note starts like a note after a rest (as the kick's hand-off):
+    // no old filter or crossover energy runs into the new attack.
     void trigger (const SynthParams& p)
     {
-        // Phases restart only from silence, so retriggers never break the waveform.
-        if (stage == Stage::idle || ampEnv < 1.0e-4)
-        {
-            phase = 0.0; subPhase = 0.0; modPhase = 0.0; prevMod = 0.0; phaseUp = 0.0; phaseDown = 0.0;
-        }
         gate = true;
-        stage = Stage::attack;
-        attackStart = ampEnv;
+        if (handoffLeft == 0 && (stage == Stage::idle || ampEnv < 1.0e-4))
+        {
+            startNote (p);
+            return;
+        }
+        if (p.smoothStart && handoffLeft == 0)
+        {
+            // SMOOTH (the behaviour before 2026-10-23): the note continues the sounding one from its
+            // current level and phases, so back-to-back notes flow without a new attack.
+            stage = Stage::attack;
+            attackStart = ampEnv;
+            attackPos = 0.0;
+            fltEnv = 1.0;
+            fmEnv = 1.0;
+            punchT = 0.0;
+            velGain = (1.0 - p.velSens) + p.velSens * velocity;
+            return;
+        }
+        if (handoffLeft == 0)
+            handoffLeft = handoffFrames();
+        pendingStart = true;
+    }
+
+    int handoffFrames() const noexcept { return std::max (2, (int) std::ceil (0.001 * sr)); }
+
+    // The old note's signal, cleared once its output has faded (between DSP chunks). Parameter
+    // smoothing and the STEREO DELAY time keep running: they are settings, not sound.
+    void resetSignalPath()
+    {
+        os[(size_t) activeOs]->reset();
+        f1.reset(); f2.reset(); xo.reset(); toneLp.reset();
+        crushHold = 0.0; crushCount = 0;
+        dc.reset();
+        for (auto& b : eq) b.reset();
+        split.reset(); centreHp.reset(); decor.reset(); haas.reset();
+        for (auto& h : sideHp) h.reset();
+    }
+
+    void startNote (const SynthParams& p)
+    {
+        phase = 0.0; subPhase = 0.0; modPhase = 0.0; prevMod = 0.0; phaseUp = 0.0; phaseDown = 0.0;
+        stage = gate ? Stage::attack : Stage::release; // a note released during the hand-off stays silent
+        ampEnv = 0.0;
+        attackStart = 0.0;
         attackPos = 0.0;
         fltEnv = 1.0;
         fmEnv = 1.0;
@@ -266,6 +332,9 @@ private:
     void renderChunk (float* outL, float* outR, int len, const juce::MidiBuffer& midi, juce::MidiBufferIterator& it,
                       int chunkStart, const SynthParams& p)
     {
+        // A hand-off whose output has faded: clear the old signal between chunks (see process()).
+        if (handoffLeft == 1)
+            resetSignalPath();
         const bool wantSwitch = discreteDiffers (p);
         lastSplitTarget = p.splitHz;
         auto& over = *os[(size_t) activeOs];
@@ -287,6 +356,15 @@ private:
                 handleMidi ((*it).getMessage(), p);
                 ++it;
             }
+            if (handoffLeft > 0)
+                postHandoffGain = (double) --handoffLeft / handoffFrames();
+            if (pendingStart && handoffLeft == 0)
+            {
+                pendingStart = false;
+                startNote (p);
+                postHandoffGain = 1.0;
+            }
+            handoffGain[(size_t) i] = postHandoffGain;
             tickEnvelopes (p);
 
             // Control-rate values (base rate), held across the oversampled samples.
@@ -406,8 +484,8 @@ private:
             // invents a side signal (and never pushes sub into the stereo field).
             const double pk = std::max (std::abs (l), std::abs (r));
             const double lim = pk > 0.9 ? safety (pk) / pk : 1.0;
-            outL[i] = (float) (l * lim);
-            outR[i] = (float) (r * lim);
+            outL[i] = (float) (l * lim * handoffGain[(size_t) i]);
+            outR[i] = (float) (r * lim * handoffGain[(size_t) i]);
         }
         if (wantSwitch && fadeGain <= 0.0)
             applyDiscrete (p);
@@ -617,6 +695,11 @@ private:
     juce::AudioBuffer<float> mono;
 
     int notes[16] {}, noteCount = 0;
+    std::array<std::uint8_t, 128> strikes {}; // strikes per key that are still down (see handleMidi)
+    int handoffLeft = 0;                      // samples left of the previous note's output fade
+    bool pendingStart = false;                // a note waits for the end of that fade
+    double postHandoffGain = 1.0;
+    std::vector<double> handoffGain;          // per sample of a chunk, applied to the output
     float velocity = 1.0f;
     double velGain = 1.0;
     bool gate = false, firstBlock = true;

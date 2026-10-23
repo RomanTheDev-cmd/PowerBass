@@ -268,7 +268,7 @@ void testPresets (bool report)
 void testFactoryLevels()
 {
     const auto& f = factoryPresets();
-    std::vector<double> loudest (f.size(), 0.0);
+    std::vector<double> loudest (f.size(), 0.0), masters (f.size(), 0.0);
     std::atomic<size_t> next { 0 };
     auto work = [&]
     {
@@ -276,6 +276,7 @@ void testFactoryLevels()
         {
             auto p = paramsFromSnapshot (f[i].values);
             const double master = p.masterDb;
+            masters[i] = master;
             p.masterDb = -40.0f;
             double pk = 0.0;
             auto take = [&] (int root, int pattern, double bpm)
@@ -306,7 +307,7 @@ void testFactoryLevels()
         if (const auto it = pr.values.find (id::master); it != pr.values.end())
             offStep += std::abs (it->second * 10.0f - std::round (it->second * 10.0f)) > 1.0e-3f ? 1 : 0;
     expect (offStep == 0, "factory MASTER values sit on the 0.1 dB parameter step (" + juce::String (offStep) + " off)");
-    int over = 0, under = 0;
+    int over = 0, under = 0, capped = 0;
     double hi = -100.0, lo = 100.0;
     juce::String hiName, loName;
     for (size_t i = 0; i < f.size(); ++i)
@@ -314,12 +315,18 @@ void testFactoryLevels()
         if (loudest[i] > hi) { hi = loudest[i]; hiName = f[i].name; }
         if (loudest[i] < lo) { lo = loudest[i]; loName = f[i].name; }
         over += loudest[i] > -0.95 ? 1 : 0;
-        under += loudest[i] <= -1.1 ? 1 : 0;
+        // MASTER cannot go above its +6 dB maximum: a preset already there may stay up to 0.5 dB short
+        // (Warm Rumble 02 since every note restarts from silence, 2026-10-23).
+        const bool atMax = masters[i] >= 5.95 && loudest[i] > -1.6;
+        capped += loudest[i] <= -1.1 && atMax ? 1 : 0;
+        under += loudest[i] <= -1.1 && ! atMax ? 1 : 0;
     }
     expect (over == 0, "no factory preset gets near the emergency ceiling on any note E1-C3 (" + juce::String (over)
                        + " over -0.95 dBFS, loudest " + hiName + " " + juce::String (hi, 2) + " dBFS)");
     expect (under == 0, "every factory preset peaks at -1 dBFS over the level grid (" + juce::String (under)
-                        + " under -1.1 dBFS, quietest " + loName + " " + juce::String (lo, 2) + " dBFS)");
+                        + " under -1.1 dBFS, quietest " + loName + " " + juce::String (lo, 2) + " dBFS; "
+                        + juce::String (capped) + " at the MASTER maximum)");
+    expect (capped <= 2, "at most two presets need MASTER beyond its maximum (" + juce::String (capped) + ")");
 }
 
 void testWidth()
@@ -453,6 +460,104 @@ void testGlideAndLegato()
     auto m = render (p, legato, 1.0);
     const int t = (int) (0.7 * 48000);
     expect (rms (l, 0, t, t + 2400) > rms (m, 0, t, t + 2400) * 0.98, "legato does not retrigger, mono does");
+}
+
+// Amplitude of a (near) sine of known frequency at sample i: sqrt(x^2 + (x' / 2 pi f)^2). Unlike short
+// RMS windows it does not dip at zero crossings, so it shows where the sound itself fades.
+double sineAmp (const juce::AudioBuffer<float>& a, int i, double f, double sr)
+{
+    const double x = a.getSample (0, i);
+    const double d = (a.getSample (0, i + 1) - a.getSample (0, i - 1)) * 0.5 * sr / (2.0 * 3.14159265358979 * f);
+    return std::sqrt (x * x + d * d);
+}
+double meanSineAmp (const juce::AudioBuffer<float>& a, int from, int to, double f, double sr)
+{
+    double s = 0;
+    for (int i = from; i < to; ++i) s += sineAmp (a, i, f, sr);
+    return s / std::max (1, to - from);
+}
+double minSineAmp (const juce::AudioBuffer<float>& a, int from, int to, double f, double sr)
+{
+    double m = 1.0e9;
+    for (int i = from; i < to; ++i) m = std::min (m, sineAmp (a, i, f, sr));
+    return m;
+}
+
+// A note that starts while the previous one still sounds restarts from silence: the old sound
+// fades out in about 1 ms and the new note runs the whole ATTACK, like a note after a rest.
+// (It used to start from the current envelope level, so with a long SUSTAIN/RELEASE the notes of a
+// rolling line ran together and ATTACK did nothing - Roman's "Bass 2" in Logic, 2026-10-23.)
+void testEveryNoteHasFullAttack()
+{
+    SynthParams p;                      // sustained like "Biting Reese 02"; a sine so the level is measurable
+    p.shape = 0.0f; p.sub = 0.0f; p.sustain = 0.9f; p.decayMs = 43.0f; p.releaseMs = 400.0f;
+    p.glideMode = GlideMode::legato; p.glideMs = 0.0f; p.cutoffHz = 18000.0f; p.resonance = 0.0f; p.distTone = 1.0f;
+    p.envAmount = 0.0f; p.punch = 0.0f; p.distDrive = 0.0f; p.distMix = 0.0f; p.fmAmount = 0.0f; p.oscDrive = 0.0f;
+    const double sr = 48000.0, step = 60.0 / 133.0 / 4.0, c1 = 32.703; // 16ths at 133 BPM, back to back, C1
+    std::vector<Note> run;
+    for (int k = 0; k < 8; ++k) run.push_back ({ 0.2 + k * step, 0.2 + (k + 1) * step, 36 });
+    const auto onAt = [&] (int k) { return (int) ((0.2 + k * step) * sr); };
+
+    // ATTACK 40 ms (linear): 4..12 ms into a note it is 10..30 % of full, so below half the level at 60..100 ms.
+    p.attackMs = 40.0f;
+    const auto a = render (p, run, 0.2 + 9 * step);
+    int slow = 0;
+    for (int k = 1; k < 8; ++k)
+        if (meanSineAmp (a, onAt (k) + 192, onAt (k) + 576, c1, sr) < 0.5 * meanSineAmp (a, onAt (k) + 2880, onAt (k) + 4800, c1, sr)) ++slow;
+    expect (slow == 7, "every back-to-back note runs the 40 ms ATTACK (" + juce::String (slow) + "/7)");
+
+    // Fastest ATTACK: each back-to-back note starts exactly like the same note after a rest - its first
+    // 10 ms match a fresh note's waveform (allowing up to 2 ms for the previous note to fade out).
+    auto q = p;
+    q.attackMs = 0.5f;
+    const auto b = render (q, run, 0.2 + 9 * step);
+    const auto fresh = render (q, { { 0.2, 0.2 + step, 36 } }, 0.2 + 2 * step);
+    const int f0 = onAt (0), len = 480;
+    const double ref = rms (fresh, 0, f0, f0 + len);
+    int alike = 0;
+    for (int k = 1; k < 8; ++k)
+    {
+        double best = 1.0e9;
+        for (int lag = 0; lag <= 96; ++lag)
+        {
+            double e = 0;
+            for (int i = 0; i < len; ++i)
+            {
+                const double d = b.getSample (0, onAt (k) + lag + i) - fresh.getSample (0, f0 + i);
+                e += d * d;
+            }
+            best = std::min (best, std::sqrt (e / len) / ref);
+        }
+        if (best < 0.2) ++alike;
+    }
+    expect (alike == 7, "every back-to-back note starts like a note after a rest (" + juce::String (alike) + "/7)");
+
+    // The same key struck again with its old note-off arriving a sample later (on before off):
+    // the new note must keep sounding until its own note-off, not fall into the release.
+    const auto c = render (q, { { 0.1, 0.5 + 1.0 / sr, 36 }, { 0.5, 0.9, 36 } }, 1.0);
+    expect (meanSineAmp (c, (int) (0.75 * sr), (int) (0.85 * sr), c1, sr) > 0.8 * meanSineAmp (c, (int) (0.35 * sr), (int) (0.45 * sr), c1, sr),
+            "a re-struck key keeps sounding when its old note-off comes after the new note-on");
+
+    // SMOOTH (the old behaviour, a switch): back-to-back notes continue the sound - no dip at a note start,
+    // and a slow ATTACK does not start again from silence.
+    auto sm = q;
+    sm.smoothStart = true;
+    const auto e = render (sm, run, 0.2 + 9 * step);
+    int flowing = 0;
+    for (int k = 1; k < 8; ++k)
+        if (minSineAmp (e, onAt (k), onAt (k) + 144, c1, sr) > 0.5 * meanSineAmp (e, onAt (k) + 480, onAt (k) + 960, c1, sr)) ++flowing;
+    expect (flowing == 7, "SMOOTH: back-to-back notes continue without a new attack (" + juce::String (flowing) + "/7)");
+    auto smSlow = p;
+    smSlow.smoothStart = true;
+    const auto g = render (smSlow, run, 0.2 + 9 * step);
+    expect (meanSineAmp (g, onAt (4) + 192, onAt (4) + 576, c1, sr) > 0.8 * meanSineAmp (g, onAt (4) + 2880, onAt (4) + 4800, c1, sr),
+            "SMOOTH: a slow ATTACK continues from the level reached, not from silence");
+
+    // Control: legato between different, overlapping keys does not restart (no dip; G1 = 49 Hz after the change).
+    const auto d = render (q, { { 0.1, 0.55, 36 }, { 0.5, 0.9, 43 } }, 1.0);
+    const double g1 = 48.999;
+    expect (minSineAmp (d, (int) (0.5 * sr) + 48, (int) (0.5 * sr) + 144, g1, sr) > 0.5 * meanSineAmp (d, (int) (0.6 * sr), (int) (0.62 * sr), g1, sr),
+            "legato between overlapping keys does not restart");
 }
 
 // High-frequency share: energy above 1 kHz relative to the whole signal, in dB.
@@ -729,6 +834,7 @@ int main (int argc, char** argv)
     testRatesBlocksOversampling();
     testNoClicks();
     testGlideAndLegato();
+    testEveryNoteHasFullAttack();
     testCharacterAndModes();
     testDetune();
     testDriveSweepIsSmooth();

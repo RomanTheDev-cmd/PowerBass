@@ -187,12 +187,15 @@ Segment::Segment (juce::AudioProcessorValueTreeState& s, const juce::String& pid
     {
         auto* b = buttons.add (new juce::TextButton (labels[i]));
         b->setTooltip (tooltip);
-        b->onClick = [this, i]
+        b->onClick = [this, i, single = labels.size() == 1]
         {
             if (auto* p = dynamic_cast<juce::RangedAudioParameter*> (state.getParameter (paramId)))
             {
+                // One label: an on/off button for a two-state parameter (index 1 = on).
+                const int now = juce::roundToInt (state.getRawParameterValue (paramId)->load());
+                const float target = single ? (now == 1 ? 0.0f : 1.0f) : (float) i;
                 p->beginChangeGesture();
-                p->setValueNotifyingHost (p->convertTo0to1 ((float) i));
+                p->setValueNotifyingHost (p->convertTo0to1 (target));
                 p->endChangeGesture();
             }
         };
@@ -216,7 +219,7 @@ void Segment::handleAsyncUpdate()
 {
     const int index = juce::roundToInt (state.getRawParameterValue (paramId)->load());
     for (int i = 0; i < buttons.size(); ++i)
-        buttons[i]->setToggleState (i == index, juce::dontSendNotification);
+        buttons[i]->setToggleState (buttons.size() == 1 ? index == 1 : i == index, juce::dontSendNotification);
 }
 
 //==============================================================================
@@ -772,7 +775,12 @@ PowerBassEditor::PowerBassEditor (PowerBassProcessor& p)
       master (p.state, pb::id::master, "MASTER", "Output level"),
       filterMode (p.state, pb::id::filterMode, { "LP24", "LP12", "BP", "HP" }, "Filter mode"),
       distType (p.state, pb::id::distType, { "SATURATE", "CLIP", "FOLD", "DESTROY", "CRUSH" }, "Distortion algorithm"),
-      glideMode (p.state, pb::id::glideMode, { "MONO", "LEGATO" }, "Mono: every note retriggers. Legato: overlapping notes slide"),
+      legato (p.state, pb::id::glideMode, { "LEGATO" },
+              "On: a note played before the previous one is released continues it without a new attack (and slides with GLIDE). "
+              "Off: every note starts anew"),
+      smooth (p.state, pb::id::smoothStart, { "SMOOTH" },
+              "On: notes that follow each other continue the sound without a new attack (the behaviour before October 2026). "
+              "Off: every note starts with the full ATTACK"),
       scope (p), advanced (p.state), browser (p)
 {
     setLookAndFeel (&lnf);
@@ -783,11 +791,13 @@ PowerBassEditor::PowerBassEditor (PowerBassProcessor& p)
     for (auto* c : std::initializer_list<juce::Component*> {
              &shape, &sub, &oscDrive, &fmAmount, &fmRatio, &fmDecay, &oscMix, &cutoff, &resonance, &envAmount, &distDrive, &distTone,
              &distMix, &dark, &bite, &punch, &width, &splitFreq, &stereoDelay, &attack, &decay, &sustain, &release, &glide, &master, &filterMode,
-             &distType, &glideMode, &scope, &meter, &prevButton, &nextButton, &presetButton, &saveButton, &advancedButton, &menuButton,
+             &distType, &legato, &smooth, &scope, &meter, &prevButton, &nextButton, &presetButton, &saveButton, &advancedButton, &menuButton,
              &previewButton })
         addAndMakeVisible (c);
     addChildComponent (advanced);
     scope.setComponentID ("scope");
+    legato.setComponentID ("legato");
+    smooth.setComponentID ("smooth");
     addChildComponent (browser); // over everything below the header when open
     presetButton.setComponentID ("presetButton");
     browser.setComponentID ("presetBrowser");
@@ -962,7 +972,7 @@ void PowerBassEditor::resized()
     drv.removeFromTop (S (8));
     primaryAndGrid (drv, distDrive, { &distTone, &distMix, &dark, &bite }, 2);
 
-    // AMP: the envelope on top, the attack hit and glide below.
+    // AMP: the envelope on top; the attack hit, glide and the LEGATO / SMOOTH buttons below.
     auto amp = b[1];
     auto envRow = amp.removeFromTop (amp.getHeight() / 2);
     const int ew = envRow.getWidth() / 4;
@@ -971,7 +981,10 @@ void PowerBassEditor::resized()
     const int pw = amp.getWidth() / 4;
     punch.setBounds (amp.removeFromLeft (pw));
     glide.setBounds (amp.removeFromLeft (pw));
-    glideMode.setBounds (amp.withSizeKeepingCentre (amp.getWidth() - S (8), S (26)));
+    auto modes = amp.withSizeKeepingCentre (amp.getWidth() - S (8), S (26) * 2 + S (8));
+    legato.setBounds (modes.removeFromTop (S (26)));
+    modes.removeFromTop (S (8));
+    smooth.setBounds (modes.removeFromTop (S (26)));
 
     // OUTPUT: level with its meter, stereo controls beside it.
     auto out = b[2];
