@@ -21,6 +21,17 @@ void setPlain (PowerBassProcessor& p, const char* id, float v)
     param->setValueNotifyingHost (param->convertTo0to1 (v));
 }
 
+// A mouse event on component c (click or drag), for the mouse handlers of the waveform.
+juce::MouseEvent mouseAt (juce::Component* c, bool dragged)
+{
+    const auto now = juce::Time::getCurrentTime();
+    const juce::Point<float> pt (20.0f, 20.0f);
+    return juce::MouseEvent (juce::Desktop::getInstance().getMainMouseSource(), pt, {}, juce::MouseInputSource::defaultPressure,
+                             juce::MouseInputSource::defaultOrientation, juce::MouseInputSource::defaultRotation,
+                             juce::MouseInputSource::defaultTiltX, juce::MouseInputSource::defaultTiltY, c, c, now, pt, now, 1, dragged);
+}
+
+
 struct Run { double peak = 0; bool finite = true; };
 
 // A rolling 16th bass line at 150 BPM (C2 / D#2), `between` runs before each block.
@@ -387,6 +398,27 @@ void testNoteButtons()
 #endif
 }
 
+// The current sound as a waveform, like PowerKick's (Roman, 2026-10-23): it shows the note PREVIEW plays,
+// and a click on it plays that note - no MIDI keyboard needed.
+void testWaveformView()
+{
+#if JUCE_MAC
+    juce::ScopedJuceInitialiser_GUI gui;
+    PowerBassProcessor p;
+    std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
+    ed->setBoundsConstrained ({ 0, 0, 1080, 720 });
+    auto* w = dynamic_cast<pb::ui::WaveformView*> (ed->findChildWithID ("waveform"));
+    expect (w != nullptr && w->getWidth() >= ed->getWidth() * 3 / 4, "the waveform spans the top of the window");
+    if (w == nullptr)
+        return;
+    expect (w->hasAudio(), "it shows the current sound at once");
+    p.previewRequested = false;
+    w->mouseDown (mouseAt (w, false));
+    w->mouseUp (mouseAt (w, false));
+    expect (p.previewRequested.exchange (false), "a click on the waveform plays the note");
+#endif
+}
+
 // The preset browser's filter: category, any of the selected groups, and words of a search text.
 void testPresetFilter()
 {
@@ -557,17 +589,18 @@ void testBlockLayout()
     juce::ScopedJuceInitialiser_GUI gui;
     PowerBassProcessor p;
     std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
-    const juce::StringArray primary { "shape", "fmAmount", "cutoff", "distDrive", "master" };
+    // One primary knob per block; MASTER sits beside the waveform, as OUTPUT in PowerKick (Roman, 2026-10-23).
+    const juce::StringArray primary { "shape", "fmAmount", "cutoff", "distDrive", "width" };
     const juce::StringArray secondary { "sub", "oscDrive", "oscMix", "fmRatio", "fmDecay", "resonance", "envAmount", "distTone",
                                         "distMix", "dark", "bite", "attack", "decay", "sustain", "release", "punch", "glide",
-                                        "width", "splitFreq", "stereoDelay" };
+                                        "splitFreq", "stereoDelay" };
     for (auto size : { juce::Rectangle<int> (0, 0, 864, 576), juce::Rectangle<int> (0, 0, 1080, 720), juce::Rectangle<int> (0, 0, 1620, 1080) })
     {
         ed->setBoundsConstrained (size);
         const juce::String at = " at " + juce::String (ed->getWidth()) + "x" + juce::String (ed->getHeight());
         std::vector<juce::Component*> knobs;
         bool found = true;
-        for (const auto& ids : { primary, secondary })
+        for (const auto& ids : { primary, secondary, juce::StringArray { "master" } })
             for (const auto& id : ids)
             {
                 auto* k = ed->findChildWithID (id);
@@ -599,13 +632,18 @@ void testBlockLayout()
         for (const auto& id : secondary)
             if (auto* k = dynamic_cast<pb::ui::Knob*> (ed->findChildWithID (id))) accents = accents && ! (bool) k->slider.getProperties()["primary"];
         expect (accents, "only the primary knobs carry the accent" + at);
-        auto* scope = ed->findChildWithID ("scope");
-        expect (scope != nullptr && scope->getWidth() >= ed->getWidth() * 9 / 10, "the scope spans the window width" + at);
+        auto* waveform = ed->findChildWithID ("waveform");
+        auto* masterKnob = ed->findChildWithID ("master");
+        expect (waveform != nullptr && waveform->getWidth() >= ed->getWidth() * 3 / 4 && waveform->getHeight() >= ed->getHeight() * 17 / 100,
+                "a large waveform across the top (" + juce::String (waveform != nullptr ? waveform->getHeight() : 0) + " px high)" + at);
+        expect (waveform != nullptr && masterKnob != nullptr && masterKnob->getX() >= waveform->getRight()
+                && masterKnob->getBounds().getCentreY() > waveform->getY() && masterKnob->getBounds().getCentreY() < waveform->getBottom(),
+                "MASTER sits right of the waveform, as OUTPUT in PowerKick" + at);
         auto centre = [&ed] (const juce::String& id) { auto* k = ed->findChildWithID (id); return k != nullptr ? k->getBounds().getCentre() : juce::Point<int>(); };
         const bool chain = centre ("shape").x < centre ("fmAmount").x && centre ("fmAmount").x < centre ("cutoff").x
-                           && centre ("distDrive").x < centre ("attack").x && centre ("attack").x < centre ("master").x
-                           && centre ("shape").y < centre ("distDrive").y && centre ("cutoff").y < centre ("master").y;
-        expect (chain, "blocks follow the signal path: SOURCE, FM, FILTER, then DRIVE, AMP, OUTPUT" + at);
+                           && centre ("distDrive").x < centre ("attack").x && centre ("attack").x < centre ("width").x
+                           && centre ("shape").y < centre ("distDrive").y && centre ("cutoff").y < centre ("width").y;
+        expect (chain, "blocks follow the signal path: SOURCE, FM, FILTER, then DRIVE, AMP, STEREO" + at);
     }
     ed.reset();
 #endif
@@ -696,6 +734,7 @@ int main (int argc, char** argv)
     testPreview();
     testEditor();
     testBlockLayout();
+    testWaveformView();
     testNoteButtons();
     testPresetBrowser();
     std::cout << (failures == 0 ? "PASS " : "FAILED ") << (checks - failures) << "/" << checks << " wrapper checks\n";

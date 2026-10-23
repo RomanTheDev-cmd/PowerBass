@@ -68,16 +68,27 @@ private:
     juce::OwnedArray<juce::TextButton> buttons;
 };
 
-class Scope : public juce::Component
+// The current sound as a waveform, like PowerKick's: the note PREVIEW plays (C1, 0.4 s), redrawn when the
+// knobs settle. A click plays it, so a preset can be heard without a MIDI keyboard (Roman, 2026-10-23).
+class WaveformView : public juce::Component, public juce::SettableTooltipClient
 {
 public:
-    explicit Scope (PowerBassProcessor& p) : proc (p) {}
-    void refresh();
+    WaveformView();
+    std::function<void()> onClick;
+    void setAudio (const juce::AudioBuffer<float>& mono, double sampleRate);
+    bool hasAudio() const { return ! maxV.empty(); }
+    void flash() { flashLevel = 1.0f; repaint(); }
+    void decay();
     void paint (juce::Graphics&) override;
+    void mouseEnter (const juce::MouseEvent&) override { hover = true; repaint(); }
+    void mouseExit (const juce::MouseEvent&) override { hover = false; repaint(); }
+    void mouseUp (const juce::MouseEvent&) override;
 
 private:
-    PowerBassProcessor& proc;
-    std::array<float, 1024> shown {};
+    std::vector<float> minV, maxV;
+    double lengthMs = 0.0;
+    float flashLevel = 0.0f;
+    bool hover = false;
 };
 
 class Meter : public juce::Component
@@ -175,7 +186,7 @@ private:
 };
 }
 
-class PowerBassEditor : public juce::AudioProcessorEditor, private juce::Timer
+class PowerBassEditor : public juce::AudioProcessorEditor, private juce::Timer, private juce::AudioProcessorValueTreeState::Listener
 {
 public:
     explicit PowerBassEditor (PowerBassProcessor&);
@@ -185,6 +196,8 @@ public:
 
 private:
     void timerCallback() override;
+    void parameterChanged (const juce::String&, float) override { soundDirty = true; }
+    void renderWaveform();
     void showMainMenu();
     void stepPreset (int delta);
     void savePreset();
@@ -206,7 +219,9 @@ private:
     pb::ui::Knob width, splitFreq, stereoDelay;
     pb::ui::Knob attack, decay, sustain, release, glide, master;
     pb::ui::Segment filterMode, distType, legato, smooth;
-    pb::ui::Scope scope;
+    pb::ui::WaveformView waveform;
+    std::atomic<bool> soundDirty { true };
+    int dirtyAge = -1;
     pb::ui::Meter meter;
     pb::ui::AdvancedPanel advanced;
     pb::ui::PresetBrowser browser;
