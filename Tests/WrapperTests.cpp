@@ -427,7 +427,7 @@ void testPresetFilter()
     expect (pb::filterPresets (all, "Rolling Techno Bass", {}, {}).size() == 100, "category Rolling Techno Bass: 100 presets");
     expect (pb::filterPresets (all, "Rolling Techno Bass", { "Reese" }, {}).size() == 39, "Rolling + Reese: 39 presets");
     const auto two = pb::filterPresets (all, "Dark Underground Bass", { "Reese", "FM" }, {});
-    expect (two.size() == 29, "Dark Underground + Reese or FM: 21 + 8 presets (" + juce::String ((int) two.size()) + ")");
+    expect (two.size() == 31, "Dark Underground + Reese or FM: 23 + 8 presets (" + juce::String ((int) two.size()) + ")");
     juce::StringArray found;
     for (int i : pb::filterPresets (all, {}, {}, "  reese CORE ")) found.add (all[(size_t) i].name);
     expect (found.contains ("Reese Core"), "search finds a preset by words in any case");
