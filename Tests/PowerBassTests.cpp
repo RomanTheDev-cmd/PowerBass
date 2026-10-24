@@ -212,7 +212,7 @@ const std::vector<Note> oneNote { { 0.0, 0.6, 36 } };
 void testPresets (bool report)
 {
     const auto& f = factoryPresets();
-    expect (f.size() == 300, "300 factory presets, got " + juce::String ((int) f.size()));
+    expect (f.size() == 304, "304 factory presets, got " + juce::String ((int) f.size()));
     std::map<juce::String, int> cats;
     std::set<juce::String> names;
     for (const auto& p : f)
@@ -222,8 +222,9 @@ void testPresets (bool report)
         expect (juce::StringArray { "Reese", "FM", "Plucks", "Sustained" }.contains (p.group), p.name + ": browser group (" + p.group + ")");
     }
     expect (cats.size() == 10, "10 categories");
-    // Rolling basses are the core of the library (100 of 300).
-    const std::map<juce::String, int> expected { { "Rolling Techno Bass", 100 }, { "Dark Underground Bass", 60 },
+    // Rolling basses are the core of the library (100 of 304; Dark Underground has 4 hand-designed variants of
+    // Reese Core and Dark Pulse since 2026-10-23).
+    const std::map<juce::String, int> expected { { "Rolling Techno Bass", 100 }, { "Dark Underground Bass", 64 },
         { "Hard Techno Rumble Bass", 55 }, { "Raw Analog Bass", 20 }, { "Acid-Inspired Bass", 13 }, { "Destroyed Bass", 13 },
         { "Schranz Distorted Bass", 12 }, { "Metallic Bass", 12 }, { "Industrial FM Bass", 10 }, { "Deep Sub Bass", 5 } };
     for (auto& [c, n] : expected)
