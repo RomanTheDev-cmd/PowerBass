@@ -54,7 +54,8 @@ public:
         sSplit.prepare (sr, 0.0005); // ticked once per 32 samples: ~16 ms glide
         dc.set (10.0, sr);
         driftMain.prepare (sr); driftUp.prepare (sr); driftDown.prepare (sr);
-        anaTop.set (14000.0, sr); anaBlend.prepare (sr); anaBlendPost.prepare (sr);
+        anaTop.set (7000.0, sr); anaTop2.set (7000.0, sr);
+        anaKE = std::exp (-1.0 / (0.02 * sr)); anaKG = std::exp (-1.0 / (0.05 * sr)); anaEIn = anaEOut = 0.0; anaG = 1.0; anaBlend.prepare (sr); anaBlendPost.prepare (sr);
         decor.prepare (sr);
         haas.prepare ((int) (0.016 * sr) + 8);
         reset();
@@ -82,7 +83,7 @@ public:
         phase = subPhase = modPhase = 0.0;
         prevMod = 0.0;
         logFreq = targetLogFreq = std::log (110.0);
-        anaRand.seed (0x5EED2810u); driftMain.reset(); driftUp.reset(); driftDown.reset(); anaTop.reset();
+        anaRand.seed (0x5EED2810u); driftMain.reset(); driftUp.reset(); driftDown.reset(); anaTop.reset(); anaTop2.reset(); anaEIn = anaEOut = 0.0; anaG = 1.0;
         bend = 0.0;
         punchT = 1.0e9;
         dc.reset();
@@ -289,10 +290,10 @@ private:
         fmEnv = 1.0;
         punchT = 0.0;
         velGain = (1.0 - p.velSens) + p.velSens * velocity;
-        // ANALOGUE: each note a little different (oscillators +/-1.5 / +/-3 cents, filter +/-4 %), drawn in DIGITAL too
+        // ANALOGUE: each note a little different (oscillators +/-4 / +/-8 cents, filter +/-3 %: more moved the level of low-cut presets by up to 4 dB), drawn in DIGITAL too
         // so the sequence does not depend on the switch.
-        noteCentsMain = 1.5 * anaRand.next(); noteCentsUp = 3.0 * anaRand.next(); noteCentsDown = 3.0 * anaRand.next();
-        noteCut = 1.0 + 0.04 * anaRand.next();
+        noteCentsMain = 4.0 * anaRand.next(); noteCentsUp = 8.0 * anaRand.next(); noteCentsDown = 8.0 * anaRand.next();
+        noteCut = 1.0 + 0.03 * anaRand.next();
     }
 
     void releaseGate() noexcept
@@ -386,9 +387,9 @@ private:
             logFreq = targetLogFreq + glideCoef * (logFreq - targetLogFreq);
             const double punchSemis = p.punch * 12.0 * std::exp (-punchT / 0.006);
             const double freq = std::exp (logFreq) * std::exp2 ((bend + punchSemis) / 12.0);
-            // ANALOGUE: slow drift (targets +/-6 cents, the detuned copies +/-8; after smoothing a wander of a few cents) on top of the per-note spread.
+            // ANALOGUE: slow drift (targets +/-15 cents, the detuned copies +/-20; after smoothing a wander of ~3-8 cents) on top of the per-note spread.
             const double ana = anaBlend.tick (p.analog);
-            const double dMain = driftMain.tick (anaRand, 6.0), dUp = driftUp.tick (anaRand, 8.0), dDown = driftDown.tick (anaRand, 8.0);
+            const double dMain = driftMain.tick (anaRand, 15.0), dUp = driftUp.tick (anaRand, 20.0), dDown = driftDown.tick (anaRand, 20.0);
             const double inc = std::min (freq * std::exp2 (ana * (noteCentsMain + dMain) / 1200.0) / osRate, 0.2);
             // The level hit rises over 1 ms, so a retrigger on a sounding note never clicks.
             const double punchAmp = 1.0 + p.punch * 0.6 * std::exp (-punchT / 0.012) * std::min (1.0, punchT / 0.001);
@@ -464,6 +465,7 @@ private:
                     if (! actPost) osc = filter (osc);
                     double d = distort (osc, g, norm, distMix);
                     if (actPost) d = filter (d);
+                    d += ana * (power_analog::warmDrive (d) - d); // ANALOGUE: a rounder, thicker drive stage
                     y = d * amp;
                 }
                 u[i * factor + k] = (float) y;
@@ -488,7 +490,17 @@ private:
                 updateSplit();
             }
             double y = dc.tick (base[i]);
-            y += anaBlendPost.tick (p.analog) * (anaTop.tick (y) - y); // ANALOGUE: softer top (one pole, 14 kHz)
+            {
+                // ANALOGUE: a softer, rounder top (two one-poles at 7 kHz, 12 dB/oct) at the same loudness: a slow
+                // energy match (20 ms energy, 50 ms gain, at most +4 dB) so the switch compares timbre, not level.
+                const double a = anaBlendPost.tick (p.analog);
+                const double t = anaTop2.tick (anaTop.tick (y));
+                anaEIn = y * y + anaKE * (anaEIn - y * y);
+                anaEOut = t * t + anaKE * (anaEOut - t * t);
+                const double gT = juce::jlimit (1.0, 1.585, std::sqrt ((anaEIn + 1.0e-12) / (anaEOut + 1.0e-12)));
+                anaG = gT + anaKG * (anaG - gT);
+                y += a * (t * anaG - y);
+            }
             for (auto& b : eq) y = b.tick (y);
             const double gain = sMaster.tick (dbToGain (p.masterDb)) * fadeGain;
             double l, r;
@@ -725,7 +737,8 @@ private:
     double logFreq = 0.0, targetLogFreq = 0.0, bend = 0.0;
     power_analog::Random anaRand;
     power_analog::Drift driftMain, driftUp, driftDown;
-    power_analog::OnePole anaTop;
+    power_analog::OnePole anaTop, anaTop2;
+    double anaEIn = 0.0, anaEOut = 0.0, anaG = 1.0, anaKE = 0.999, anaKG = 0.999;
     power_analog::Blend anaBlend, anaBlendPost;
     double noteCentsMain = 0.0, noteCentsUp = 0.0, noteCentsDown = 0.0, noteCut = 1.0;
 

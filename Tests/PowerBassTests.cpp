@@ -815,6 +815,11 @@ void testAnalogue()
     const double lvl = db (rms (ana, 0, 0, n)) - db (rms (dig, 0, 0, n));
     expect (std::abs (lvl) < 1.0, "ANALOGUE keeps the level of Reese Core within 1 dB (" + juce::String (lvl, 2) + " dB)");
     expect (same, "ANALOGUE is repeatable: the same render twice is identical (a bounce is the same every time)");
+    // Audible in the timbre, not only in the phase (Roman, 2026-10-28: "разницы не слышно" with the first version):
+    // the top 2.5-8 kHz at least 2 dB softer.
+    const double topDig = db (bandRms (mid (dig), 48000, 2500, 8000)), topAna = db (bandRms (mid (ana), 48000, 2500, 8000));
+    expect (topDig - topAna > 2.0, "ANALOGUE is audibly softer on top: 2.5-8 kHz " + juce::String (topDig - topAna, 1) + " dB lower");
+    std::cout << "  ANALOGUE Reese Core: 2.5-8 kHz " << juce::String (topAna - topDig, 1) << " dB\n";
     std::cout << "  ANALOGUE Reese Core: change " << juce::String (10.0 * std::log10 (diff / ref), 1) << " dB, level " << juce::String (lvl, 2) << " dB\n";
 
     // A slight drift: a plain sine on A2, held 4 s - a few cents in Analogue, none in Digital.
@@ -835,13 +840,14 @@ void testAnalogue()
         }
         std::cout << "  " << (analog ? "ANALOGUE" : "DIGITAL") << " A2 pitch " << juce::String (lo, 2) << " .. " << juce::String (hi, 2) << " cents\n";
         if (analog)
-            expect (hi - lo > 0.5 && hi - lo < 12.0 && std::max (std::abs (lo), std::abs (hi)) < 10.0,
+            expect (hi - lo > 2.0 && hi - lo < 25.0 && std::max (std::abs (lo), std::abs (hi)) < 20.0,
                     "ANALOGUE drifts slightly: A2 wanders " + juce::String (hi - lo, 2) + " cents (" + juce::String (lo, 2) + ".." + juce::String (hi, 2) + ")");
         else
             expect (hi - lo < 0.2, "DIGITAL holds the pitch: A2 within " + juce::String (hi - lo, 3) + " cents");
     }
 
-    // Every factory preset in Analogue: finite, below 0 dBFS, the note within 1.5 dB of Digital.
+    // Every factory preset in Analogue: finite, below 0 dBFS, the note within 2 dB of Digital (resonant presets move
+    // a little with the per-note spread - part of the analogue liveliness; the stronger version of 2026-10-28).
     int bad = 0;
     juce::String worst;
     double worstDb = 0.0;
@@ -851,10 +857,10 @@ void testAnalogue()
         a.analog = true;
         const auto x = render (d, oneNote, 1.0), y = render (a, oneNote, 1.0);
         const double dl = db (rms (y, 0, 0, 28800)) - db (rms (x, 0, 0, 28800));
-        if (! finite (y) || peak (y) > 1.0 || std::abs (dl) > 1.5) ++bad;
+        if (! finite (y) || peak (y) > 1.0 || std::abs (dl) > 2.0) ++bad;
         if (std::abs (dl) > std::abs (worstDb)) { worstDb = dl; worst = pr.name; }
     }
-    expect (bad == 0, "every factory preset in ANALOGUE stays finite, under 0 dBFS and within 1.5 dB of DIGITAL ("
+    expect (bad == 0, "every factory preset in ANALOGUE stays finite, under 0 dBFS and within 2 dB of DIGITAL ("
                       + juce::String (bad) + " off; largest level change " + worst + " " + juce::String (worstDb, 2) + " dB)");
     std::cout << "  ANALOGUE library: largest level change " << worst << " " << juce::String (worstDb, 2) << " dB\n";
 }
