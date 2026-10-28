@@ -48,6 +48,7 @@ namespace id
     inline constexpr const char* detune     = "detune";
     inline constexpr const char* stereoDelay = "stereoDelay";
     inline constexpr const char* smoothStart = "smoothStart";
+    inline constexpr const char* analog = "analog";
 }
 
 enum class FilterMode { lp24, lp12, bp, hp };
@@ -90,6 +91,7 @@ struct SynthParams
     float bendRange = 2.0f;
     float stereoDelayMs = 0.0f; // 0..15 ms time offset between L and R above SPLIT (0 = off)
     float detune = 0.0f;      // 0..1: two extra detuned voices on the analog osc (reese), 0..30 cents
+    bool analog = false;      // ANALOGUE: slight pitch drift, per-note spread, warmth, softer top (2026-10-28)
     bool smoothStart = false; // SMOOTH: a note on a still-sounding one continues from its level (the old behaviour)
 };
 

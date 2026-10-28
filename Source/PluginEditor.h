@@ -219,6 +219,7 @@ private:
     pb::ui::Knob width, splitFreq, stereoDelay;
     pb::ui::Knob attack, decay, sustain, release, glide, master;
     pb::ui::Segment filterMode, distType, legato, smooth;
+    std::unique_ptr<pb::ui::Segment> analogMode; // DIGITAL | ANALOGUE, in the header (2026-10-28)
     pb::ui::WaveformView waveform;
     std::atomic<bool> soundDirty { true };
     int dirtyAge = -1;

@@ -1,0 +1,953 @@
+[ 15%] Building CXX object CMakeFiles/powerbass_tests.dir/Tests/PowerBassTests.cpp.o
+[ 15%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 15%] Building CXX object CMakeFiles/powerbass_tests.dir/Source/Params.cpp.o
+[ 21%] Building CXX object CMakeFiles/powerbass_tests.dir/Source/Presets.cpp.o
+[ 26%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_core/juce_core_CompilationTime.cpp.o
+[ 26%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/PowerBassTests.cpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/set:518:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/equal.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.cpp:48:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/Params.cpp:1:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/Params.h:3:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:215:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_StandardHeader.h:62:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1840:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platformIn file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/Presets.cpp:1:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/Presets.h:3:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/Params.h:3:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:215:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_StandardHeader.h:62:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1840:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: In file included from "The selected platform is no longer supported by libc++." [-W#warnings]
+ is no longer supported by libc++."
+      |    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.cpp:44:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:  204 | #  warning "T66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:215:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_StandardHeader.h:62:
+In file included from he selected/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1840:
+In file included from  pla/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+tform   204 | #  warning "The selected pis nlatform is no lono longerger supp suppoortertedd by by l libc++."
+      | ibc++   ^
+."
+      |    ^
+[ 31%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_core/juce_core.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.cpp:49:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/PowerBassTests.cpp:5:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:4:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/Filters.h:172:15: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  172 |         if (v == target) return;
+      |             ~ ^  ~~~~~~
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/PowerBassTests.cpp:5:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:562:17: warning: enumeration values 'saturate', 'hardClip', and 'crush' not explicitly handled in switch [-Wswitch-enum]
+  562 |         switch (t)
+      |                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:562:17: note: add missing switch cases
+  562 |         switch (t)
+      |                 ^
+  563 |         {
+  564 |             case DistType::fold:
+  565 |                 return 1.25 * g >= pi * 0.5 ? 1.0 : std::sin (1.25 * g);
+  566 |             case DistType::destroy:
+  567 |             {
+  568 |                 double peak = 0.0;
+  569 |                 for (int i = 1; i <= 128; ++i)
+  570 |                 {
+  571 |                     const double x = i / 128.0;
+  572 |                     peak = std::max ({ peak, std::abs (shape (x, g, t)), std::abs (shape (-x, g, t)) });
+  573 |                 }
+  574 |                 return peak;
+  575 |             }
+  576 |             default:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:624:30: warning: declaration shadows a field of 'pb::dsp::BassEngine' [-Wshadow]
+  624 |         void prepare (double sr)
+      |                              ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:692:12: note: previous declaration is here
+  692 |     double sr = 48000.0, osRate = 192000.0;
+      |            ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/PowerBassTests.cpp:98:29: warning: implicit conversion from 'const unsigned long' to 'double' may lose precision [-Wimplicit-int-float-conversion]
+   98 |     return std::sqrt (sum / std::max<size_t> (1, x.size()));
+      |                           ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/PowerBassTests.cpp:114:29: warning: implicit conversion from 'const unsigned long' to 'double' may lose precision [-Wimplicit-int-float-conversion]
+  114 |     return std::sqrt (sum / std::max<size_t> (1, x.size()));
+      |                           ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/PowerBassTests.cpp:762:6: warning: no previous prototype for function 'testPhraseTailSilence' [-Wmissing-prototypes]
+  762 | void testPhraseTailSilence()
+      |      ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/PowerBassTests.cpp:762:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  762 | void testPhraseTailSilence()
+      | ^
+      | static 
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/PowerBassTests.cpp:852:61: warning: 'createWriterFor' is deprecated: Use the function taking an AudioFormatWriterOptions instead. [-Wdeprecated-declarations]
+  852 |             std::unique_ptr<juce::AudioFormatWriter> w (wav.createWriterFor (st.get(), 48000, 2, 24, {}, 0));
+      |                                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_formats/format/juce_AudioFormat.h:178:7: note: 'createWriterFor' has been explicitly marked deprecated here
+  178 |     [[deprecated ("Use the function taking an AudioFormatWriterOptions instead.")]]
+      |       ^
+1 warning generated.
+[ 36%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.cpp:51:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/PowerBassTests.cpp:103:8: warning: unused function 'bandRmsSteep' [-Wunused-function]
+  103 | double bandRmsSteep (const std::vector<float>& x, double sr, double f1, double f2)
+      |        ^~~~~~~~~~~~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/PowerBassTests.cpp:201:13: warning: unused function 'preset' [-Wunused-function]
+  201 | SynthParams preset (const char* name)
+      |             ^~~~~~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/Presets.cpp:33:51: warning: missing field 'group' initializer [-Wmissing-field-initializers]
+   33 |             Preset p { d.name, d.category, {}, {} };
+      |                                                   ^
+2 warnings generated.
+[ 42%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.cpp:57:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.h:68:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.h:68:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.h:67:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+10 warnings generated.
+[ 47%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp:55:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.h:68:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.h:67:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 52%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp:92:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/utility:264:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 57%] Building C object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_graphics/juce_graphics_Sheenbidi.c.o
+[ 63%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_graphics/juce_graphics.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.cpp:50:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.h:67:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 68%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_events/juce_events.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.cpp:54:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 73%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_data_structures/juce_data_structures.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_data_structures/juce_data_structures.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_data_structures/juce_data_structures.cpp:44:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_data_structures/juce_data_structures.h:65:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:215:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_StandardHeader.h:62:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1840:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 78%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless_ara.cpp.o
+[ 84%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless_lv2_libs.cpp.o
+[ 89%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.cpp:47:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 94%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_dsp/juce_dsp.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_dsp/juce_dsp.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_dsp/juce_dsp.cpp:44:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_dsp/juce_dsp.h:67:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:215:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_StandardHeader.h:62:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1840:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+1 warning generated.
+1 warning generated.
+1 warning generated.
+1 warning generated.
+1 warning generated.
+[100%] Linking CXX executable powerbass_tests_artefacts/Release/powerbass_tests
+[100%] Built target powerbass_tests
+[  0%] Building CXX object CMakeFiles/PowerBass.dir/Source/Params.cpp.o
+[  2%] Building CXX object CMakeFiles/PowerBass.dir/Source/Presets.cpp.o
+[  4%] Building CXX object CMakeFiles/PowerBass.dir/Source/PluginProcessor.cpp.o
+[  7%] Building CXX object CMakeFiles/PowerBass.dir/Source/PluginEditor.cpp.o
+[  9%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.mm.o
+[ 12%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.cpp:1:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:3:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array:117:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/equal.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/Presets.cpp:1:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/Presets.h:3:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/Params.h:3:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:215:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_StandardHeader.h:62:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1840:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/Params.cpp:1:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/Params.h:3:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.h:6615:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h
+:215:
+  204 | #In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.cpp:1  wIn file included from arning :
+"The/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_StandardHeader.h:In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.h:3:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:3:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array:117:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/equal.h:13:
+In file included from  s62:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15el/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm::
+1840:
+In file included from ected pl/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+at"The selected platform is no longer supported by libc++." [-W#warnings]
+for/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204  204 | #  warning "The selected platfo:4:m is no longer supported by libc++."
+ warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+      |    ^
+rm is no longer suppo  204 | #  warnirtedng " bTheIn file included from  sely libecc++.ted platform is no longer /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.mm:35:
+In file included from "
+      |    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.cpp:57:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.h:68:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.hsupported b:68:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.h:67:
+In file included from y li/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+bc++."
+      |    ^In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from 
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.mm:/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.cpp:51:
+In file included from   204/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.h: | #  66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.hwarnin:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:g "The se208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from lecte/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:d platform is54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h: no 30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:longer15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204: sup4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+p  204 | #orted   wby larning "The seibc+lect+."
+      | ed platf   ^
+orm is no longer supported by libc++."
+      |    ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.cpp:1:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:6:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:4:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/Filters.h:172:15: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  172 |         if (v == target) return;
+      |             ~ ^  ~~~~~~
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.cpp:1:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:6:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:562:17: warning: enumeration values 'saturate', 'hardClip', and 'crush' not explicitly handled in switch [-Wswitch-enum]
+  562 |         switch (t)
+      |                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:562:17: note: add missing switch cases
+  562 |         switch (t)
+      |                 ^
+  563 |         {
+  564 |             case DistType::fold:
+  565 |                 return 1.25 * g >= pi * 0.5 ? 1.0 : std::sin (1.25 * g);
+  566 |             case DistType::destroy:
+  567 |             {
+  568 |                 double peak = 0.0;
+  569 |                 for (int i = 1; i <= 128; ++i)
+  570 |                 {
+  571 |                     const double x = i / 128.0;
+  572 |                     peak = std::max ({ peak, std::abs (shape (x, g, t)), std::abs (shape (-x, g, t)) });
+  573 |                 }
+  574 |                 return peak;
+  575 |             }
+  576 |             default:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:624:30: warning: declaration shadows a field of 'pb::dsp::BassEngine' [-Wshadow]
+  624 |         void prepare (double sr)
+      |                              ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:692:12: note: previous declaration is here
+  692 |     double sr = 48000.0, osRate = 192000.0;
+      |            ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.cpp:2:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.h:159:34: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  159 |     float scale() const { return getWidth() / 1032.0f; }
+      |                                  ^~~~~~~~~~ ~
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.cpp:1:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.h:3:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:6:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:4:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/Filters.h:172:15: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  172 |         if (v == target) return;
+      |             ~ ^  ~~~~~~
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.cpp:1:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.h:3:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:6:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:562:17: warning: enumeration values 'saturate', 'hardClip', and 'crush' not explicitly handled in switch [-Wswitch-enum]
+  562 |         switch (t)
+      |                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:562:17: note: add missing switch cases
+  562 |         switch (t)
+      |                 ^
+  563 |         {
+  564 |             case DistType::fold:
+  565 |                 return 1.25 * g >= pi * 0.5 ? 1.0 : std::sin (1.25 * g);
+  566 |             case DistType::destroy:
+  567 |             {
+  568 |                 double peak = 0.0;
+  569 |                 for (int i = 1; i <= 128; ++i)
+  570 |                 {
+  571 |                     const double x = i / 128.0;
+  572 |                     peak = std::max ({ peak, std::abs (shape (x, g, t)), std::abs (shape (-x, g, t)) });
+  573 |                 }
+  574 |                 return peak;
+  575 |             }
+  576 |             default:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:624:30: warning: declaration shadows a field of 'pb::dsp::BassEngine' [-Wshadow]
+  624 |         void prepare (double sr)
+      |                              ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:692:12: note: previous declaration is here
+  692 |     double sr = 48000.0, osRate = 192000.0;
+      |            ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.cpp:1:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.h:159:34: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  159 |     float scale() const { return getWidth() / 1032.0f; }
+      |                                  ^~~~~~~~~~ ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.cpp:287:60: warning: implicit conversion from 'const int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  287 |             p.lineTo (plot.getX() + plot.getWidth() * c / (cols - 1.0f), mid - juce::jlimit (-1.0f, 1.0f, maxV[(size_t) c]) * half);
+      |                                                            ^~~~ ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.cpp:287:55: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  287 |             p.lineTo (plot.getX() + plot.getWidth() * c / (cols - 1.0f), mid - juce::jlimit (-1.0f, 1.0f, maxV[(size_t) c]) * half);
+      |                                                     ~ ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.cpp:289:60: warning: implicit conversion from 'const int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  289 |             p.lineTo (plot.getX() + plot.getWidth() * c / (cols - 1.0f), mid - juce::jlimit (-1.0f, 1.0f, minV[(size_t) c]) * half);
+      |                                                            ^~~~ ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.cpp:289:55: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  289 |             p.lineTo (plot.getX() + plot.getWidth() * c / (cols - 1.0f), mid - juce::jlimit (-1.0f, 1.0f, minV[(size_t) c]) * half);
+      |                                                     ~ ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.cpp:360:21: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  360 |     const float s = getWidth() / 640.0f; // scales with the window
+      |                     ^~~~~~~~~~ ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.cpp:379:21: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  379 |     const float s = getWidth() / 640.0f;
+      |                     ^~~~~~~~~~ ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.cpp:961:22: warning: declaration shadows a field of 'PowerBassEditor' [-Wshadow]
+  961 |     for (const auto& sub : subtitles)
+      |                      ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.h:215:25: note: previous declaration is here
+  215 |     pb::ui::Knob shape, sub, oscDrive, fmAmount, fmRatio, fmDecay, oscMix;
+      |                         ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.cpp:1034:88: warning: declaration shadows a local variable [-Wshadow-uncaptured-local]
+ 1034 |         const int n = (int) others.size(), rows = std::max (1, (n + cols - 1) / cols), rowGap = S (8);
+      |                                                                                        ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.cpp:1010:32: note: previous declaration is here
+ 1010 |     const int gutter = S (28), rowGap = S (14);
+      |                                ^
+1 warning generated.
+[ 14%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp:55:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.h:68:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.h:67:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+5 warnings generated.
+[ 17%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp.o
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/Presets.cpp:33:51: warning: missing field 'group' initializer [-Wmissing-field-initializers]
+   33 |             Preset p { d.name, d.category, {}, {} };
+      |                                                   ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp:92:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/utility:264:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+13 warnings generated.
+[ 19%] Building C object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_graphics/juce_graphics_Sheenbidi.c.o
+2 warnings generated.
+[ 21%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_graphics/juce_graphics.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.cpp:50:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.h:67:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+[ 24%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_events/juce_events.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.cpp:54:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 26%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_core/juce_core_CompilationTime.cpp.o
+[ 29%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_core/juce_core.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.cpp:49:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.mm:35:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp:61:2: warning: This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored [-W#pragma-messages]
+   61 |  JUCE_COMPILER_WARNING ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_PlatformDefs.h:292:38: note: expanded from macro 'JUCE_COMPILER_WARNING'
+  292 |  #define JUCE_COMPILER_WARNING(msg)  _Pragma (JUCE_STRINGIFY (message (msg)))
+      |                                      ^
+<scratch space>:146:2: note: expanded from here
+  146 |  message ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+1 warning generated.
+[ 31%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_data_structures/juce_data_structures.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_data_structures/juce_data_structures.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_data_structures/juce_data_structures.cpp:44:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_data_structures/juce_data_structures.h:65:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:215:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_StandardHeader.h:62:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1840:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 34%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless_ara.cpp.o
+[ 36%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless_lv2_libs.cpp.o
+[ 39%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.cpp:47:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 41%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.cpp:44:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:215:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_StandardHeader.h:62:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1840:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 43%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_utils/juce_audio_utils.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_utils/juce_audio_utils.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_utils/juce_audio_utils.cpp:49:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_utils/juce_audio_utils.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.h:68:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.h:67:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 46%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.cpp:48:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 48%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_devices/juce_audio_devices.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_devices/juce_audio_devices.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_devices/juce_audio_devices.cpp:58:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_devices/juce_audio_devices.h:67:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 51%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_dsp/juce_dsp.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_dsp/juce_dsp.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_dsp/juce_dsp.cpp:44:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_dsp/juce_dsp.h:67:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:215:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_StandardHeader.h:62:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1840:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+1 warning generated.
+1 warning generated.
+1 warning generated.
+1 warning generated.
+2 warnings generated.
+[ 53%] Linking CXX static library PowerBass_artefacts/Release/libPowerBass_SharedCode.a
+[ 53%] Built target PowerBass
+[ 60%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_utils/juce_audio_utils.mm.o
+[ 60%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.mm.o
+[ 60%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/Tests/WrapperTests.cpp.o
+[ 65%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp.o
+[ 65%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.mm.o
+[ 68%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:4:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:3:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array:117:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/equal.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.cpp:51:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp:92:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/utility:264:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_utils/juce_audio_utils.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_utils/juce_audio_utils.cpp:49:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_utils/juce_audio_utils.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.h:68:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.h:67:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp:55:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.h:68:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.h:67:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.cpp:57:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.h:68:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.h:68:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.h:67:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+libc++."
+      |    ^
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:4:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:6:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:4:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/Filters.h:172:15: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  172 |         if (v == target) return;
+      |             ~ ^  ~~~~~~
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:4:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:6:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:562:17: warning: enumeration values 'saturate', 'hardClip', and 'crush' not explicitly handled in switch [-Wswitch-enum]
+  562 |         switch (t)
+      |                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:562:17: note: add missing switch cases
+  562 |         switch (t)
+      |                 ^
+  563 |         {
+  564 |             case DistType::fold:
+  565 |                 return 1.25 * g >= pi * 0.5 ? 1.0 : std::sin (1.25 * g);
+  566 |             case DistType::destroy:
+  567 |             {
+  568 |                 double peak = 0.0;
+  569 |                 for (int i = 1; i <= 128; ++i)
+  570 |                 {
+  571 |                     const double x = i / 128.0;
+  572 |                     peak = std::max ({ peak, std::abs (shape (x, g, t)), std::abs (shape (-x, g, t)) });
+  573 |                 }
+  574 |                 return peak;
+  575 |             }
+  576 |             default:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:624:30: warning: declaration shadows a field of 'pb::dsp::BassEngine' [-Wshadow]
+  624 |         void prepare (double sr)
+      |                              ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:692:12: note: previous declaration is here
+  692 |     double sr = 48000.0, osRate = 192000.0;
+      |            ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:5:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.h:159:34: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  159 |     float scale() const { return getWidth() / 1032.0f; }
+      |                                  ^~~~~~~~~~ ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:667:5: warning: no previous prototype for function 'snapshot' [-Wmissing-prototypes]
+  667 | int snapshot (const juce::File& dir)
+      |     ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:667:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  667 | int snapshot (const juce::File& dir)
+      | ^
+      | static 
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.mm:35:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp:61:2: warning: This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored [-W#pragma-messages]
+   61 |  JUCE_COMPILER_WARNING ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_PlatformDefs.h:292:38: note: expanded from macro 'JUCE_COMPILER_WARNING'
+  292 |  #define JUCE_COMPILER_WARNING(msg)  _Pragma (JUCE_STRINGIFY (message (msg)))
+      |                                      ^
+<scratch space>:146:2: note: expanded from here
+  146 |  message ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+6 warnings generated.
+[ 70%] Building C object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_graphics/juce_graphics_Sheenbidi.c.o
+[ 73%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_graphics/juce_graphics.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.cpp:50:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.h:67:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 75%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_events/juce_events.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.cpp:54:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 78%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_core/juce_core_CompilationTime.cpp.o
+1 warning generated.
+[ 80%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_core/juce_core.mm.o
+[ 82%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_data_structures/juce_data_structures.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.cpp:49:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_data_structures/juce_data_structures.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_data_structures/juce_data_structures.cpp:44:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_data_structures/juce_data_structures.h:65:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:215:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_StandardHeader.h:62:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1840:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 85%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless_ara.cpp.o
+[ 87%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless_lv2_libs.cpp.o
+[ 90%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.cpp:47:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 92%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.cpp:44:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:215:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_StandardHeader.h:62:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1840:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 95%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.cpp:48:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.h:66:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+[ 97%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_devices/juce_audio_devices.mm.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_devices/juce_audio_devices.mm:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_devices/juce_audio_devices.cpp:58:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_devices/juce_audio_devices.h:67:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.h:64:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.h:208:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/native/juce_BasicNativeHeaders.h:60:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CoreFoundation.h:54:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework/Headers/CFBase.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stddef.h:30:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+1 warning generated.
+1 warning generated.
+1 warning generated.
+1 warning generated.
+1 warning generated.
+2 warnings generated.
+[100%] Linking CXX executable powerbass_wrapper_tests_artefacts/Release/powerbass_wrapper_tests
+[100%] Built target powerbass_wrapper_tests

@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-27",
+  "author": "Codex",
+  "head": "cb215f3e9d6e18c1695053dd647fee5aba18d03b",
+  "before": {
+    "Source/PluginProcessor.h": "aa39cfbc7330dd6b9272bd9d820e81a81210a0547b6531d759ba67d56b1f141e",
+    "Source/PluginProcessor.cpp": "c99f17281b19e791971a3a8181e77b06acb1ec4fee6e5aaec95b91bfb68d4cde",
+    "Source/DSP/BassEngine.h": "d61d29083552bd4c0e6bcb94d41cc820eecfe4d516ff25e39e1a92e80643bfd7",
+    "Tests/WrapperTests.cpp": "40bba120f0567ef3fa77ee985f40b561ce2bc26360d3c48ddea62188e09db87a",
+    "Tests/PowerBassTests.cpp": "aa9ce9c7c5c91d28cc2e5323acb11e131f39b95deccb299e422e56186a876df6"
+  },
+  "symptom": "Logic Pro: фон появляется после MIDI-ноты, не затухает, заметнее с эффектами; пользователь подозревает SMOOTH, PREVIEW не использует.",
+  "installed_au_before_sha256": "be2005a08725080ffc824cae862198d48ff023953d2acda2db4717537555f619",
+  "baseline_au": {
+    "checks": 18,
+    "noteoff_silent": 12,
+    "reset_stuck": 6,
+    "sr": [
+      44100,
+      48000,
+      96000
+    ]
+  },
+  "verified": {
+    "dsp": "3789/3789",
+    "wrapper": "142/142",
+    "original_host_flush": "FAILED 8/12, four silence assertions fail",
+    "fixed_host_flush": "12/12",
+    "packaged_au_native_coreaudio": "18/18 silent after noteoff/reset, 44.1/48/96 kHz, SMOOTH OFF/ON",
+    "installed_au_unchanged": true,
+    "Logic_project_opened_or_modified": false,
+    "architecture": "arm64",
+    "Windows_checked": false,
+    "Intel_checked": false
+  },
+  "artifacts_sha256": {
+    "Сборки/Кандидаты/2026-10-27 — Сброс голоса/macOS arm64/PowerBass.component/Contents/Info.plist": "a5284834a34f3807b5ad55b46259476acf2b662bcbb6bfb206e8f02cc566b851",
+    "Сборки/Кандидаты/2026-10-27 — Сброс голоса/macOS arm64/PowerBass.component/Contents/PkgInfo": "d06a80ba92de0833d0ed03de1b02b7c8913f126d9e8c8931b190765dd5d83b11",
+    "Сборки/Кандидаты/2026-10-27 — Сброс голоса/macOS arm64/PowerBass.component/Contents/_CodeSignature/CodeResources": "6686de10a28a2fe11b36cbb86dcbacc827cfc4ea116b4dabf1845e5aee629e9b",
+    "Сборки/Кандидаты/2026-10-27 — Сброс голоса/macOS arm64/PowerBass.component/Contents/MacOS/PowerBass": "cf81b40d0ccecb32d1c6a5bccf0937492b09d997e7abc2c45f5308d31b0e2536",
+    "Сборки/Кандидаты/2026-10-27 — Сброс голоса/macOS arm64/PowerBass.vst3/Contents/Info.plist": "59f17827256400062dcad28b64a211bafd4c1acf801b99a2f7e2491f42fdae71",
+    "Сборки/Кандидаты/2026-10-27 — Сброс голоса/macOS arm64/PowerBass.vst3/Contents/PkgInfo": "d06a80ba92de0833d0ed03de1b02b7c8913f126d9e8c8931b190765dd5d83b11",
+    "Сборки/Кандидаты/2026-10-27 — Сброс голоса/macOS arm64/PowerBass.vst3/Contents/_CodeSignature/CodeResources": "6d7b35b5b73a0d7c01f9c157fd58e6d74235ee3664bb324f10f50d998c4e4537",
+    "Сборки/Кандидаты/2026-10-27 — Сброс голоса/macOS arm64/PowerBass.vst3/Contents/MacOS/PowerBass": "590af021fda37aa503c3378260e7d0aa6480ae360011d02c41c0ad66b33a5e83",
+    "Сборки/Кандидаты/2026-10-27 — Сброс голоса/macOS arm64/PowerBass.vst3/Contents/Resources/moduleinfo.json": "0a0592ff6bd5c6469b437d83eee63678222d87c92f872e3546c41fa8efcc1033"
+  },
+  "source_after": {
+    "Source/PluginProcessor.h": "fe35050b541aa89aaed6a925c16f606376707313d2692ab4cc10b184290a4abf",
+    "Source/PluginProcessor.cpp": "6ec34841b22b80be4faac9a7809f5bb0ae3aae057c68bb9902aa8b8a87093cfb",
+    "Tests/PowerBassTests.cpp": "591892292611151572a1711a76d9fd34c04eecf7238bb82f973f892bf422c8c4",
+    "Tests/WrapperTests.cpp": "c65c056ab629f2218032c4655058af8d445c1180886db798246c26647a5ef7c2"
+  },
+  "exit_codes": {
+    "configure": 0,
+    "build": 0,
+    "phrase_tail_baseline": 0,
+    "host_flush_red": 1,
+    "host_flush_green": 0,
+    "dsp": 0,
+    "wrapper": 0,
+    "installed_au_probe": 0,
+    "packaged_au_probe": 0,
+    "packaged_codesign_verify": 0
+  }
+}

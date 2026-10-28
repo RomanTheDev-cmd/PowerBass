@@ -894,6 +894,10 @@ PowerBassEditor::PowerBassEditor (PowerBassProcessor& p)
     waveform.onClick = [this] { proc.previewRequested = true; waveform.flash(); };
     for (const auto& pid : pb::allParamIds())
         proc.state.addParameterListener (pid, this);
+    analogMode = std::make_unique<pb::ui::Segment> (p.state, pb::id::analog, juce::StringArray { "DIGITAL", "ANALOGUE" }, "DIGITAL: the exact sound. ANALOGUE: slight pitch drift, every note a little different, warmth and a softer top");
+    analogMode->setComponentID ("analog");
+    addAndMakeVisible (*analogMode);
+    resized();
     renderWaveform();
     startTimerHz (30);
 }
@@ -985,6 +989,12 @@ void PowerBassEditor::resized()
     advancedButton.setBounds (header.removeFromRight (S (96)));
     header.removeFromRight (S (8));
     previewButton.setBounds (header.removeFromRight (S (86)));
+    if (analogMode != nullptr) // left, after the logo (the preset name owns the centre)
+    {
+        auto left = getLocalBounds().removeFromTop (S (60)).reduced (S (24), S (14));
+        left.removeFromLeft (S (136));
+        analogMode->setBounds (left.removeFromLeft (S (164)));
+    }
     auto centre = getLocalBounds().removeFromTop (S (60)).withSizeKeepingCentre (S (420), S (32));
     prevButton.setBounds (centre.removeFromLeft (S (32)));
     saveButton.setBounds (centre.removeFromRight (S (64)));

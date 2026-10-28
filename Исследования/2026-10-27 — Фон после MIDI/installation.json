@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-27",
+  "author": "Codex",
+  "authorization": "Роман: примени",
+  "architecture": "arm64",
+  "records": [
+    {
+      "destination": "/Users/roman/Library/Audio/Plug-Ins/Components/PowerBass.component",
+      "name": "PowerBass.component",
+      "backup": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/Резервные копии/2026-10-27 до установки сброса голоса 025908/Components/PowerBass.component",
+      "before": {
+        "Contents/Info.plist": "a5284834a34f3807b5ad55b46259476acf2b662bcbb6bfb206e8f02cc566b851",
+        "Contents/PkgInfo": "d06a80ba92de0833d0ed03de1b02b7c8913f126d9e8c8931b190765dd5d83b11",
+        "Contents/_CodeSignature/CodeResources": "6686de10a28a2fe11b36cbb86dcbacc827cfc4ea116b4dabf1845e5aee629e9b",
+        "Contents/MacOS/PowerBass": "be2005a08725080ffc824cae862198d48ff023953d2acda2db4717537555f619"
+      },
+      "after": {
+        "Contents/Info.plist": "a5284834a34f3807b5ad55b46259476acf2b662bcbb6bfb206e8f02cc566b851",
+        "Contents/PkgInfo": "d06a80ba92de0833d0ed03de1b02b7c8913f126d9e8c8931b190765dd5d83b11",
+        "Contents/_CodeSignature/CodeResources": "6686de10a28a2fe11b36cbb86dcbacc827cfc4ea116b4dabf1845e5aee629e9b",
+        "Contents/MacOS/PowerBass": "cf81b40d0ccecb32d1c6a5bccf0937492b09d997e7abc2c45f5308d31b0e2536"
+      },
+      "original_backup": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/Резервные копии/2026-10-27 до установки сброса голоса 025908/Components/PowerBass.component — оригинал"
+    },
+    {
+      "destination": "/Users/roman/Library/Audio/Plug-Ins/VST3/PowerBass.vst3",
+      "name": "PowerBass.vst3",
+      "backup": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/Резервные копии/2026-10-27 до установки сброса голоса 025908/VST3/PowerBass.vst3",
+      "before": {
+        "Contents/Info.plist": "59f17827256400062dcad28b64a211bafd4c1acf801b99a2f7e2491f42fdae71",
+        "Contents/PkgInfo": "d06a80ba92de0833d0ed03de1b02b7c8913f126d9e8c8931b190765dd5d83b11",
+        "Contents/_CodeSignature/CodeResources": "6d7b35b5b73a0d7c01f9c157fd58e6d74235ee3664bb324f10f50d998c4e4537",
+        "Contents/MacOS/PowerBass": "d4834e70051056990f0866437c27a9d0af6b9d21764d07f5e70f8ab934314002",
+        "Contents/Resources/moduleinfo.json": "0a0592ff6bd5c6469b437d83eee63678222d87c92f872e3546c41fa8efcc1033"
+      },
+      "after": {
+        "Contents/Info.plist": "59f17827256400062dcad28b64a211bafd4c1acf801b99a2f7e2491f42fdae71",
+        "Contents/PkgInfo": "d06a80ba92de0833d0ed03de1b02b7c8913f126d9e8c8931b190765dd5d83b11",
+        "Contents/_CodeSignature/CodeResources": "6d7b35b5b73a0d7c01f9c157fd58e6d74235ee3664bb324f10f50d998c4e4537",
+        "Contents/MacOS/PowerBass": "590af021fda37aa503c3378260e7d0aa6480ae360011d02c41c0ad66b33a5e83",
+        "Contents/Resources/moduleinfo.json": "0a0592ff6bd5c6469b437d83eee63678222d87c92f872e3546c41fa8efcc1033"
+      },
+      "original_backup": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/Резервные копии/2026-10-27 до установки сброса голоса 025908/VST3/PowerBass.vst3 — оригинал"
+    }
+  ],
+  "verification": {
+    "native_installed_AU": "18/18, exact silence after Note Off and Reset, 44.1/48/96 kHz, SMOOTH OFF/ON",
+    "auval": "AU VALIDATION SUCCEEDED",
+    "bundle_sha256": "matches verified candidate",
+    "codesign": "strict verify passed for installed AU and VST3",
+    "Logic_project_modified": false,
+    "actual_user_FX_chain_verified": false
+  }
+}

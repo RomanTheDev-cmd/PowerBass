@@ -757,8 +757,116 @@ void testPresetFiles()
 }
 }
 
+// A completed MIDI phrase must reach silence with SMOOTH as well as full retrigger.
+// Include overlapping equal keys: each strike receives its own, slightly late note-off.
+void testPhraseTailSilence()
+{
+    for (bool smooth : { false, true })
+        for (const auto& pr : factoryPresets())
+        {
+            auto p = paramsFromSnapshot (pr.values);
+            p.smoothStart = smooth;
+            const std::vector<Note> notes { { 0.0, 0.201, 36 }, { 0.2, 0.401, 36 },
+                                            { 0.4, 0.601, 43 }, { 0.6, 0.801, 39 } };
+            const double seconds = 0.801 + std::max (2.0, 2.6 * p.releaseMs * 0.001);
+            const auto a = render (p, notes, seconds, 48000, 173);
+            const int from = a.getNumSamples() - 4800;
+            const double tail = std::max (a.getMagnitude (0, from, 4800), a.getMagnitude (1, from, 4800));
+            expect (finite (a) && tail < 1.0e-7,
+                    pr.name + (smooth ? " SMOOTH" : " retrigger") + ": silence after MIDI phrase ("
+                        + juce::String (db (tail), 1) + " dBFS)");
+        }
+}
+
+
+// Pitch of a plain tone in [t0, t1] (positive zero crossings, interpolated), in cents against ref Hz.
+double toneCents (const juce::AudioBuffer<float>& a, double t0, double t1, double ref)
+{
+    std::vector<double> z;
+    for (int i = (int) (t0 * 48000) + 1; i < (int) (t1 * 48000); ++i)
+    {
+        const double x0 = a.getSample (0, i - 1), x1 = a.getSample (0, i);
+        if (x0 < 0.0 && x1 >= 0.0) z.push_back (i - 1 + x0 / (x0 - x1));
+    }
+    return z.size() < 3 ? 0.0 : 1200.0 * std::log2 (48000.0 * (double) (z.size() - 1) / (z.back() - z.front()) / ref);
+}
+
+// DIGITAL | ANALOGUE (Roman, 2026-10-28): "при переключении должен быть легкий дрейф и прочие особенности аналога,
+// соответственно то что сейчас это digital". Every other test runs in Digital, the sound as it was.
+void testAnalogue()
+{
+    const auto& f = factoryPresets();
+    SynthParams reese;
+    for (const auto& pr : f) if (pr.name == "Reese Core") reese = paramsFromSnapshot (pr.values);
+    auto an = reese; an.analog = true;
+    const auto riff = patternNotes (36, 0, 150.0, 2.0);
+    const auto dig = render (reese, riff, 2.0), ana = render (an, riff, 2.0), ana2 = render (an, riff, 2.0);
+    const int n = dig.getNumSamples();
+    double diff = 0.0, ref = 0.0;
+    bool same = true;
+    for (int c = 0; c < 2; ++c)
+        for (int i = 0; i < n; ++i)
+        {
+            diff += std::pow ((double) ana.getSample (c, i) - dig.getSample (c, i), 2.0);
+            ref += std::pow ((double) dig.getSample (c, i), 2.0);
+            same = same && ana.getSample (c, i) == ana2.getSample (c, i);
+        }
+    expect (10.0 * std::log10 (diff / ref) > -30.0, "ANALOGUE audibly changes Reese Core (" + juce::String (10.0 * std::log10 (diff / ref), 1) + " dB)");
+    const double lvl = db (rms (ana, 0, 0, n)) - db (rms (dig, 0, 0, n));
+    expect (std::abs (lvl) < 1.0, "ANALOGUE keeps the level of Reese Core within 1 dB (" + juce::String (lvl, 2) + " dB)");
+    expect (same, "ANALOGUE is repeatable: the same render twice is identical (a bounce is the same every time)");
+    std::cout << "  ANALOGUE Reese Core: change " << juce::String (10.0 * std::log10 (diff / ref), 1) << " dB, level " << juce::String (lvl, 2) << " dB\n";
+
+    // A slight drift: a plain sine on A2, held 4 s - a few cents in Analogue, none in Digital.
+    SynthParams s = reese;
+    s.shape = 0.0f; s.fmAmount = 0.0f; s.oscMix = 0.0f; s.sub = 0.0f; s.distMix = 0.0f; s.detune = 0.0f; s.punch = 0.0f; s.oscDrive = 0.0f;
+    s.cutoffHz = 18000.0f; s.resonance = 0.0f; s.envAmount = 0.0f; s.dark = 0.0f; s.bite = 0.0f; s.width = 0.0f;
+    s.attackMs = 1.0f; s.decayMs = 5000.0f; s.sustain = 1.0f; s.releaseMs = 50.0f;
+    const std::vector<Note> held { { 0.0, 4.2, 45 } };
+    for (bool analog : { false, true })
+    {
+        s.analog = analog;
+        const auto a = render (s, held, 4.3);
+        double lo = 1.0e9, hi = -1.0e9;
+        for (double t = 0.3; t + 0.25 <= 4.1; t += 0.25)
+        {
+            const double c = toneCents (a, t, t + 0.25, 110.0);
+            lo = std::min (lo, c); hi = std::max (hi, c);
+        }
+        std::cout << "  " << (analog ? "ANALOGUE" : "DIGITAL") << " A2 pitch " << juce::String (lo, 2) << " .. " << juce::String (hi, 2) << " cents\n";
+        if (analog)
+            expect (hi - lo > 0.5 && hi - lo < 12.0 && std::max (std::abs (lo), std::abs (hi)) < 10.0,
+                    "ANALOGUE drifts slightly: A2 wanders " + juce::String (hi - lo, 2) + " cents (" + juce::String (lo, 2) + ".." + juce::String (hi, 2) + ")");
+        else
+            expect (hi - lo < 0.2, "DIGITAL holds the pitch: A2 within " + juce::String (hi - lo, 3) + " cents");
+    }
+
+    // Every factory preset in Analogue: finite, below 0 dBFS, the note within 1.5 dB of Digital.
+    int bad = 0;
+    juce::String worst;
+    double worstDb = 0.0;
+    for (const auto& pr : f)
+    {
+        auto d = paramsFromSnapshot (pr.values), a = d;
+        a.analog = true;
+        const auto x = render (d, oneNote, 1.0), y = render (a, oneNote, 1.0);
+        const double dl = db (rms (y, 0, 0, 28800)) - db (rms (x, 0, 0, 28800));
+        if (! finite (y) || peak (y) > 1.0 || std::abs (dl) > 1.5) ++bad;
+        if (std::abs (dl) > std::abs (worstDb)) { worstDb = dl; worst = pr.name; }
+    }
+    expect (bad == 0, "every factory preset in ANALOGUE stays finite, under 0 dBFS and within 1.5 dB of DIGITAL ("
+                      + juce::String (bad) + " off; largest level change " + worst + " " + juce::String (worstDb, 2) + " dB)");
+    std::cout << "  ANALOGUE library: largest level change " << worst << " " << juce::String (worstDb, 2) << " dB\n";
+}
+
 int main (int argc, char** argv)
 {
+    if (argc > 1 && juce::String (argv[1]) == "--tail-check")
+    {
+        testPhraseTailSilence();
+        std::cout << (failures == 0 ? "PASS " : "FAILED ") << (checks - failures) << "/" << checks << " tail checks\n";
+        return failures == 0 ? 0 : 1;
+    }
     // No GUI initialisation: the tests are pure DSP and file I/O (and run under Wine).
     if (argc > 1 && juce::String (argv[1]) == "--dump-presets")
     {
@@ -836,6 +944,8 @@ int main (int argc, char** argv)
     testNoClicks();
     testGlideAndLegato();
     testEveryNoteHasFullAttack();
+    testAnalogue();
+    testPhraseTailSilence();
     testCharacterAndModes();
     testDetune();
     testDriveSweepIsSmooth();

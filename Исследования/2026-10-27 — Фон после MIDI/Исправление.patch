@@ -1,0 +1,168 @@
+diff --git a/Source/PluginProcessor.cpp b/Source/PluginProcessor.cpp
+index 99f3151..53db4aa 100644
+--- a/Source/PluginProcessor.cpp
++++ b/Source/PluginProcessor.cpp
+@@ -17,6 +17,7 @@ bool PowerBassProcessor::isBusesLayoutSupported (const BusesLayout& layouts) con
+ 
+ void PowerBassProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+ {
++    previewSamplesLeft = 0;
+     preparedRate = sampleRate; // not getSampleRate(): it is only valid if the host set it first
+     engine.prepare (sampleRate, std::max (32, std::min (samplesPerBlock, 1024)), pb::readParams (state));
+     monoScratch.setSize (1, std::max (512, samplesPerBlock));
+@@ -26,6 +27,21 @@ void PowerBassProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+     setLatencySamples (reportedLatency);
+ }
+ 
++void PowerBassProcessor::reset()
++{
++    // AU Reset can replace the final MIDI note-off. Clear voices AND filter/delay tails.
++    engine.reset();
++    previewSamplesLeft = 0;
++    previewRequested.store (false);
++    meterL.store (0.0f);
++    meterR.store (0.0f);
++}
++
++void PowerBassProcessor::releaseResources()
++{
++    reset();
++}
++
+ void PowerBassProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
+ {
+     juce::ScopedNoDenormals noDenormals;
+diff --git a/Source/PluginProcessor.h b/Source/PluginProcessor.h
+index 3b10c76..3ed52d8 100644
+--- a/Source/PluginProcessor.h
++++ b/Source/PluginProcessor.h
+@@ -13,7 +13,8 @@ public:
+     ~PowerBassProcessor() override = default;
+ 
+     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
+-    void releaseResources() override {}
++    void releaseResources() override;
++    void reset() override;
+     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
+     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
+     using AudioProcessor::processBlock;
+diff --git a/Tests/PowerBassTests.cpp b/Tests/PowerBassTests.cpp
+index 238258b..a8491e3 100644
+--- a/Tests/PowerBassTests.cpp
++++ b/Tests/PowerBassTests.cpp
+@@ -757,8 +757,35 @@ void testPresetFiles()
+ }
+ }
+ 
++// A completed MIDI phrase must reach silence with SMOOTH as well as full retrigger.
++// Include overlapping equal keys: each strike receives its own, slightly late note-off.
++void testPhraseTailSilence()
++{
++    for (bool smooth : { false, true })
++        for (const auto& pr : factoryPresets())
++        {
++            auto p = paramsFromSnapshot (pr.values);
++            p.smoothStart = smooth;
++            const std::vector<Note> notes { { 0.0, 0.201, 36 }, { 0.2, 0.401, 36 },
++                                            { 0.4, 0.601, 43 }, { 0.6, 0.801, 39 } };
++            const double seconds = 0.801 + std::max (2.0, 2.6 * p.releaseMs * 0.001);
++            const auto a = render (p, notes, seconds, 48000, 173);
++            const int from = a.getNumSamples() - 4800;
++            const double tail = std::max (a.getMagnitude (0, from, 4800), a.getMagnitude (1, from, 4800));
++            expect (finite (a) && tail < 1.0e-7,
++                    pr.name + (smooth ? " SMOOTH" : " retrigger") + ": silence after MIDI phrase ("
++                        + juce::String (db (tail), 1) + " dBFS)");
++        }
++}
++
+ int main (int argc, char** argv)
+ {
++    if (argc > 1 && juce::String (argv[1]) == "--tail-check")
++    {
++        testPhraseTailSilence();
++        std::cout << (failures == 0 ? "PASS " : "FAILED ") << (checks - failures) << "/" << checks << " tail checks\n";
++        return failures == 0 ? 0 : 1;
++    }
+     // No GUI initialisation: the tests are pure DSP and file I/O (and run under Wine).
+     if (argc > 1 && juce::String (argv[1]) == "--dump-presets")
+     {
+@@ -836,6 +863,7 @@ int main (int argc, char** argv)
+     testNoClicks();
+     testGlideAndLegato();
+     testEveryNoteHasFullAttack();
++    testPhraseTailSilence();
+     testCharacterAndModes();
+     testDetune();
+     testDriveSweepIsSmooth();
+diff --git a/Tests/WrapperTests.cpp b/Tests/WrapperTests.cpp
+index 2f0d8dd..e1cdac7 100644
+--- a/Tests/WrapperTests.cpp
++++ b/Tests/WrapperTests.cpp
+@@ -515,6 +515,46 @@ void testPreview()
+     expect (tail < 1.0e-3, "PREVIEW note is released (no hanging note)");
+ }
+ 
++// A host can flush a voice without delivering the last note-off (AU Reset / deactivation).
++// This must clear the whole signal path and pending preview, independently of SMOOTH.
++void testHostFlushClearsVoice()
++{
++    for (bool smooth : { false, true })
++        for (bool deactivate : { false, true })
++        {
++            PowerBassProcessor p;
++            setPlain (p, pb::id::smoothStart, smooth ? 1.0f : 0.0f);
++            p.prepareToPlay (48000, 512);
++            juce::AudioBuffer<float> buf (2, 512);
++            double body = 0.0;
++            for (int b = 0; b < 30; ++b)
++            {
++                juce::MidiBuffer midi;
++                if (b == 0) midi.addEvent (juce::MidiMessage::noteOn (1, 36, 0.9f), 0);
++                p.processBlock (buf, midi);
++                body = std::max (body, (double) buf.getMagnitude (0, 0, 512));
++            }
++            expect (body > 0.05, "host flush control: a held note is sounding");
++            p.previewRequested = true;
++            if (deactivate) p.releaseResources(); else p.reset();
++            double tail = 0.0;
++            for (int b = 0; b < 200; ++b)
++            {
++                juce::MidiBuffer midi;
++                p.processBlock (buf, midi);
++                tail = std::max ({ tail, (double) buf.getMagnitude (0, 0, 512),
++                                       (double) buf.getMagnitude (1, 0, 512) });
++            }
++            expect (tail == 0.0, juce::String (deactivate ? "releaseResources" : "reset")
++                                        + (smooth ? " SMOOTH" : " retrigger")
++                                        + " clears voice and pending preview (peak " + juce::String (tail, 6) + ")");
++            juce::MidiBuffer next;
++            next.addEvent (juce::MidiMessage::noteOn (1, 43, 0.9f), 0);
++            p.processBlock (buf, next);
++            expect (buf.getMagnitude (0, 0, 512) > 0.01f, "a new note plays after host flush");
++        }
++}
++
+ // The preset browser replaces the nested preset menus: one panel, one list, filters on top.
+ void testPresetBrowser()
+ {
+@@ -716,6 +756,12 @@ int snapshot (const juce::File& dir)
+ 
+ int main (int argc, char** argv)
+ {
++    if (argc > 1 && juce::String (argv[1]) == "--host-flush-check")
++    {
++        testHostFlushClearsVoice();
++        std::cout << (failures == 0 ? "PASS " : "FAILED ") << (checks - failures) << "/" << checks << " host flush checks\n";
++        return failures == 0 ? 0 : 1;
++    }
+     if (argc > 2 && juce::String (argv[1]) == "--snapshot")
+         return snapshot (juce::File (juce::String::fromUTF8 (argv[2])));
+     testDefaultsMatchDefaultPreset();
+@@ -732,6 +778,7 @@ int main (int argc, char** argv)
+     testAutomation();
+     testMonoBus();
+     testPreview();
++    testHostFlushClearsVoice();
+     testEditor();
+     testBlockLayout();
+     testWaveformView();
