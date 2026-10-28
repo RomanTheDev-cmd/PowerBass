@@ -1,0 +1,20 @@
+1. Dark Pulse 01
+2. Dark Pulse 02
+3. Dark Pulse 03
+4. Dark Pulse 04
+5. Dark Pulse 05
+6. Dark Pulse 06
+7. Dark Pulse 07
+8. Dark Pulse 08
+9. Dark Pulse 09
+10. Dark Pulse 10
+11. Hard Pulse 01
+12. Hard Pulse 02
+13. Hard Pulse 03
+14. Hard Pulse 04
+15. Hard Pulse 05
+16. Raw Heavy
+17. Raw Line
+18. Raw Pulse
+19. Raw Round
+20. Raw Simple
