@@ -515,6 +515,46 @@ void testPreview()
     expect (tail < 1.0e-3, "PREVIEW note is released (no hanging note)");
 }
 
+// A host can flush a voice without delivering the last note-off (AU Reset / deactivation).
+// This must clear the whole signal path and pending preview, independently of SMOOTH.
+void testHostFlushClearsVoice()
+{
+    for (bool smooth : { false, true })
+        for (bool deactivate : { false, true })
+        {
+            PowerBassProcessor p;
+            setPlain (p, pb::id::smoothStart, smooth ? 1.0f : 0.0f);
+            p.prepareToPlay (48000, 512);
+            juce::AudioBuffer<float> buf (2, 512);
+            double body = 0.0;
+            for (int b = 0; b < 30; ++b)
+            {
+                juce::MidiBuffer midi;
+                if (b == 0) midi.addEvent (juce::MidiMessage::noteOn (1, 36, 0.9f), 0);
+                p.processBlock (buf, midi);
+                body = std::max (body, (double) buf.getMagnitude (0, 0, 512));
+            }
+            expect (body > 0.05, "host flush control: a held note is sounding");
+            p.previewRequested = true;
+            if (deactivate) p.releaseResources(); else p.reset();
+            double tail = 0.0;
+            for (int b = 0; b < 200; ++b)
+            {
+                juce::MidiBuffer midi;
+                p.processBlock (buf, midi);
+                tail = std::max ({ tail, (double) buf.getMagnitude (0, 0, 512),
+                                       (double) buf.getMagnitude (1, 0, 512) });
+            }
+            expect (tail == 0.0, juce::String (deactivate ? "releaseResources" : "reset")
+                                        + (smooth ? " SMOOTH" : " retrigger")
+                                        + " clears voice and pending preview (peak " + juce::String (tail, 6) + ")");
+            juce::MidiBuffer next;
+            next.addEvent (juce::MidiMessage::noteOn (1, 43, 0.9f), 0);
+            p.processBlock (buf, next);
+            expect (buf.getMagnitude (0, 0, 512) > 0.01f, "a new note plays after host flush");
+        }
+}
+
 // The preset browser replaces the nested preset menus: one panel, one list, filters on top.
 void testPresetBrowser()
 {
@@ -714,8 +754,53 @@ int snapshot (const juce::File& dir)
     return 0;
 }
 
+
+// DIGITAL | ANALOGUE (2026-10-28): a parameter in Digital by default, kept over preset changes like OVERSAMPLE,
+// a two-button switch in the header that overlaps nothing.
+void testAnalogueSwitch()
+{
+    PowerBassProcessor p;
+    p.prepareToPlay (48000.0, 512);
+    auto* prm = p.state.getParameter (pb::id::analog);
+    expect (prm != nullptr && prm->getValue() == 0.0f, "DIGITAL | ANALOGUE exists and starts in DIGITAL");
+    if (prm == nullptr) return;
+    setPlain (p, pb::id::analog, 1.0f);
+    const auto& all = p.library.all();
+    int kept = 0, tried = 0;
+    for (int i = 0; i < (int) all.size(); i += 29, ++tried)
+    {
+        p.loadPreset (i);
+        kept += p.state.getRawParameterValue (pb::id::analog)->load() > 0.5f ? 1 : 0;
+    }
+    expect (kept == tried, "a preset change keeps ANALOGUE (" + juce::String (kept) + " of " + juce::String (tried) + ")");
+    setPlain (p, pb::id::analog, 0.0f);
+    std::unique_ptr<juce::AudioProcessorEditor> ed (p.createEditor());
+    ed->setSize (1080, 720);
+    auto* seg = ed->findChildWithID ("analog");
+    expect (seg != nullptr && seg->getNumChildComponents() == 2 && ed->getLocalBounds().contains (seg->getBounds()),
+            "the header shows DIGITAL | ANALOGUE");
+    if (seg == nullptr || seg->getNumChildComponents() != 2) return;
+    bool clear = true;
+    for (auto* c : ed->getChildren())
+        if (c != seg && c->isVisible() && c->getBounds().intersects (seg->getBounds()))
+        {
+            clear = false;
+            std::cout << "  overlaps " << c->getComponentID() << "\n";
+        }
+    expect (clear, "DIGITAL | ANALOGUE overlaps no other control");
+    auto* analogueButton = dynamic_cast<juce::Button*> (seg->getChildComponent (1));
+    if (analogueButton != nullptr && analogueButton->onClick != nullptr) analogueButton->onClick();
+    expect (p.state.getRawParameterValue (pb::id::analog)->load() > 0.5f, "the ANALOGUE button switches the sound to ANALOGUE");
+}
+
 int main (int argc, char** argv)
 {
+    if (argc > 1 && juce::String (argv[1]) == "--host-flush-check")
+    {
+        testHostFlushClearsVoice();
+        std::cout << (failures == 0 ? "PASS " : "FAILED ") << (checks - failures) << "/" << checks << " host flush checks\n";
+        return failures == 0 ? 0 : 1;
+    }
     if (argc > 2 && juce::String (argv[1]) == "--snapshot")
         return snapshot (juce::File (juce::String::fromUTF8 (argv[2])));
     testDefaultsMatchDefaultPreset();
@@ -728,10 +813,12 @@ int main (int argc, char** argv)
     testStateRestoredAfterPrepareStartsExact();
     testOversamplingLatency();
     testPresetsKeepOversampling();
+    testAnalogueSwitch();
     testPresetFilter();
     testAutomation();
     testMonoBus();
     testPreview();
+    testHostFlushClearsVoice();
     testEditor();
     testBlockLayout();
     testWaveformView();

@@ -17,6 +17,7 @@ bool PowerBassProcessor::isBusesLayoutSupported (const BusesLayout& layouts) con
 
 void PowerBassProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    previewSamplesLeft = 0;
     preparedRate = sampleRate; // not getSampleRate(): it is only valid if the host set it first
     engine.prepare (sampleRate, std::max (32, std::min (samplesPerBlock, 1024)), pb::readParams (state));
     monoScratch.setSize (1, std::max (512, samplesPerBlock));
@@ -24,6 +25,21 @@ void PowerBassProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
         latencyByOversampling[(size_t) i] = engine.getLatencySamplesFor (i);
     reportedLatency = engine.getLatencySamples();
     setLatencySamples (reportedLatency);
+}
+
+void PowerBassProcessor::reset()
+{
+    // AU Reset can replace the final MIDI note-off. Clear voices AND filter/delay tails.
+    engine.reset();
+    previewSamplesLeft = 0;
+    previewRequested.store (false);
+    meterL.store (0.0f);
+    meterR.store (0.0f);
+}
+
+void PowerBassProcessor::releaseResources()
+{
+    reset();
 }
 
 void PowerBassProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)

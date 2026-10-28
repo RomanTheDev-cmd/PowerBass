@@ -4,6 +4,8 @@
 #include "Filters.h"
 #include "../Params.h"
 
+#include "AnalogCharacter.h"
+
 namespace pb::dsp
 {
 inline double dbToGain (double db) noexcept { return std::pow (10.0, db / 20.0); }
@@ -51,6 +53,8 @@ public:
             s->prepare (sr);
         sSplit.prepare (sr, 0.0005); // ticked once per 32 samples: ~16 ms glide
         dc.set (10.0, sr);
+        driftMain.prepare (sr); driftUp.prepare (sr); driftDown.prepare (sr);
+        anaTop.set (14000.0, sr); anaBlend.prepare (sr); anaBlendPost.prepare (sr);
         decor.prepare (sr);
         haas.prepare ((int) (0.016 * sr) + 8);
         reset();
@@ -78,6 +82,7 @@ public:
         phase = subPhase = modPhase = 0.0;
         prevMod = 0.0;
         logFreq = targetLogFreq = std::log (110.0);
+        anaRand.seed (0x5EED2810u); driftMain.reset(); driftUp.reset(); driftDown.reset(); anaTop.reset();
         bend = 0.0;
         punchT = 1.0e9;
         dc.reset();
@@ -284,6 +289,10 @@ private:
         fmEnv = 1.0;
         punchT = 0.0;
         velGain = (1.0 - p.velSens) + p.velSens * velocity;
+        // ANALOGUE: each note a little different (oscillators +/-1.5 / +/-3 cents, filter +/-4 %), drawn in DIGITAL too
+        // so the sequence does not depend on the switch.
+        noteCentsMain = 1.5 * anaRand.next(); noteCentsUp = 3.0 * anaRand.next(); noteCentsDown = 3.0 * anaRand.next();
+        noteCut = 1.0 + 0.04 * anaRand.next();
     }
 
     void releaseGate() noexcept
@@ -377,7 +386,10 @@ private:
             logFreq = targetLogFreq + glideCoef * (logFreq - targetLogFreq);
             const double punchSemis = p.punch * 12.0 * std::exp (-punchT / 0.006);
             const double freq = std::exp (logFreq) * std::exp2 ((bend + punchSemis) / 12.0);
-            const double inc = std::min (freq / osRate, 0.2);
+            // ANALOGUE: slow drift (targets +/-6 cents, the detuned copies +/-8; after smoothing a wander of a few cents) on top of the per-note spread.
+            const double ana = anaBlend.tick (p.analog);
+            const double dMain = driftMain.tick (anaRand, 6.0), dUp = driftUp.tick (anaRand, 8.0), dDown = driftDown.tick (anaRand, 8.0);
+            const double inc = std::min (freq * std::exp2 (ana * (noteCentsMain + dMain) / 1200.0) / osRate, 0.2);
             // The level hit rises over 1 ms, so a retrigger on a sounding note never clicks.
             const double punchAmp = 1.0 + p.punch * 0.6 * std::exp (-punchT / 0.012) * std::min (1.0, punchT / 0.001);
 
@@ -388,7 +400,7 @@ private:
             // Filter: envelope, DARK pulls it down, BITE adds resonance, mild key tracking.
             const double keyTrack = 0.3 * (logFreq - std::log (110.0)) / std::log (2.0);
             const double cutOct = envAmt * fltEnv * 6.0 - dark * 1.3 + keyTrack;
-            const double cut = juce::jlimit (25.0, osRate * 0.45, std::exp (logCut) * std::exp2 (cutOct));
+            const double cut = juce::jlimit (25.0, osRate * 0.45, std::exp (logCut) * std::exp2 (cutOct) * (1.0 + ana * (noteCut - 1.0)));
             const double q = 0.6 + std::pow (std::min (1.0, res + 0.15 * bite), 2.0) * 13.0;
             setFilter (cut, q);
 
@@ -410,6 +422,8 @@ private:
             const double detuneW = std::min (1.0, p.detune * 3.0);
             const double detuneRatio = std::exp2 (p.detune * 30.0 / 1200.0);
             const double detuneNorm = 1.0 / std::sqrt (1.0 + 2.0 * detuneW * detuneW);
+            const double incUp = inc * detuneRatio * std::exp2 (ana * (noteCentsUp + dUp - noteCentsMain - dMain) / 1200.0);
+            const double incDown = inc / detuneRatio * std::exp2 (ana * (noteCentsDown + dDown - noteCentsMain - dMain) / 1200.0);
 
             // Waveform morph weights.
             const int si = juce::jlimit (0, 2, (int) shape);
@@ -436,15 +450,16 @@ private:
                     double analog = morph (ph, inc, si, sf);
                     if (detuneW > 0.0)
                     {
-                        phaseUp += inc * detuneRatio;   phaseUp -= std::floor (phaseUp);
-                        phaseDown += inc / detuneRatio; phaseDown -= std::floor (phaseDown);
+                        phaseUp += incUp;     phaseUp -= std::floor (phaseUp);
+                        phaseDown += incDown; phaseDown -= std::floor (phaseDown);
                         double pu = phaseUp + pm, pd = phaseDown + pm;
                         pu -= std::floor (pu); pd -= std::floor (pd);
-                        analog = (analog + detuneW * (morph (pu, inc * detuneRatio, si, sf) + morph (pd, inc / detuneRatio, si, sf))) * detuneNorm;
+                        analog = (analog + detuneW * (morph (pu, incUp, si, sf) + morph (pd, incDown, si, sf))) * detuneNorm;
                     }
                     const double fm = std::sin (2.0 * pi * phase + fmIndex * mod);
                     double osc = std::tanh (oscG * (analog * (1.0 - mix) + fm * mix)) * oscNorm * 0.8;
                     osc += subLvl * 0.85 * std::sin (2.0 * pi * subPhase);
+                    osc += ana * (power_analog::warm (osc) - osc); // ANALOGUE warmth before the filter
 
                     if (! actPost) osc = filter (osc);
                     double d = distort (osc, g, norm, distMix);
@@ -473,6 +488,7 @@ private:
                 updateSplit();
             }
             double y = dc.tick (base[i]);
+            y += anaBlendPost.tick (p.analog) * (anaTop.tick (y) - y); // ANALOGUE: softer top (one pole, 14 kHz)
             for (auto& b : eq) y = b.tick (y);
             const double gain = sMaster.tick (dbToGain (p.masterDb)) * fadeGain;
             double l, r;
@@ -707,6 +723,11 @@ private:
     double ampEnv = 0.0, attackStart = 0.0, attackPos = 0.0, fltEnv = 0.0, fmEnv = 0.0, punchT = 1.0e9;
     double phase = 0.0, subPhase = 0.0, modPhase = 0.0, prevMod = 0.0, phaseUp = 0.0, phaseDown = 0.0;
     double logFreq = 0.0, targetLogFreq = 0.0, bend = 0.0;
+    power_analog::Random anaRand;
+    power_analog::Drift driftMain, driftUp, driftDown;
+    power_analog::OnePole anaTop;
+    power_analog::Blend anaBlend, anaBlendPost;
+    double noteCentsMain = 0.0, noteCentsUp = 0.0, noteCentsDown = 0.0, noteCut = 1.0;
 
     DistType actDist = DistType::saturate;
     FilterMode actFilter = FilterMode::lp24;

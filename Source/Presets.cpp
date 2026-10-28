@@ -45,7 +45,7 @@ const Snapshot& legacyNeutral()
 {
     // SMOOTH is the exception: projects and presets from before it get it off - a full attack on every note,
     // as Roman asked for (2026-10-23), not the old flowing retrigger.
-    static const Snapshot neutral { { id::detune, 0.0f }, { id::stereoDelay, 0.0f }, { id::smoothStart, 0.0f } };
+    static const Snapshot neutral { { id::detune, 0.0f }, { id::stereoDelay, 0.0f }, { id::smoothStart, 0.0f }, { id::analog, 0.0f } };
     return neutral;
 }
 
@@ -64,7 +64,8 @@ void applySnapshot (juce::AudioProcessorValueTreeState& state, const Snapshot& v
         // OVERSAMPLE is a quality setting of this instance, not part of a sound: presets (and A/B,
         // variations) never change it. Factory presets do not store it, so a switch used to fall
         // back to 4x and change the plug-in latency while the host was playing.
-        if (pid == id::oversample)
+        // DIGITAL | ANALOGUE is kept the same way: a character switch over any preset.
+        if (pid == id::oversample || pid == id::analog)
             continue;
         auto* param = dynamic_cast<juce::RangedAudioParameter*> (state.getParameter (pid));
         if (param == nullptr)
@@ -109,6 +110,7 @@ SynthParams paramsFromSnapshot (const Snapshot& s)
     p.glideMode = (GlideMode) juce::roundToInt (get (id::glideMode, (float) p.glideMode));
     p.masterDb = get (id::master, p.masterDb);
     p.filterPostDist = get (id::filterPos, 0.0f) > 0.5f;
+    p.analog = get (id::analog, 0.0f) > 0.5f;
     p.oversampleIndex = juce::jlimit (0, 2, juce::roundToInt (get (id::oversample, (float) p.oversampleIndex)));
     p.fltDecayMs = get (id::fltDecay, p.fltDecayMs);
     p.velSens = get (id::velSens, p.velSens);
