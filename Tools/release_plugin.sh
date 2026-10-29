@@ -10,6 +10,7 @@ C=~/Library/Caches/PowerKickTools/cmake/cmake/data/bin/cmake; W=~/Library/Caches
 export WIN_LLVM_ROOT=$W/llvm-mingw-20261020-ucrt-macos-universal WIN_SDK=$W/winsdk WIN_WINE=$W/wine-run.sh
 BIN="$W/wine/Wine Stable.app/Contents/Resources/wine/bin"; U=~/Library/Caches/${P}BuildUniversal; BW=~/Library/Caches/${P}BuildWin
 l=$(echo $P | tr 'A-Z' 'a-z'); O=~/Library/Caches/release-$P; mkdir -p "$O"
+VER="$(sed -n 's/^project([A-Za-z]* VERSION \([0-9.]*\).*/\1/p' "$D/CMakeLists.txt")"   # the zip carries the project version
 fail() { echo "ОСТАНОВЛЕНО: $1"; exit 1; }
 $C --build $U -j10 > "$O/mac.log" 2>&1 || fail "сборка Mac"; echo "сборка Mac: ок"
 $C --build $BW -j10 > "$O/win.log" 2>&1 || fail "сборка Windows"; echo "сборка Windows: ок"
@@ -23,10 +24,10 @@ done; "$BIN/wineserver" -k 2>/dev/null
 S="$D/Сборки"; Uo=$U/${P}_artefacts/Release; Wo=$BW/${P}_artefacts/Release; I=~/Library/Audio/Plug-Ins
 for b in "$Uo/AU/$P.component" "$Uo/VST3/$P.vst3" "$Uo/Standalone/$P.app"; do codesign --force --deep --sign - "$b" 2>/dev/null; codesign --verify --deep --strict "$b" || fail "подпись $b"; done
 T=~/.Trash/"$P до $STAMP"; mkdir -p "$T/macOS" "$T/Windows" "$T/Установленные"
-mv "$S/macOS/$P.app" "$S/macOS/$P.component" "$S/macOS/$P.vst3" "$T/macOS/"; mv "$S/Windows/$P.exe" "$S/Windows/$P.vst3" "$T/Windows/"; mv "$S/$P-1.0.0-Windows-x64.zip" "$T/"
+mv "$S/macOS/$P.app" "$S/macOS/$P.component" "$S/macOS/$P.vst3" "$T/macOS/"; mv "$S/Windows/$P.exe" "$S/Windows/$P.vst3" "$T/Windows/"; for z in "$S/$P"-*-Windows-x64.zip; do [ -e "$z" ] && mv "$z" "$T/"; done
 ditto "$Uo/Standalone/$P.app" "$S/macOS/$P.app"; ditto "$Uo/AU/$P.component" "$S/macOS/$P.component"; ditto "$Uo/VST3/$P.vst3" "$S/macOS/$P.vst3"
 ditto "$Wo/Standalone/$P.exe" "$S/Windows/$P.exe"; ditto "$Wo/VST3/$P.vst3" "$S/Windows/$P.vst3"
-Z=$(mktemp -d); ditto "$S/Windows" "$Z/$P"; (cd "$Z" && zip -qr -X -D "$S/$P-1.0.0-Windows-x64.zip" "$P" -x "*.DS_Store")
+Z=$(mktemp -d); ditto "$S/Windows" "$Z/$P"; (cd "$Z" && zip -qr -X -D "$S/$P-$VER-Windows-x64.zip" "$P" -x "*.DS_Store")
 mv "$I/Components/$P.component" "$I/VST3/$P.vst3" "$T/Установленные/"
 ditto "$S/macOS/$P.component" "$I/Components/$P.component"; ditto "$S/macOS/$P.vst3" "$I/VST3/$P.vst3"
 diff -rq "$I/Components/$P.component" "$S/macOS/$P.component" > /dev/null && diff -rq "$I/VST3/$P.vst3" "$S/macOS/$P.vst3" > /dev/null || fail "установка"

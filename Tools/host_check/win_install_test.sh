@@ -8,7 +8,7 @@ set -u
 P="$1"; ROOT="/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты"
 W=~/Library/Caches/PowerToolsWin; BIN="$W/wine/Wine Stable.app/Contents/Resources/wine/bin"
 export WINEPREFIX=$W/prefix-install-$P WINEDEBUG=-all WINEDLLOVERRIDES="mscoree,mshtml="
-SETUP="$ROOT/$P/Установщики/$P-1.0.0-Windows-x64-Setup.exe"; SRC="$ROOT/$P/Сборки/Windows"
+SETUP="$(ls "$ROOT/$P/Установщики/$P-"*-Windows-x64-Setup.exe | tail -1)"; SRC="$ROOT/$P/Сборки/Windows"   # any version
 HC=~/Library/Caches/HostCheckWin/host_check_artefacts/Release/host_check.exe
 C="$WINEPREFIX/drive_c"; VST="$C/Program Files/Common Files/VST3/$P.vst3"; APPDIR="$C/Program Files/MyDarknessDays/$P"
 LNK="$C/ProgramData/Microsoft/Windows/Start Menu/Programs/MyDarknessDays/$P.lnk"
