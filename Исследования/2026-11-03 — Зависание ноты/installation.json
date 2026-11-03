@@ -1,0 +1,134 @@
+{
+  "date": "2026-11-03",
+  "author": "Codex",
+  "topic": "Install PowerBass 1.1.1 MIDI lifetime fix",
+  "authorization": "Current bug-fix request, continuing the previously authorised application of this fix",
+  "backup": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/Резервные копии/2026-11-03 до 1.1.1 154255",
+  "records": [
+    {
+      "target": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/macOS/PowerBass.component",
+      "backup": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/Резервные копии/2026-11-03 до 1.1.1 154255/Выпущенные macOS/PowerBass.component",
+      "before": {
+        "Contents/Info.plist": "b232c68f50d8e8513b8ea56ceb8d73f5eb00df7945e1e21ced77389e03789ae9",
+        "Contents/PkgInfo": "d06a80ba92de0833d0ed03de1b02b7c8913f126d9e8c8931b190765dd5d83b11",
+        "Contents/_CodeSignature/CodeResources": "6686de10a28a2fe11b36cbb86dcbacc827cfc4ea116b4dabf1845e5aee629e9b",
+        "Contents/MacOS/PowerBass": "ccbdd267b2ed0775d18339dd6ddb10b659d84f10045d8032b4865468094e3c08"
+      },
+      "after": {
+        "Contents/Info.plist": "5308c3df5c65ec8c77a64d49bf7e492eef422ede5ba219f2ca10d439235f4e37",
+        "Contents/PkgInfo": "d06a80ba92de0833d0ed03de1b02b7c8913f126d9e8c8931b190765dd5d83b11",
+        "Contents/_CodeSignature/CodeResources": "6686de10a28a2fe11b36cbb86dcbacc827cfc4ea116b4dabf1845e5aee629e9b",
+        "Contents/MacOS/PowerBass": "dcc7ceb83a4e25c8aef149997195ebd8537ba079e1b2593f6e7313617bb93254"
+      }
+    },
+    {
+      "target": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/macOS/PowerBass.vst3",
+      "backup": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/Резервные копии/2026-11-03 до 1.1.1 154255/Выпущенные macOS/PowerBass.vst3",
+      "before": {
+        "Contents/Info.plist": "5f8703127ae9a49d78a83409e5af35a3048a8a036841aa6cc443f229da07e529",
+        "Contents/PkgInfo": "d06a80ba92de0833d0ed03de1b02b7c8913f126d9e8c8931b190765dd5d83b11",
+        "Contents/_CodeSignature/CodeResources": "f2d9c236df96481a7e1c5fd2f651e0b93f737e90189568d6996c4729d53c82e3",
+        "Contents/MacOS/PowerBass": "0f85962284ed4dfce943be095727c05ac69c13eed517a84f5a01d6329066eba4",
+        "Contents/Resources/moduleinfo.json": "472f12fee4ae186e56493ff9cbfb0d16e73bfb944d40cb8dc649139c242b9268"
+      },
+      "after": {
+        "Contents/Info.plist": "f4ea9b2c9d45b2792182ae8e9307a0e4a58fa2e5eb8c96cc0d2b6820cf795b0d",
+        "Contents/PkgInfo": "d06a80ba92de0833d0ed03de1b02b7c8913f126d9e8c8931b190765dd5d83b11",
+        "Contents/_CodeSignature/CodeResources": "406a782acc5f4a699532a2b84a36c914ccdf5af22f61ef9ef4987b3efeb103b8",
+        "Contents/MacOS/PowerBass": "5b8d63a2665ac1878333761ebeb303d071d000252d4cf57ba43b8858f1cb3aee",
+        "Contents/Resources/moduleinfo.json": "2bbd598a66c5fe8be8bcb8cfee538ae80bd84efce4de84a6f5eb68adfd6b96f1"
+      }
+    },
+    {
+      "target": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/macOS/PowerBass.app",
+      "backup": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/Резервные копии/2026-11-03 до 1.1.1 154255/Выпущенные macOS/PowerBass.app",
+      "before": {
+        "Contents/Info.plist": "a617e9de3a897310f2caf6f11ffb9d23b674fde034cee7d9f24dc54c1faf8167",
+        "Contents/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+        "Contents/_CodeSignature/CodeResources": "9b8570aee558651f95ec77d131bae7c43445f73040a70bbb941e5e4e54e880f9",
+        "Contents/MacOS/PowerBass": "e672bf5a0f47bc6435efbeaa114080be84df96caedcf59f3fb41a0fca2bfbac7",
+        "Contents/Resources/RecentFilesMenuTemplate.nib": "718eb4c5a3a5564dd832ae9a36cf649f3ef257ce896dd921693eeb6101bd008a"
+      },
+      "after": {
+        "Contents/Info.plist": "0598ab914d1793007ba397a7ff6fd605e77d84c3da4e0708f4df550c3905620b",
+        "Contents/PkgInfo": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+        "Contents/_CodeSignature/CodeResources": "9b8570aee558651f95ec77d131bae7c43445f73040a70bbb941e5e4e54e880f9",
+        "Contents/MacOS/PowerBass": "dfb2d67dc864534379065f6608cd93be895d45ea200282088eb4f55a664703ac",
+        "Contents/Resources/RecentFilesMenuTemplate.nib": "718eb4c5a3a5564dd832ae9a36cf649f3ef257ce896dd921693eeb6101bd008a"
+      }
+    },
+    {
+      "target": "/Users/roman/Library/Audio/Plug-Ins/Components/PowerBass.component",
+      "backup": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/Резервные копии/2026-11-03 до 1.1.1 154255/Установленные/Components/PowerBass.component",
+      "before": {
+        "Contents/Info.plist": "b232c68f50d8e8513b8ea56ceb8d73f5eb00df7945e1e21ced77389e03789ae9",
+        "Contents/PkgInfo": "d06a80ba92de0833d0ed03de1b02b7c8913f126d9e8c8931b190765dd5d83b11",
+        "Contents/_CodeSignature/CodeResources": "6686de10a28a2fe11b36cbb86dcbacc827cfc4ea116b4dabf1845e5aee629e9b",
+        "Contents/MacOS/PowerBass": "ccbdd267b2ed0775d18339dd6ddb10b659d84f10045d8032b4865468094e3c08"
+      },
+      "after": {
+        "Contents/Info.plist": "5308c3df5c65ec8c77a64d49bf7e492eef422ede5ba219f2ca10d439235f4e37",
+        "Contents/PkgInfo": "d06a80ba92de0833d0ed03de1b02b7c8913f126d9e8c8931b190765dd5d83b11",
+        "Contents/_CodeSignature/CodeResources": "6686de10a28a2fe11b36cbb86dcbacc827cfc4ea116b4dabf1845e5aee629e9b",
+        "Contents/MacOS/PowerBass": "dcc7ceb83a4e25c8aef149997195ebd8537ba079e1b2593f6e7313617bb93254"
+      }
+    },
+    {
+      "target": "/Users/roman/Library/Audio/Plug-Ins/VST3/PowerBass.vst3",
+      "backup": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/Резервные копии/2026-11-03 до 1.1.1 154255/Установленные/VST3/PowerBass.vst3",
+      "before": {
+        "Contents/Info.plist": "5f8703127ae9a49d78a83409e5af35a3048a8a036841aa6cc443f229da07e529",
+        "Contents/PkgInfo": "d06a80ba92de0833d0ed03de1b02b7c8913f126d9e8c8931b190765dd5d83b11",
+        "Contents/_CodeSignature/CodeResources": "f2d9c236df96481a7e1c5fd2f651e0b93f737e90189568d6996c4729d53c82e3",
+        "Contents/MacOS/PowerBass": "0f85962284ed4dfce943be095727c05ac69c13eed517a84f5a01d6329066eba4",
+        "Contents/Resources/moduleinfo.json": "472f12fee4ae186e56493ff9cbfb0d16e73bfb944d40cb8dc649139c242b9268"
+      },
+      "after": {
+        "Contents/Info.plist": "f4ea9b2c9d45b2792182ae8e9307a0e4a58fa2e5eb8c96cc0d2b6820cf795b0d",
+        "Contents/PkgInfo": "d06a80ba92de0833d0ed03de1b02b7c8913f126d9e8c8931b190765dd5d83b11",
+        "Contents/_CodeSignature/CodeResources": "406a782acc5f4a699532a2b84a36c914ccdf5af22f61ef9ef4987b3efeb103b8",
+        "Contents/MacOS/PowerBass": "5b8d63a2665ac1878333761ebeb303d071d000252d4cf57ba43b8858f1cb3aee",
+        "Contents/Resources/moduleinfo.json": "2bbd598a66c5fe8be8bcb8cfee538ae80bd84efce4de84a6f5eb68adfd6b96f1"
+      }
+    },
+    {
+      "target": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/Windows/PowerBass.exe",
+      "backup": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/Резервные копии/2026-11-03 до 1.1.1 154255/Выпущенные Windows/PowerBass.exe",
+      "before": {
+        "file": "4b37f39b0a322a4f43d4f0c72e3bf3075cc208065d96300659ef39f5d4ae573d"
+      },
+      "after": {
+        "file": "9103385ef469d33a4efc5f98355d791508d17036d6b96b754a7608d59fd59d2e"
+      }
+    },
+    {
+      "target": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/Windows/PowerBass.vst3",
+      "backup": "/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Сборки/Резервные копии/2026-11-03 до 1.1.1 154255/Выпущенные Windows/PowerBass.vst3",
+      "before": {
+        "Contents/x86_64-win/PowerBass.vst3.manifest": "36660799afd242f2d606943bd879050d6875cd2a47c6250d43c17acd649aa1af",
+        "Contents/x86_64-win/PowerBass.vst3": "68f5188e0a744694c4961acce385c45d84d87928840e989530326e5751373f52",
+        "Contents/Resources/moduleinfo.json": "b47df2d36d63ac4052003804aa6b502cb1bd23a41700bf745eba4ee468d209f6"
+      },
+      "after": {
+        "Contents/x86_64-win/PowerBass.vst3.manifest": "36660799afd242f2d606943bd879050d6875cd2a47c6250d43c17acd649aa1af",
+        "Contents/x86_64-win/PowerBass.vst3": "6b3f20bbb46a6a6656f8b3ceea4a2be6b0835a0d17e78bd7d341fe787147fc52",
+        "Contents/Resources/moduleinfo.json": "03fd2fa16366e5d1bf252b4290bf65b2d54ed302dc315a55c8e621fb79022cff"
+      }
+    }
+  ],
+  "Windows_zip_sha256": "b77f80eb61df254a6c16bc59fba532bca1baac38fb5552fd102c0c453f2d265c",
+  "predeployment_checks": {
+    "tails-arm64.log": "PASS 1216/1216",
+    "tails-x86_64.log": "PASS 1216/1216",
+    "tails-wine.log": "PASS 1216/1216",
+    "wrapper-arm64.log": "PASS 194/194",
+    "wrapper-x86_64.log": "PASS 194/194",
+    "wrapper-wine.log": "PASS 146/146",
+    "au-reset-green-arm64.log": "PASS 60/60",
+    "au-reset-green-x86_64.log": "PASS 60/60",
+    "preview-ownership-green.log": "PASS 27/27",
+    "pluginval-AU.log": "SUCCESS",
+    "pluginval-VST3.log": "SUCCESS",
+    "windows-vst3-host.log": "PASS"
+  }
+}

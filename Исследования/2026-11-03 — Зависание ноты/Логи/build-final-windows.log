@@ -1,0 +1,18 @@
+[  9%] Built target powerbass_tests_rc_lib
+[100%] Built target powerbass_tests
+[  4%] Built target powerbass_wrapper_tests_rc_lib
+[ 56%] Built target PowerBass
+[ 59%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/Tests/WrapperTests.cpp.obj
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp(25,18): warning: unused function 'mouseAt' [-Wunused-function]
+   25 | juce::MouseEvent mouseAt (juce::Component* c, bool dragged)
+      |                  ^~~~~~~
+1 warning generated.
+[ 61%] Linking CXX executable powerbass_wrapper_tests_artefacts/Release/powerbass_wrapper_tests.exe
+[100%] Built target powerbass_wrapper_tests
+[  5%] Built target PowerBass_rc_lib
+[ 11%] Built target PowerBass_vst3_helper
+[ 75%] Built target PowerBass
+[100%] Built target PowerBass_VST3
+[  5%] Built target PowerBass_rc_lib
+[ 73%] Built target PowerBass
+[100%] Built target PowerBass_Standalone

@@ -1,0 +1,52 @@
+{
+  "date": "2026-11-03",
+  "author": "Codex",
+  "head": "7221053298743d357e8f0e9012d56fe138d3a01e",
+  "installed_AU_SHA256": "ccbdd267b2ed0775d18339dd6ddb10b659d84f10045d8032b4865468094e3c08",
+  "source_before": {
+    "Source/PluginProcessor.cpp": "6ec34841b22b80be4faac9a7809f5bb0ae3aae057c68bb9902aa8b8a87093cfb",
+    "Source/PluginProcessor.h": "fe35050b541aa89aaed6a925c16f606376707313d2692ab4cc10b184290a4abf",
+    "Source/DSP/BassEngine.h": "0e74300bf8e01295e15fb0dfbe4906cedf6b767234ef1a57577aa82f479dd8c6",
+    "cmake/patch_juce.cmake": "23ffe0c2f401ba52f0eedaf53eabb453865dcc42ef74edd775fd6067ac64d5e0",
+    "CMakeLists.txt": "69155dad01163ab6f599895fe465454dd0c0dac74dff40a66c3b332f6703b8d1",
+    "Tests/WrapperTests.cpp": "41e551bbcc2b1d9c02b76eee9c9b585c13c88f1a5889ef7fc81b18e163d5a0c1"
+  },
+  "version_after": "1.1.1",
+  "verified_log_assertions": {
+    "installed-au-green-arm64.log": "PASS 60/60",
+    "installed-au-green-x86_64.log": "PASS 60/60",
+    "installed-auval-arm64.log": "AU VALIDATION SUCCEEDED",
+    "installed-auval-x86_64.log": "AU VALIDATION SUCCEEDED",
+    "wrapper-arm64.log": "PASS 194/194",
+    "wrapper-x86_64.log": "PASS 194/194",
+    "wrapper-wine.log": "PASS 146/146",
+    "tails-arm64.log": "PASS 1216/1216",
+    "tails-x86_64.log": "PASS 1216/1216",
+    "tails-wine.log": "PASS 1216/1216",
+    "preview-ownership-green.log": "PASS 27/27",
+    "pluginval-installed-AU.log": "SUCCESS",
+    "pluginval-VST3.log": "SUCCESS",
+    "windows-vst3-host.log": "PASS"
+  },
+  "source_after": {
+    "Source/PluginProcessor.cpp": "5d1fc15a2e25bca050e9a613bf9c3bbca8dada242230eac1aa0767dc4f0f9ba2",
+    "cmake/patch_juce.cmake": "9b9c922b5de5d7eaed658f9b0fc6c5fd5478d8f79ff644a4cac73fd4a06cf8d8",
+    "CMakeLists.txt": "25be917cdaf7b6b6a2dc7a5e4501671dd9b6384e7dbfe4334bf3eaf218876a68",
+    "Tests/WrapperTests.cpp": "0769ecc7247b6d9d3c51147c4fed9be5d09b624dd9309d53a82d508f89d180f3",
+    "Tests/AUResetTests.cpp": "fe52d91840d6051586855bfc1e16ccc2831d4d8ed379fa467a072492d6b8f098",
+    "Tests/PowerBassTests.cpp": "d709c7c2457630504c2df02224ef6d3809d4cab88854a5dc413d7c8f38c6043a"
+  },
+  "limitations": [
+    "User Logic project and FX chain not opened or tested",
+    "Full DSP level grid intentionally interrupted; not PASS",
+    "Windows checks run in Wine, not a physical Windows PC",
+    "Pre-install pluginval AU resolved registered 1.1.0; superseded by installed-AU 1.1.1 validation"
+  ],
+  "windows_installer_test": {
+    "checks_ok": 26,
+    "fail": 0,
+    "host": "PASS",
+    "install_exit": 0,
+    "uninstall_verified": true
+  }
+}

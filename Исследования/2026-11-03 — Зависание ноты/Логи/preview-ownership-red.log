@@ -1,0 +1,12 @@
+FAIL: preview ownership case 0 retrigger: no ghost note after MIDI (0.402386)
+FAIL: preview ownership case 1 retrigger: no ghost note after MIDI (0.402386)
+FAIL: preview ownership case 2 retrigger: real C1 survives preview/panic timer
+FAIL: preview ownership case 3 retrigger: real C1 survives preview/panic timer
+FAIL: preview ownership case 4 retrigger: real C1 survives preview/panic timer
+FAIL: preview ownership case 0 SMOOTH: no ghost note after MIDI (0.402380)
+FAIL: preview ownership case 1 SMOOTH: no ghost note after MIDI (0.402380)
+FAIL: preview ownership case 2 SMOOTH: real C1 survives preview/panic timer
+FAIL: preview ownership case 3 SMOOTH: real C1 survives preview/panic timer
+FAIL: preview ownership case 4 SMOOTH: real C1 survives preview/panic timer
+FAIL: a zero-length block does not lose an unrendered Preview
+FAILED 8/19 preview ownership checks

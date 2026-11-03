@@ -1,0 +1,37 @@
+[
+  {
+    "bundle": "PowerBass.component",
+    "version": "1.1.1",
+    "payload_sha256_match": true
+  },
+  {
+    "bundle": "PowerBass.vst3",
+    "version": "1.1.1",
+    "payload_sha256_match": true
+  },
+  {
+    "bundle": "PowerBass.app",
+    "version": "1.1.1",
+    "payload_sha256_match": true
+  },
+  {
+    "installer": "PowerBass-1.1.1-macOS.pkg",
+    "export_sha256_match": true,
+    "sha256": "689ea73040e81a7b5ebc0653a9983e5fa29cec649cd9c574873c3f284eff87ae"
+  },
+  {
+    "installer": "PowerBass-1.1.1-Windows-x64-Setup.exe",
+    "export_sha256_match": true,
+    "sha256": "0bd6bce189db3a5fd6738e145cb860e3f789b60f02b20586cb9f68151aac3742"
+  },
+  {
+    "installed": "/Users/roman/Library/Audio/Plug-Ins/Components/PowerBass.component",
+    "sha256_match": true,
+    "strict_signature": true
+  },
+  {
+    "installed": "/Users/roman/Library/Audio/Plug-Ins/VST3/PowerBass.vst3",
+    "sha256_match": true,
+    "strict_signature": true
+  }
+]

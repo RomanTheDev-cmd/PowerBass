@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-03",
+  "author": "Codex",
+  "topic": "JUCE AU patch replay and version guard",
+  "apply_exit": 0,
+  "repeat_exit": 0,
+  "repeat_hash_unchanged": true,
+  "unexpected_upstream_rejected_exit": 1,
+  "apply_stdout": "-- JUCE patched: AU Reset clears pending MIDI\n",
+  "guard_stderr": "CMake Error at cmake/patch_juce.cmake:31 (message):\n  patch_juce.cmake: AU Reset is not as expected in\n  /var/folders/31/w7q923bx0dz50f2sxkg7bnjw0000gn/T/powerbass-patch-check-sguvu0cc/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_1.mm;\n  check the fix by hand\n\n\n"
+}

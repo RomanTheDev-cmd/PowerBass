@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-03",
+  "author": "Codex",
+  "topic": "Use focused lifecycle regressions for MIDI/wrapper-only fix",
+  "status": "interrupted; not a PASS",
+  "pids": [
+    68198,
+    68199,
+    68200
+  ],
+  "reason": "DSP sound generation and factory levels are unchanged. Run all-presets tail checks, full wrapper tests and native AU queue regressions instead of repeating the long level-calibration grid."
+}

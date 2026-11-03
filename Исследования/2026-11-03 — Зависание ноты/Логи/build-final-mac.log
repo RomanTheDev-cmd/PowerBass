@@ -1,0 +1,220 @@
+[ 52%] Built target PowerBass
+[ 55%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/Tests/WrapperTests.cpp.o
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:4:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:3:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array:117:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/equal.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:4:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:6:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:4:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/Filters.h:172:15: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  172 |         if (v == target) return;
+      |             ~ ^  ~~~~~~
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:4:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:6:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:590:17: warning: enumeration values 'saturate', 'hardClip', and 'crush' not explicitly handled in switch [-Wswitch-enum]
+  590 |         switch (t)
+      |                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:590:17: note: add missing switch cases
+  590 |         switch (t)
+      |                 ^
+  591 |         {
+  592 |             case DistType::fold:
+  593 |                 return 1.25 * g >= pi * 0.5 ? 1.0 : std::sin (1.25 * g);
+  594 |             case DistType::destroy:
+  595 |             {
+  596 |                 double peak = 0.0;
+  597 |                 for (int i = 1; i <= 128; ++i)
+  598 |                 {
+  599 |                     const double x = i / 128.0;
+  600 |                     peak = std::max ({ peak, std::abs (shape (x, g, t)), std::abs (shape (-x, g, t)) });
+  601 |                 }
+  602 |                 return peak;
+  603 |             }
+  604 |             default:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:652:30: warning: declaration shadows a field of 'pb::dsp::BassEngine' [-Wshadow]
+  652 |         void prepare (double sr)
+      |                              ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:720:12: note: previous declaration is here
+  720 |     double sr = 48000.0, osRate = 192000.0;
+      |            ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:5:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.h:186:34: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  186 |     float scale() const { return getWidth() / 1032.0f; }
+      |                                  ^~~~~~~~~~ ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:750:5: warning: no previous prototype for function 'snapshot' [-Wmissing-prototypes]
+  750 | int snapshot (const juce::File& dir)
+      |     ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:750:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  750 | int snapshot (const juce::File& dir)
+      | ^
+      | static 
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:803:6: warning: no previous prototype for function 'testAnalogueSwitch' [-Wmissing-prototypes]
+  803 | void testAnalogueSwitch()
+      |      ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:803:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  803 | void testAnalogueSwitch()
+      | ^
+      | static 
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:840:12: warning: no previous prototype for function 'tempPresetDir' [-Wmissing-prototypes]
+  840 | juce::File tempPresetDir()
+      |            ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:840:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  840 | juce::File tempPresetDir()
+      | ^
+      | static 
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:847:19: warning: no previous prototype for function 'starredNames' [-Wmissing-prototypes]
+  847 | juce::StringArray starredNames (const pb::PresetLibrary& l)
+      |                   ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:847:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  847 | juce::StringArray starredNames (const pb::PresetLibrary& l)
+      | ^
+      | static 
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:854:5: warning: no previous prototype for function 'userIndex' [-Wmissing-prototypes]
+  854 | int userIndex (const pb::PresetLibrary& l, const juce::String& name)
+      |     ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:854:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  854 | int userIndex (const pb::PresetLibrary& l, const juce::String& name)
+      | ^
+      | static 
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:862:6: warning: no previous prototype for function 'testFavourites' [-Wmissing-prototypes]
+  862 | void testFavourites()
+      |      ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:862:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  862 | void testFavourites()
+      | ^
+      | static 
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:945:66: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  945 |     auto* atStar = rowComp->getComponentAt (juce::roundToInt (12 * ed->getWidth() / 1080.0f), h / 2);
+      |                                                               ~~~^~~~~~~~~~~~~~~~ ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:909:6: warning: no previous prototype for function 'testFavouritesInEditor' [-Wmissing-prototypes]
+  909 | void testFavouritesInEditor()
+      |      ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:909:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  909 | void testFavouritesInEditor()
+      | ^
+      | static 
+13 warnings generated.
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:4:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:3:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array:117:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/equal.h:13:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/comp.h:12:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:15:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__configuration/availability.h:204:4: warning: "The selected platform is no longer supported by libc++." [-W#warnings]
+  204 | #  warning "The selected platform is no longer supported by libc++."
+      |    ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:4:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:6:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:4:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/Filters.h:172:15: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  172 |         if (v == target) return;
+      |             ~ ^  ~~~~~~
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:4:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginProcessor.h:6:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:590:17: warning: enumeration values 'saturate', 'hardClip', and 'crush' not explicitly handled in switch [-Wswitch-enum]
+  590 |         switch (t)
+      |                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:590:17: note: add missing switch cases
+  590 |         switch (t)
+      |                 ^
+  591 |         {
+  592 |             case DistType::fold:
+  593 |                 return 1.25 * g >= pi * 0.5 ? 1.0 : std::sin (1.25 * g);
+  594 |             case DistType::destroy:
+  595 |             {
+  596 |                 double peak = 0.0;
+  597 |                 for (int i = 1; i <= 128; ++i)
+  598 |                 {
+  599 |                     const double x = i / 128.0;
+  600 |                     peak = std::max ({ peak, std::abs (shape (x, g, t)), std::abs (shape (-x, g, t)) });
+  601 |                 }
+  602 |                 return peak;
+  603 |             }
+  604 |             default:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:652:30: warning: declaration shadows a field of 'pb::dsp::BassEngine' [-Wshadow]
+  652 |         void prepare (double sr)
+      |                              ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/DSP/BassEngine.h:720:12: note: previous declaration is here
+  720 |     double sr = 48000.0, osRate = 192000.0;
+      |            ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:5:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/PluginEditor.h:186:34: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  186 |     float scale() const { return getWidth() / 1032.0f; }
+      |                                  ^~~~~~~~~~ ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:750:5: warning: no previous prototype for function 'snapshot' [-Wmissing-prototypes]
+  750 | int snapshot (const juce::File& dir)
+      |     ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:750:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  750 | int snapshot (const juce::File& dir)
+      | ^
+      | static 
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:803:6: warning: no previous prototype for function 'testAnalogueSwitch' [-Wmissing-prototypes]
+  803 | void testAnalogueSwitch()
+      |      ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:803:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  803 | void testAnalogueSwitch()
+      | ^
+      | static 
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:840:12: warning: no previous prototype for function 'tempPresetDir' [-Wmissing-prototypes]
+  840 | juce::File tempPresetDir()
+      |            ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:840:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  840 | juce::File tempPresetDir()
+      | ^
+      | static 
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:847:19: warning: no previous prototype for function 'starredNames' [-Wmissing-prototypes]
+  847 | juce::StringArray starredNames (const pb::PresetLibrary& l)
+      |                   ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:847:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  847 | juce::StringArray starredNames (const pb::PresetLibrary& l)
+      | ^
+      | static 
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:854:5: warning: no previous prototype for function 'userIndex' [-Wmissing-prototypes]
+  854 | int userIndex (const pb::PresetLibrary& l, const juce::String& name)
+      |     ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:854:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  854 | int userIndex (const pb::PresetLibrary& l, const juce::String& name)
+      | ^
+      | static 
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:862:6: warning: no previous prototype for function 'testFavourites' [-Wmissing-prototypes]
+  862 | void testFavourites()
+      |      ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:862:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  862 | void testFavourites()
+      | ^
+      | static 
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:945:66: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  945 |     auto* atStar = rowComp->getComponentAt (juce::roundToInt (12 * ed->getWidth() / 1080.0f), h / 2);
+      |                                                               ~~~^~~~~~~~~~~~~~~~ ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:909:6: warning: no previous prototype for function 'testFavouritesInEditor' [-Wmissing-prototypes]
+  909 | void testFavouritesInEditor()
+      |      ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp:909:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  909 | void testFavouritesInEditor()
+      | ^
+      | static 
+13 warnings generated.
+[ 57%] Linking CXX executable powerbass_wrapper_tests_artefacts/Release/powerbass_wrapper_tests
+[100%] Built target powerbass_wrapper_tests
+[100%] Built target powerbass_tests
+[ 61%] Built target PowerBass
+[ 64%] Linking CXX CFBundle shared module PowerBass_artefacts/Release/AU/PowerBass.component/Contents/MacOS/PowerBass
+[100%] Built target PowerBass_AU
+[  2%] Built target PowerBass_vst3_helper
+[ 62%] Built target PowerBass
+[ 65%] Linking CXX CFBundle shared module PowerBass_artefacts/Release/VST3/PowerBass.vst3/Contents/MacOS/PowerBass
+/Users/roman/Library/Caches/PowerBassStuckNote20261103/build/PowerBass_artefacts/Release/VST3/PowerBass.vst3: code object is not signed at all
+-- Replacing invalid signature with ad-hoc signature
+/Users/roman/Library/Caches/PowerBassStuckNote20261103/build/PowerBass_artefacts/Release/VST3/PowerBass.vst3: replacing existing signature
+removing moduleinfo.json
+creating /Users/roman/Library/Caches/PowerBassStuckNote20261103/build/PowerBass_artefacts/Release/VST3/PowerBass.vst3
+[100%] Built target PowerBass_VST3
+[ 63%] Built target PowerBass
+[100%] Built target PowerBass_Standalone
+[100%] Built target powerbass_au_reset_tests

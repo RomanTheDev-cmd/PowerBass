@@ -1,0 +1,16 @@
+{"sr":44100,"case":0,"body":0.7013,"tail":0.378689,"pass":false}
+{"sr":44100,"case":1,"body":0.7013,"tail":0,"pass":true}
+{"sr":44100,"case":2,"body":0.690548,"tail":0.380414,"pass":true}
+{"sr":44100,"case":3,"body":0.7013,"tail":0,"pass":true}
+{"sr":44100,"case":4,"body":0.690548,"tail":0.400899,"pass":false}
+{"sr":48000,"case":0,"body":0.710543,"tail":0.380758,"pass":false}
+{"sr":48000,"case":1,"body":0.710543,"tail":0,"pass":true}
+{"sr":48000,"case":2,"body":0.708749,"tail":0.368849,"pass":true}
+{"sr":48000,"case":3,"body":0.710543,"tail":0,"pass":true}
+{"sr":48000,"case":4,"body":0.708749,"tail":0.397088,"pass":false}
+{"sr":96000,"case":0,"body":0.714487,"tail":0.381928,"pass":false}
+{"sr":96000,"case":1,"body":0.714487,"tail":0,"pass":true}
+{"sr":96000,"case":2,"body":0.708782,"tail":0.367822,"pass":true}
+{"sr":96000,"case":3,"body":0.714487,"tail":0,"pass":true}
+{"sr":96000,"case":4,"body":0.708782,"tail":0.399114,"pass":false}
+FAILED 9/15 AU reset checks

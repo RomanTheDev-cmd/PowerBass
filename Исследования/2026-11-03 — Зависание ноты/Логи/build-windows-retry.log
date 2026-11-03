@@ -1,0 +1,448 @@
+-- The C compiler identification is Clang 23.1.4 with MSVC-like command-line
+-- The CXX compiler identification is Clang 23.1.4 with MSVC-like command-line
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /Users/roman/Library/Caches/PowerToolsWin/llvm-mingw-20261020-ucrt-macos-universal/bin/clang-cl - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Users/roman/Library/Caches/PowerToolsWin/llvm-mingw-20261020-ucrt-macos-universal/bin/clang-cl - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring juceaide
+-- Building juceaide
+-- Exporting juceaide
+-- Testing juceaide
+-- Finished setting up juceaide
+-- Configuring done (1.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/roman/Library/Caches/PowerBassStuckNote20261103/win
+[  4%] Generating powerbass_tests_artefacts/JuceLibraryCode/powerbass_tests_resources.rc
+[  9%] Building RC object CMakeFiles/powerbass_tests_rc_lib.dir/powerbass_tests_artefacts/JuceLibraryCode/powerbass_tests_resources.rc.res
+[  9%] Built target powerbass_tests_rc_lib
+[ 13%] Building CXX object CMakeFiles/powerbass_tests.dir/Source/Params.cpp.obj
+[ 18%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.cpp.obj
+[ 22%] Building CXX object CMakeFiles/powerbass_tests.dir/Source/Presets.cpp.obj
+[ 27%] Building CXX object CMakeFiles/powerbass_tests.dir/Tests/PowerBassTests.cpp.obj
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/PowerBassTests.cpp(941,61): warning: 'createWriterFor' is deprecated: Use the function taking an AudioFormatWriterOptions instead. [-Wdeprecated-declarations]
+  941 |             std::unique_ptr<juce::AudioFormatWriter> w (wav.createWriterFor (st.get(), 48000, 2, 24, {}, 0));
+      |                                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_formats/format/juce_AudioFormat.h(178,7): note: 'createWriterFor' has been explicitly marked deprecated here
+  178 |     [[deprecated ("Use the function taking an AudioFormatWriterOptions instead.")]]
+      |       ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/Presets.cpp(33,51): warning: missing field 'group' initializer [-Wmissing-field-initializers]
+   33 |             Preset p { d.name, d.category, {}, {} };
+      |                                                   ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/PowerBassTests.cpp(103,8): warning: unused function 'bandRmsSteep' [-Wunused-function]
+  103 | double bandRmsSteep (const std::vector<float>& x, double sr, double f1, double f2)
+      |        ^~~~~~~~~~~~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/PowerBassTests.cpp(201,13): warning: unused function 'preset' [-Wunused-function]
+  201 | SynthParams preset (const char* name)
+      |             ^~~~~~
+[ 31%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.cpp.obj
+1 warning generated.
+[ 36%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_core/juce_core.cpp.obj
+3 warnings generated.
+[ 40%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_core/juce_core_CompilationTime.cpp.obj
+[ 45%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.cpp.obj
+[ 50%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.cpp.obj
+[ 54%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp.obj
+[ 59%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_graphics/juce_graphics.cpp.obj
+[ 63%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp.obj
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp:94:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/harfbuzz.cc:2:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout.cc:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout-kerx-table.hh:31:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-kern.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-ot-layout-gpos-table.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/GPOS.hh:5:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(2260,30): warning: array index 1 is past the end of the array (that has type 'const OT::IntType<unsigned short>[1]') [-Warray-bounds]
+ 2260 |               match_input (*second, input.arrayZ[1], input_data)))
+      |                                     ^            ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(2436,28): note: in instantiation of member function 'OT::RuleSet<OT::Layout::SmallTypes>::apply' requested here
+ 2436 |     return_trace (rule_set.apply (c, lookup_context));
+      |                            ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(689,49): note: in instantiation of member function 'OT::ContextFormat1_4<OT::Layout::SmallTypes>::apply' requested here
+  689 |   return_t dispatch (const T &obj) { return obj.apply (this); }
+      |                                                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(2909,45): note: in instantiation of function template specialization 'OT::hb_ot_apply_context_t::dispatch<OT::ContextFormat1_4<OT::Layout::SmallTypes>>' requested here
+ 2909 |     case 1: hb_barrier (); return_trace (c->dispatch (u.format1, std::forward<Ts> (ds)...));
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookupSubTable.hh(46,57): note: in instantiation of function template specialization 'OT::Context::dispatch<OT::hb_ot_apply_context_t>' requested here
+   46 |     case Context:               return_trace (u.context.dispatch (c, std::forward<Ts> (ds)...));
+      |                                                         ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-layout-common.hh(1339,68): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookupSubTable::dispatch<OT::hb_ot_apply_context_t>' requested here
+ 1339 |       typename context_t::return_t r = get_subtable<TSubTable> (i).dispatch (c, lookup_type, std::forward<Ts> (ds)...);
+      |                                                                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(66,20): note: in instantiation of function template specialization 'OT::Lookup::dispatch<OT::Layout::GPOS_impl::PosLookupSubTable, OT::hb_ot_apply_context_t>' requested here
+   66 |   { return Lookup::dispatch<SubTable> (c, std::forward<Ts> (ds)...); }
+      |                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(26,19): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookup::dispatch<OT::hb_ot_apply_context_t>' requested here
+   26 |     return_trace (dispatch (c));
+      |                   ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-open-type.hh(639,3): note: array 'arrayZ' declared here
+  639 |   Type          arrayZ[HB_VAR_ARRAY];
+      |   ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp:94:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/harfbuzz.cc:2:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout.cc:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout-kerx-table.hh:31:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-kern.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-ot-layout-gpos-table.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/GPOS.hh:5:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(3473,30): warning: array index 1 is past the end of the array (that has type 'const OT::IntType<unsigned short>[1]') [-Warray-bounds]
+ 3473 |               match_input (*second, input.arrayZ[1], input_data))
+      |                                     ^            ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(3656,28): note: in instantiation of member function 'OT::ChainRuleSet<OT::Layout::SmallTypes>::apply' requested here
+ 3656 |     return_trace (rule_set.apply (c, lookup_context));
+      |                            ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(689,49): note: in instantiation of member function 'OT::ChainContextFormat1_4<OT::Layout::SmallTypes>::apply' requested here
+  689 |   return_t dispatch (const T &obj) { return obj.apply (this); }
+      |                                                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(4242,45): note: in instantiation of function template specialization 'OT::hb_ot_apply_context_t::dispatch<OT::ChainContextFormat1_4<OT::Layout::SmallTypes>>' requested here
+ 4242 |     case 1: hb_barrier (); return_trace (c->dispatch (u.format1, std::forward<Ts> (ds)...));
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookupSubTable.hh(47,62): note: in instantiation of function template specialization 'OT::ChainContext::dispatch<OT::hb_ot_apply_context_t>' requested here
+   47 |     case ChainContext:          return_trace (u.chainContext.dispatch (c, std::forward<Ts> (ds)...));
+      |                                                              ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-layout-common.hh(1339,68): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookupSubTable::dispatch<OT::hb_ot_apply_context_t>' requested here
+ 1339 |       typename context_t::return_t r = get_subtable<TSubTable> (i).dispatch (c, lookup_type, std::forward<Ts> (ds)...);
+      |                                                                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(66,20): note: in instantiation of function template specialization 'OT::Lookup::dispatch<OT::Layout::GPOS_impl::PosLookupSubTable, OT::hb_ot_apply_context_t>' requested here
+   66 |   { return Lookup::dispatch<SubTable> (c, std::forward<Ts> (ds)...); }
+      |                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(26,19): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookup::dispatch<OT::hb_ot_apply_context_t>' requested here
+   26 |     return_trace (dispatch (c));
+      |                   ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-open-type.hh(979,3): note: array 'arrayZ' declared here
+  979 |   Type          arrayZ[HB_VAR_ARRAY];
+      |   ^
+[ 68%] Building C object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_graphics/juce_graphics_Sheenbidi.c.obj
+[ 72%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_events/juce_events.cpp.obj
+[ 77%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_data_structures/juce_data_structures.cpp.obj
+[ 81%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.cpp.obj
+[ 86%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless_ara.cpp.obj
+[ 90%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless_lv2_libs.cpp.obj
+[ 95%] Building CXX object CMakeFiles/powerbass_tests.dir/third_party/JUCE/modules/juce_dsp/juce_dsp.cpp.obj
+2 warnings generated.
+[100%] Linking CXX executable powerbass_tests_artefacts/Release/powerbass_tests.exe
+[100%] Built target powerbass_tests
+[  2%] Generating powerbass_wrapper_tests_artefacts/JuceLibraryCode/powerbass_wrapper_tests_resources.rc
+[  6%] Building CXX object CMakeFiles/PowerBass.dir/Source/Presets.cpp.obj
+[  6%] Building CXX object CMakeFiles/PowerBass.dir/Source/PluginProcessor.cpp.obj
+[  9%] Building CXX object CMakeFiles/PowerBass.dir/Source/Params.cpp.obj
+[ 11%] Building RC object CMakeFiles/powerbass_wrapper_tests_rc_lib.dir/powerbass_wrapper_tests_artefacts/JuceLibraryCode/powerbass_wrapper_tests_resources.rc.res
+[ 11%] Built target powerbass_wrapper_tests_rc_lib
+[ 13%] Building CXX object CMakeFiles/PowerBass.dir/Source/PluginEditor.cpp.obj
+[ 15%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.cpp.obj
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Source/Presets.cpp(33,51): warning: missing field 'group' initializer [-Wmissing-field-initializers]
+   33 |             Preset p { d.name, d.category, {}, {} };
+      |                                                   ^
+[ 18%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.cpp.obj
+1 warning generated.
+[ 20%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp.obj
+[ 22%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_graphics/juce_graphics.cpp.obj
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp(61,2): warning: This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored [-W#pragma-messages]
+   61 |  JUCE_COMPILER_WARNING ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_PlatformDefs.h(292,38): note: expanded from macro 'JUCE_COMPILER_WARNING'
+  292 |  #define JUCE_COMPILER_WARNING(msg)  _Pragma (JUCE_STRINGIFY (message (msg)))
+      |                                      ^
+<scratch space>(28,2): note: expanded from here
+   28 |  message ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+[ 25%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp.obj
+[ 27%] Building C object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_graphics/juce_graphics_Sheenbidi.c.obj
+[ 29%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_events/juce_events.cpp.obj
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp:94:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/harfbuzz.cc:2:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout.cc:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout-kerx-table.hh:31:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-kern.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-ot-layout-gpos-table.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/GPOS.hh:5:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(2260,30): warning: array index 1 is past the end of the array (that has type 'const OT::IntType<unsigned short>[1]') [-Warray-bounds]
+ 2260 |               match_input (*second, input.arrayZ[1], input_data)))
+      |                                     ^            ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(2436,28): note: in instantiation of member function 'OT::RuleSet<OT::Layout::SmallTypes>::apply' requested here
+ 2436 |     return_trace (rule_set.apply (c, lookup_context));
+      |                            ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(689,49): note: in instantiation of member function 'OT::ContextFormat1_4<OT::Layout::SmallTypes>::apply' requested here
+  689 |   return_t dispatch (const T &obj) { return obj.apply (this); }
+      |                                                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(2909,45): note: in instantiation of function template specialization 'OT::hb_ot_apply_context_t::dispatch<OT::ContextFormat1_4<OT::Layout::SmallTypes>>' requested here
+ 2909 |     case 1: hb_barrier (); return_trace (c->dispatch (u.format1, std::forward<Ts> (ds)...));
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookupSubTable.hh(46,57): note: in instantiation of function template specialization 'OT::Context::dispatch<OT::hb_ot_apply_context_t>' requested here
+   46 |     case Context:               return_trace (u.context.dispatch (c, std::forward<Ts> (ds)...));
+      |                                                         ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-layout-common.hh(1339,68): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookupSubTable::dispatch<OT::hb_ot_apply_context_t>' requested here
+ 1339 |       typename context_t::return_t r = get_subtable<TSubTable> (i).dispatch (c, lookup_type, std::forward<Ts> (ds)...);
+      |                                                                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(66,20): note: in instantiation of function template specialization 'OT::Lookup::dispatch<OT::Layout::GPOS_impl::PosLookupSubTable, OT::hb_ot_apply_context_t>' requested here
+   66 |   { return Lookup::dispatch<SubTable> (c, std::forward<Ts> (ds)...); }
+      |                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(26,19): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookup::dispatch<OT::hb_ot_apply_context_t>' requested here
+   26 |     return_trace (dispatch (c));
+      |                   ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-open-type.hh(639,3): note: array 'arrayZ' declared here
+  639 |   Type          arrayZ[HB_VAR_ARRAY];
+      |   ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp:94:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/harfbuzz.cc:2:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout.cc:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout-kerx-table.hh:31:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-kern.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-ot-layout-gpos-table.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/GPOS.hh:5:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(3473,30): warning: array index 1 is past the end of the array (that has type 'const OT::IntType<unsigned short>[1]') [-Warray-bounds]
+ 3473 |               match_input (*second, input.arrayZ[1], input_data))
+      |                                     ^            ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(3656,28): note: in instantiation of member function 'OT::ChainRuleSet<OT::Layout::SmallTypes>::apply' requested here
+ 3656 |     return_trace (rule_set.apply (c, lookup_context));
+      |                            ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(689,49): note: in instantiation of member function 'OT::ChainContextFormat1_4<OT::Layout::SmallTypes>::apply' requested here
+  689 |   return_t dispatch (const T &obj) { return obj.apply (this); }
+      |                                                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(4242,45): note: in instantiation of function template specialization 'OT::hb_ot_apply_context_t::dispatch<OT::ChainContextFormat1_4<OT::Layout::SmallTypes>>' requested here
+ 4242 |     case 1: hb_barrier (); return_trace (c->dispatch (u.format1, std::forward<Ts> (ds)...));
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookupSubTable.hh(47,62): note: in instantiation of function template specialization 'OT::ChainContext::dispatch<OT::hb_ot_apply_context_t>' requested here
+   47 |     case ChainContext:          return_trace (u.chainContext.dispatch (c, std::forward<Ts> (ds)...));
+      |                                                              ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-layout-common.hh(1339,68): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookupSubTable::dispatch<OT::hb_ot_apply_context_t>' requested here
+ 1339 |       typename context_t::return_t r = get_subtable<TSubTable> (i).dispatch (c, lookup_type, std::forward<Ts> (ds)...);
+      |                                                                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(66,20): note: in instantiation of function template specialization 'OT::Lookup::dispatch<OT::Layout::GPOS_impl::PosLookupSubTable, OT::hb_ot_apply_context_t>' requested here
+   66 |   { return Lookup::dispatch<SubTable> (c, std::forward<Ts> (ds)...); }
+      |                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(26,19): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookup::dispatch<OT::hb_ot_apply_context_t>' requested here
+   26 |     return_trace (dispatch (c));
+      |                   ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-open-type.hh(979,3): note: array 'arrayZ' declared here
+  979 |   Type          arrayZ[HB_VAR_ARRAY];
+      |   ^
+[ 31%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_core/juce_core.cpp.obj
+[ 34%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_core/juce_core_CompilationTime.cpp.obj
+[ 36%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_data_structures/juce_data_structures.cpp.obj
+[ 38%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.cpp.obj
+[ 40%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless_ara.cpp.obj
+[ 43%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless_lv2_libs.cpp.obj
+[ 45%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.cpp.obj
+2 warnings generated.
+[ 47%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_utils/juce_audio_utils.cpp.obj
+[ 50%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.cpp.obj
+[ 52%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_audio_devices/juce_audio_devices.cpp.obj
+[ 54%] Building CXX object CMakeFiles/PowerBass.dir/third_party/JUCE/modules/juce_dsp/juce_dsp.cpp.obj
+1 warning generated.
+[ 56%] Linking CXX static library PowerBass_artefacts/Release/PowerBass_SharedCode.lib
+[ 56%] Built target PowerBass
+[ 63%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/Tests/WrapperTests.cpp.obj
+[ 63%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.cpp.obj
+[ 63%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.cpp.obj
+[ 65%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_utils/juce_audio_utils.cpp.obj
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/Tests/WrapperTests.cpp(25,18): warning: unused function 'mouseAt' [-Wunused-function]
+   25 | juce::MouseEvent mouseAt (juce::Component* c, bool dragged)
+      |                  ^~~~~~~
+1 warning generated.
+[ 68%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp.obj
+[ 70%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_graphics/juce_graphics.cpp.obj
+[ 72%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp.obj
+[ 75%] Building C object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_graphics/juce_graphics_Sheenbidi.c.obj
+[ 77%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_events/juce_events.cpp.obj
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp(61,2): warning: This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored [-W#pragma-messages]
+   61 |  JUCE_COMPILER_WARNING ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/system/juce_PlatformDefs.h(292,38): note: expanded from macro 'JUCE_COMPILER_WARNING'
+  292 |  #define JUCE_COMPILER_WARNING(msg)  _Pragma (JUCE_STRINGIFY (message (msg)))
+      |                                      ^
+<scratch space>(28,2): note: expanded from here
+   28 |  message ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+[ 79%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_core/juce_core.cpp.obj
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp:94:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/harfbuzz.cc:2:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout.cc:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout-kerx-table.hh:31:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-kern.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-ot-layout-gpos-table.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/GPOS.hh:5:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(2260,30): warning: array index 1 is past the end of the array (that has type 'const OT::IntType<unsigned short>[1]') [-Warray-bounds]
+ 2260 |               match_input (*second, input.arrayZ[1], input_data)))
+      |                                     ^            ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(2436,28): note: in instantiation of member function 'OT::RuleSet<OT::Layout::SmallTypes>::apply' requested here
+ 2436 |     return_trace (rule_set.apply (c, lookup_context));
+      |                            ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(689,49): note: in instantiation of member function 'OT::ContextFormat1_4<OT::Layout::SmallTypes>::apply' requested here
+  689 |   return_t dispatch (const T &obj) { return obj.apply (this); }
+      |                                                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(2909,45): note: in instantiation of function template specialization 'OT::hb_ot_apply_context_t::dispatch<OT::ContextFormat1_4<OT::Layout::SmallTypes>>' requested here
+ 2909 |     case 1: hb_barrier (); return_trace (c->dispatch (u.format1, std::forward<Ts> (ds)...));
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookupSubTable.hh(46,57): note: in instantiation of function template specialization 'OT::Context::dispatch<OT::hb_ot_apply_context_t>' requested here
+   46 |     case Context:               return_trace (u.context.dispatch (c, std::forward<Ts> (ds)...));
+      |                                                         ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-layout-common.hh(1339,68): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookupSubTable::dispatch<OT::hb_ot_apply_context_t>' requested here
+ 1339 |       typename context_t::return_t r = get_subtable<TSubTable> (i).dispatch (c, lookup_type, std::forward<Ts> (ds)...);
+      |                                                                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(66,20): note: in instantiation of function template specialization 'OT::Lookup::dispatch<OT::Layout::GPOS_impl::PosLookupSubTable, OT::hb_ot_apply_context_t>' requested here
+   66 |   { return Lookup::dispatch<SubTable> (c, std::forward<Ts> (ds)...); }
+      |                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(26,19): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookup::dispatch<OT::hb_ot_apply_context_t>' requested here
+   26 |     return_trace (dispatch (c));
+      |                   ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-open-type.hh(639,3): note: array 'arrayZ' declared here
+  639 |   Type          arrayZ[HB_VAR_ARRAY];
+      |   ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp:94:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/harfbuzz.cc:2:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout.cc:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout-kerx-table.hh:31:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-kern.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-ot-layout-gpos-table.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/GPOS.hh:5:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(3473,30): warning: array index 1 is past the end of the array (that has type 'const OT::IntType<unsigned short>[1]') [-Warray-bounds]
+ 3473 |               match_input (*second, input.arrayZ[1], input_data))
+      |                                     ^            ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(3656,28): note: in instantiation of member function 'OT::ChainRuleSet<OT::Layout::SmallTypes>::apply' requested here
+ 3656 |     return_trace (rule_set.apply (c, lookup_context));
+      |                            ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(689,49): note: in instantiation of member function 'OT::ChainContextFormat1_4<OT::Layout::SmallTypes>::apply' requested here
+  689 |   return_t dispatch (const T &obj) { return obj.apply (this); }
+      |                                                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(4242,45): note: in instantiation of function template specialization 'OT::hb_ot_apply_context_t::dispatch<OT::ChainContextFormat1_4<OT::Layout::SmallTypes>>' requested here
+ 4242 |     case 1: hb_barrier (); return_trace (c->dispatch (u.format1, std::forward<Ts> (ds)...));
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookupSubTable.hh(47,62): note: in instantiation of function template specialization 'OT::ChainContext::dispatch<OT::hb_ot_apply_context_t>' requested here
+   47 |     case ChainContext:          return_trace (u.chainContext.dispatch (c, std::forward<Ts> (ds)...));
+      |                                                              ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-layout-common.hh(1339,68): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookupSubTable::dispatch<OT::hb_ot_apply_context_t>' requested here
+ 1339 |       typename context_t::return_t r = get_subtable<TSubTable> (i).dispatch (c, lookup_type, std::forward<Ts> (ds)...);
+      |                                                                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(66,20): note: in instantiation of function template specialization 'OT::Lookup::dispatch<OT::Layout::GPOS_impl::PosLookupSubTable, OT::hb_ot_apply_context_t>' requested here
+   66 |   { return Lookup::dispatch<SubTable> (c, std::forward<Ts> (ds)...); }
+      |                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(26,19): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookup::dispatch<OT::hb_ot_apply_context_t>' requested here
+   26 |     return_trace (dispatch (c));
+      |                   ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-open-type.hh(979,3): note: array 'arrayZ' declared here
+  979 |   Type          arrayZ[HB_VAR_ARRAY];
+      |   ^
+[ 81%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_core/juce_core_CompilationTime.cpp.obj
+[ 84%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_data_structures/juce_data_structures.cpp.obj
+[ 86%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.cpp.obj
+[ 88%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless_ara.cpp.obj
+[ 90%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless_lv2_libs.cpp.obj
+2 warnings generated.
+[ 93%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.cpp.obj
+[ 95%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_formats/juce_audio_formats.cpp.obj
+[ 97%] Building CXX object CMakeFiles/powerbass_wrapper_tests.dir/third_party/JUCE/modules/juce_audio_devices/juce_audio_devices.cpp.obj
+1 warning generated.
+[100%] Linking CXX executable powerbass_wrapper_tests_artefacts/Release/powerbass_wrapper_tests.exe
+[100%] Built target powerbass_wrapper_tests
+[  2%] Generating PowerBass_artefacts/JuceLibraryCode/PowerBass_resources.rc
+[  5%] Building CXX object CMakeFiles/PowerBass_vst3_helper.dir/third_party/JUCE/modules/juce_audio_plugin_client/VST3/juce_VST3ManifestHelper.cpp.obj
+[ 11%] Building CXX object CMakeFiles/PowerBass.dir/Source/PluginProcessor.cpp.obj
+[ 11%] Building RC object CMakeFiles/PowerBass_rc_lib.dir/PowerBass_artefacts/JuceLibraryCode/PowerBass_resources.rc.res
+[ 11%] Built target PowerBass_rc_lib
+[ 13%] Linking CXX static library PowerBass_artefacts/Release/PowerBass_SharedCode.lib
+[ 72%] Built target PowerBass
+[ 75%] Linking CXX executable PowerBass_vst3_helper.exe
+[ 75%] Built target PowerBass_vst3_helper
+[ 80%] Building CXX object CMakeFiles/PowerBass_VST3.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX.cpp.obj
+[ 80%] Building CXX object CMakeFiles/PowerBass_VST3.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_ARA.cpp.obj
+[ 83%] Building CXX object CMakeFiles/PowerBass_VST3.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_LV2.cpp.obj
+[ 86%] Building CXX object CMakeFiles/PowerBass_VST3.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX_utils.cpp.obj
+[ 88%] Building CXX object CMakeFiles/PowerBass_VST3.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_Standalone.cpp.obj
+[ 91%] Building CXX object CMakeFiles/PowerBass_VST3.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_Unity.cpp.obj
+[ 94%] Building CXX object CMakeFiles/PowerBass_VST3.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST2.cpp.obj
+[ 97%] Building CXX object CMakeFiles/PowerBass_VST3.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST3.cpp.obj
+[100%] Linking CXX shared module PowerBass_artefacts/Release/VST3/PowerBass.vst3/Contents/x86_64-win/PowerBass.vst3
+removing moduleinfo.json
+creating /Users/roman/Library/Caches/PowerBassStuckNote20261103/win/PowerBass_artefacts/Release/VST3/PowerBass.vst3
+[100%] Built target PowerBass_VST3
+[  5%] Built target PowerBass_rc_lib
+[ 73%] Built target PowerBass
+[ 76%] Building CXX object CMakeFiles/PowerBass_Standalone.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX.cpp.obj
+[ 79%] Building CXX object CMakeFiles/PowerBass_Standalone.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_ARA.cpp.obj
+[ 85%] Building CXX object CMakeFiles/PowerBass_Standalone.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX_utils.cpp.obj
+[ 85%] Building CXX object CMakeFiles/PowerBass_Standalone.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_LV2.cpp.obj
+[ 88%] Building CXX object CMakeFiles/PowerBass_Standalone.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_Unity.cpp.obj
+[ 94%] Building CXX object CMakeFiles/PowerBass_Standalone.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_Standalone.cpp.obj
+[ 94%] Building CXX object CMakeFiles/PowerBass_Standalone.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST3.cpp.obj
+[ 97%] Building CXX object CMakeFiles/PowerBass_Standalone.dir/third_party/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST2.cpp.obj
+[100%] Linking CXX executable PowerBass_artefacts/Release/Standalone/PowerBass.exe
+[100%] Built target PowerBass_Standalone

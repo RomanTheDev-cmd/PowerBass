@@ -761,11 +761,13 @@ void testPresetFiles()
 // Include overlapping equal keys: each strike receives its own, slightly late note-off.
 void testPhraseTailSilence()
 {
-    for (bool smooth : { false, true })
+    for (bool analog : { false, true })
+      for (bool smooth : { false, true })
         for (const auto& pr : factoryPresets())
         {
             auto p = paramsFromSnapshot (pr.values);
             p.smoothStart = smooth;
+            p.analog = analog;
             const std::vector<Note> notes { { 0.0, 0.201, 36 }, { 0.2, 0.401, 36 },
                                             { 0.4, 0.601, 43 }, { 0.6, 0.801, 39 } };
             const double seconds = 0.801 + std::max (2.0, 2.6 * p.releaseMs * 0.001);
@@ -773,7 +775,7 @@ void testPhraseTailSilence()
             const int from = a.getNumSamples() - 4800;
             const double tail = std::max (a.getMagnitude (0, from, 4800), a.getMagnitude (1, from, 4800));
             expect (finite (a) && tail < 1.0e-7,
-                    pr.name + (smooth ? " SMOOTH" : " retrigger") + ": silence after MIDI phrase ("
+                    pr.name + (analog ? " ANALOGUE" : " DIGITAL") + (smooth ? " SMOOTH" : " retrigger") + ": silence after MIDI phrase ("
                         + juce::String (db (tail), 1) + " dBFS)");
         }
 }

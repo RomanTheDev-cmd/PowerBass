@@ -1,0 +1,173 @@
+[  5%] Generating host_check_artefacts/JuceLibraryCode/host_check_resources.rc
+[ 11%] Building RC object CMakeFiles/host_check_rc_lib.dir/host_check_artefacts/JuceLibraryCode/host_check_resources.rc.res
+[ 11%] Built target host_check_rc_lib
+[ 16%] Building CXX object CMakeFiles/host_check.dir/main.cpp.obj
+[ 22%] Building CXX object CMakeFiles/host_check.dir/Users/roman/Library/Mobile_Documents/com~apple~CloudDocs/Главная_рабочая_папка_ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.cpp.obj
+[ 27%] Building CXX object CMakeFiles/host_check.dir/Users/roman/Library/Mobile_Documents/com~apple~CloudDocs/Главная_рабочая_папка_ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_extra/juce_gui_extra.cpp.obj
+[ 33%] Building CXX object CMakeFiles/host_check.dir/Users/roman/Library/Mobile_Documents/com~apple~CloudDocs/Главная_рабочая_папка_ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp.obj
+[ 38%] Building CXX object CMakeFiles/host_check.dir/Users/roman/Library/Mobile_Documents/com~apple~CloudDocs/Главная_рабочая_папка_ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics.cpp.obj
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/juce_audio_processors.cpp:71:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors/format_types/juce_VST3PluginFormat.cpp:37:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(824,17): warning: virtual method '~AttributeList' is inside a 'final' class and can never be overridden [-Wunnecessary-virtual-specifier]
+  824 |         virtual ~AttributeList() = default;
+      |                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(911,17): warning: virtual method '~Message' is inside a 'final' class and can never be overridden [-Wunnecessary-virtual-specifier]
+  911 |         virtual ~Message() = default;
+      |                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(1714,13): warning: virtual method '~HostToClientParamQueue' is inside a 'final' class and can never be overridden [-Wunnecessary-virtual-specifier]
+ 1714 |     virtual ~HostToClientParamQueue() = default;
+      |             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(1819,13): warning: virtual method '~ClientToHostParamQueue' is inside a 'final' class and can never be overridden [-Wunnecessary-virtual-specifier]
+ 1819 |     virtual ~ClientToHostParamQueue() = default;
+      |             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(2645,17): warning: virtual method '~TrackPropertiesAttributeList' is inside a 'final' class and can never be overridden [-Wunnecessary-virtual-specifier]
+ 2645 |         virtual ~TrackPropertiesAttributeList() {}
+      |                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(1902,13): warning: virtual method '~ParameterChanges' is inside a 'final' class and can never be overridden [-Wunnecessary-virtual-specifier]
+ 1902 |     virtual ~ParameterChanges() = default;
+      |             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(3061,13): note: in instantiation of template class 'juce::ParameterChanges<juce::HostToClientParamQueue>' requested here
+ 3061 |         new ParameterChanges<HostToClientParamQueue>,
+      |             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(1902,13): warning: virtual method '~ParameterChanges' is inside a 'final' class and can never be overridden [-Wunnecessary-virtual-specifier]
+ 1902 |     virtual ~ParameterChanges() = default;
+      |             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(3067,13): note: in instantiation of template class 'juce::ParameterChanges<juce::ClientToHostParamQueue>' requested here
+ 3067 |         new ParameterChanges<ClientToHostParamQueue>,
+      |             ^
+[ 44%] Building CXX object CMakeFiles/host_check.dir/Users/roman/Library/Mobile_Documents/com~apple~CloudDocs/Главная_рабочая_папка_ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp.obj
+7 warnings generated.
+[ 50%] Building C object CMakeFiles/host_check.dir/Users/roman/Library/Mobile_Documents/com~apple~CloudDocs/Главная_рабочая_папка_ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics_Sheenbidi.c.obj
+[ 55%] Building CXX object CMakeFiles/host_check.dir/Users/roman/Library/Mobile_Documents/com~apple~CloudDocs/Главная_рабочая_папка_ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_events/juce_events.cpp.obj
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp:94:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/harfbuzz.cc:2:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout.cc:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout-kerx-table.hh:31:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-kern.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-ot-layout-gpos-table.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/GPOS.hh:5:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(2260,30): warning: array index 1 is past the end of the array (that has type 'const OT::IntType<unsigned short>[1]') [-Warray-bounds]
+ 2260 |               match_input (*second, input.arrayZ[1], input_data)))
+      |                                     ^            ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(2436,28): note: in instantiation of member function 'OT::RuleSet<OT::Layout::SmallTypes>::apply' requested here
+ 2436 |     return_trace (rule_set.apply (c, lookup_context));
+      |                            ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(689,49): note: in instantiation of member function 'OT::ContextFormat1_4<OT::Layout::SmallTypes>::apply' requested here
+  689 |   return_t dispatch (const T &obj) { return obj.apply (this); }
+      |                                                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(2909,45): note: in instantiation of function template specialization 'OT::hb_ot_apply_context_t::dispatch<OT::ContextFormat1_4<OT::Layout::SmallTypes>>' requested here
+ 2909 |     case 1: hb_barrier (); return_trace (c->dispatch (u.format1, std::forward<Ts> (ds)...));
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookupSubTable.hh(46,57): note: in instantiation of function template specialization 'OT::Context::dispatch<OT::hb_ot_apply_context_t>' requested here
+   46 |     case Context:               return_trace (u.context.dispatch (c, std::forward<Ts> (ds)...));
+      |                                                         ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-layout-common.hh(1339,68): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookupSubTable::dispatch<OT::hb_ot_apply_context_t>' requested here
+ 1339 |       typename context_t::return_t r = get_subtable<TSubTable> (i).dispatch (c, lookup_type, std::forward<Ts> (ds)...);
+      |                                                                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(66,20): note: in instantiation of function template specialization 'OT::Lookup::dispatch<OT::Layout::GPOS_impl::PosLookupSubTable, OT::hb_ot_apply_context_t>' requested here
+   66 |   { return Lookup::dispatch<SubTable> (c, std::forward<Ts> (ds)...); }
+      |                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(26,19): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookup::dispatch<OT::hb_ot_apply_context_t>' requested here
+   26 |     return_trace (dispatch (c));
+      |                   ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-open-type.hh(639,3): note: array 'arrayZ' declared here
+  639 |   Type          arrayZ[HB_VAR_ARRAY];
+      |   ^
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp:94:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/harfbuzz.cc:2:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout.cc:35:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-aat-layout-kerx-table.hh:31:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-kern.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-ot-layout-gpos-table.hh:32:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/GPOS.hh:5:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(3473,30): warning: array index 1 is past the end of the array (that has type 'const OT::IntType<unsigned short>[1]') [-Warray-bounds]
+ 3473 |               match_input (*second, input.arrayZ[1], input_data))
+      |                                     ^            ~
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(3656,28): note: in instantiation of member function 'OT::ChainRuleSet<OT::Layout::SmallTypes>::apply' requested here
+ 3656 |     return_trace (rule_set.apply (c, lookup_context));
+      |                            ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(689,49): note: in instantiation of member function 'OT::ChainContextFormat1_4<OT::Layout::SmallTypes>::apply' requested here
+  689 |   return_t dispatch (const T &obj) { return obj.apply (this); }
+      |                                                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/../../../hb-ot-layout-gsubgpos.hh(4242,45): note: in instantiation of function template specialization 'OT::hb_ot_apply_context_t::dispatch<OT::ChainContextFormat1_4<OT::Layout::SmallTypes>>' requested here
+ 4242 |     case 1: hb_barrier (); return_trace (c->dispatch (u.format1, std::forward<Ts> (ds)...));
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookupSubTable.hh(47,62): note: in instantiation of function template specialization 'OT::ChainContext::dispatch<OT::hb_ot_apply_context_t>' requested here
+   47 |     case ChainContext:          return_trace (u.chainContext.dispatch (c, std::forward<Ts> (ds)...));
+      |                                                              ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-ot-layout-common.hh(1339,68): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookupSubTable::dispatch<OT::hb_ot_apply_context_t>' requested here
+ 1339 |       typename context_t::return_t r = get_subtable<TSubTable> (i).dispatch (c, lookup_type, std::forward<Ts> (ds)...);
+      |                                                                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(66,20): note: in instantiation of function template specialization 'OT::Lookup::dispatch<OT::Layout::GPOS_impl::PosLookupSubTable, OT::hb_ot_apply_context_t>' requested here
+   66 |   { return Lookup::dispatch<SubTable> (c, std::forward<Ts> (ds)...); }
+      |                    ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Layout/GPOS/PosLookup.hh(26,19): note: in instantiation of function template specialization 'OT::Layout::GPOS_impl::PosLookup::dispatch<OT::hb_ot_apply_context_t>' requested here
+   26 |     return_trace (dispatch (c));
+      |                   ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/hb-debug.hh(350,45): note: expanded from macro 'return_trace'
+  350 | #define return_trace(RET) return trace.ret (RET, HB_FUNC, __LINE__)
+      |                                             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_graphics/fonts/harfbuzz/OT/Var/VARC/../../../hb-open-type.hh(979,3): note: array 'arrayZ' declared here
+  979 |   Type          arrayZ[HB_VAR_ARRAY];
+      |   ^
+[ 61%] Building CXX object CMakeFiles/host_check.dir/Users/roman/Library/Mobile_Documents/com~apple~CloudDocs/Главная_рабочая_папка_ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core.cpp.obj
+[ 66%] Building CXX object CMakeFiles/host_check.dir/Users/roman/Library/Mobile_Documents/com~apple~CloudDocs/Главная_рабочая_папка_ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_core/juce_core_CompilationTime.cpp.obj
+[ 72%] Building CXX object CMakeFiles/host_check.dir/Users/roman/Library/Mobile_Documents/com~apple~CloudDocs/Главная_рабочая_папка_ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_data_structures/juce_data_structures.cpp.obj
+[ 77%] Building CXX object CMakeFiles/host_check.dir/Users/roman/Library/Mobile_Documents/com~apple~CloudDocs/Главная_рабочая_папка_ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.cpp.obj
+[ 83%] Building CXX object CMakeFiles/host_check.dir/Users/roman/Library/Mobile_Documents/com~apple~CloudDocs/Главная_рабочая_папка_ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless_ara.cpp.obj
+[ 88%] Building CXX object CMakeFiles/host_check.dir/Users/roman/Library/Mobile_Documents/com~apple~CloudDocs/Главная_рабочая_папка_ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless_lv2_libs.cpp.obj
+[ 94%] Building CXX object CMakeFiles/host_check.dir/Users/roman/Library/Mobile_Documents/com~apple~CloudDocs/Главная_рабочая_папка_ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_basics/juce_audio_basics.cpp.obj
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/juce_audio_processors_headless.cpp:70:
+In file included from /Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatHeadless.cpp:37:
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(824,17): warning: virtual method '~AttributeList' is inside a 'final' class and can never be overridden [-Wunnecessary-virtual-specifier]
+  824 |         virtual ~AttributeList() = default;
+      |                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(911,17): warning: virtual method '~Message' is inside a 'final' class and can never be overridden [-Wunnecessary-virtual-specifier]
+  911 |         virtual ~Message() = default;
+      |                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(1714,13): warning: virtual method '~HostToClientParamQueue' is inside a 'final' class and can never be overridden [-Wunnecessary-virtual-specifier]
+ 1714 |     virtual ~HostToClientParamQueue() = default;
+      |             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(1819,13): warning: virtual method '~ClientToHostParamQueue' is inside a 'final' class and can never be overridden [-Wunnecessary-virtual-specifier]
+ 1819 |     virtual ~ClientToHostParamQueue() = default;
+      |             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(2645,17): warning: virtual method '~TrackPropertiesAttributeList' is inside a 'final' class and can never be overridden [-Wunnecessary-virtual-specifier]
+ 2645 |         virtual ~TrackPropertiesAttributeList() {}
+      |                 ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(1902,13): warning: virtual method '~ParameterChanges' is inside a 'final' class and can never be overridden [-Wunnecessary-virtual-specifier]
+ 1902 |     virtual ~ParameterChanges() = default;
+      |             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(3061,13): note: in instantiation of template class 'juce::ParameterChanges<juce::HostToClientParamQueue>' requested here
+ 3061 |         new ParameterChanges<HostToClientParamQueue>,
+      |             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(1902,13): warning: virtual method '~ParameterChanges' is inside a 'final' class and can never be overridden [-Wunnecessary-virtual-specifier]
+ 1902 |     virtual ~ParameterChanges() = default;
+      |             ^
+/Users/roman/Library/Mobile Documents/com~apple~CloudDocs/Главная рабочая папка ИИ/Проекты/PowerBass/third_party/JUCE/modules/juce_audio_processors_headless/format_types/juce_VST3PluginFormatImpl.h(3067,13): note: in instantiation of template class 'juce::ParameterChanges<juce::ClientToHostParamQueue>' requested here
+ 3067 |         new ParameterChanges<ClientToHostParamQueue>,
+      |             ^
+2 warnings generated.
+7 warnings generated.
+[100%] Linking CXX executable host_check_artefacts/Release/host_check.exe
+[100%] Built target host_check
