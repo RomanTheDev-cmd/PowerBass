@@ -495,6 +495,49 @@ void testMonoBus()
     expect (r.finite && r.peak > 0.05 && r.peak <= 1.0, "mono bus plays the bass (" + juce::String (r.peak, 3) + ")");
 }
 
+void testPreviewOwnership()
+{
+    for (bool smooth : { false, true })
+        for (int scenario = 0; scenario < 7; ++scenario)
+        {
+            PowerBassProcessor p;
+            setPlain (p, pb::id::smoothStart, smooth ? 1.0f : 0.0f);
+            p.prepareToPlay (48000, 512);
+            juce::AudioBuffer<float> audio (2, 512);
+            double held = 0.0, tail = 0.0;
+            for (int b = 0; b < 350; ++b)
+            {
+                juce::MidiBuffer midi;
+                if (b == 0 || ((scenario == 0 || scenario == 1) && b == 10)) p.previewRequested = true;
+                if (scenario == 1 && b == 0) midi.addEvent (juce::MidiMessage::noteOn (1, 36, 0.9f), 0);
+                if (scenario >= 2 && b == (scenario >= 5 ? 37 : 5))
+                {
+                    if (scenario >= 3) p.previewRequested = true;
+                    // At block 37 the original Preview expires at sample 255: test Panic at
+                    // that exact sample, then one sample later, including a real C1 at the boundary.
+                    const int panic = scenario == 5 ? 255 : scenario == 6 ? 256 : 17;
+                    midi.addEvent (juce::MidiMessage::controllerEvent (1, scenario == 4 ? 123 : 120, 0), panic);
+                    midi.addEvent (juce::MidiMessage::noteOn (1, 36, 0.9f), scenario == 5 ? panic : panic + 1);
+                }
+                if (scenario != 0 && b == 90) midi.addEvent (juce::MidiMessage::noteOff (1, 36), 33);
+                p.processBlock (audio, midi);
+                const double peak = std::max (audio.getMagnitude (0, 0, 512), audio.getMagnitude (1, 0, 512));
+                if (b >= 75 && b < 85) held = std::max (held, peak);
+                if (b >= 300) tail = std::max (tail, peak);
+            }
+            const auto label = juce::String ("preview ownership case ") + juce::String (scenario) + (smooth ? " SMOOTH" : " retrigger");
+            if (scenario != 0) expect (held > 0.01, label + ": real C1 survives preview/panic timer");
+            expect (tail < 1e-7, label + ": no ghost note after MIDI (" + juce::String (tail, 6) + ")");
+        }
+    PowerBassProcessor p;
+    p.prepareToPlay (48000, 512);
+    p.previewRequested = true;
+    juce::AudioBuffer<float> empty (2, 0);
+    juce::MidiBuffer none;
+    p.processBlock (empty, none);
+    expect (p.previewRequested.load(), "a zero-length block does not lose an unrendered Preview");
+}
+
 void testPreview()
 {
     PowerBassProcessor p;
@@ -919,6 +962,12 @@ void testFavouritesInEditor()
 
 int main (int argc, char** argv)
 {
+    if (argc > 1 && juce::String (argv[1]) == "--preview-ownership-check")
+    {
+        testPreviewOwnership();
+        std::cout << (failures == 0 ? "PASS " : "FAILED ") << (checks - failures) << "/" << checks << " preview ownership checks\n";
+        return failures == 0 ? 0 : 1;
+    }
     if (argc > 1 && juce::String (argv[1]) == "--host-flush-check")
     {
         testHostFlushClearsVoice();
@@ -943,6 +992,7 @@ int main (int argc, char** argv)
     testAutomation();
     testMonoBus();
     testPreview();
+    testPreviewOwnership();
     testHostFlushClearsVoice();
     testEditor();
     testFavouritesInEditor();

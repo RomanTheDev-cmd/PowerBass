@@ -46,10 +46,27 @@ void PowerBassProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
 {
     juce::ScopedNoDenormals noDenormals;
     const int n = buffer.getNumSamples();
+    if (n == 0) return;
 
-    // Preview button: a 400 ms C1 note.
-    if (previewRequested.exchange (false))
+    int panicAt = n;
+    for (const auto event : midi)
+        if (event.numBytes == 3 && (event.data[0] & 0xf0) == 0xb0
+            && (event.data[1] == 120 || event.data[1] == 123))
+            panicAt = std::min (panicAt, std::max (0, event.samplePosition));
+
+    if (panicAt < n)
     {
+        // Panic ends this preview. Its old timer must not release a real C1 played afterwards.
+        if (previewSamplesLeft > 0 && previewSamplesLeft <= panicAt)
+            midi.addEvent (juce::MidiMessage::noteOff (1, 36), previewSamplesLeft - 1);
+        previewSamplesLeft = 0;
+        previewRequested.store (false);
+    }
+    else if (previewRequested.exchange (false))
+    {
+        // Balance the previous strike before restarting: one timer owns exactly one Note On.
+        if (previewSamplesLeft > 0)
+            midi.addEvent (juce::MidiMessage::noteOff (1, 36), 0);
         midi.addEvent (juce::MidiMessage::noteOn (1, 36, 0.9f), 0);
         previewSamplesLeft = (int) (preparedRate * 0.4);
     }

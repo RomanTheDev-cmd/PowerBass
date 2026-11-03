@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.22)
 # macOS (27.0), so they would not load on older Macs (found 2026-10-23). arm64 slices start at 11.0 anyway.
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum macOS")
 
-project(PowerBass VERSION 1.1.0 LANGUAGES C CXX)
+project(PowerBass VERSION 1.1.1 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -15,7 +15,7 @@ endif()
 
 option(POWERBASS_COPY_AFTER_BUILD "Install plug-ins into the user plug-in folders after build" OFF)
 
-# cmake/patch_juce.cmake fixes JUCE before it is used (Windows: closing the editor could hang for ever).
+# Project patches: Windows editor shutdown and stale MIDI replayed after an AU reset.
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/third_party/JUCE/CMakeLists.txt")
   set(JUCE_PATCH_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/JUCE")
   include(cmake/patch_juce.cmake)
@@ -97,3 +97,9 @@ target_sources(powerbass_wrapper_tests PRIVATE Tests/WrapperTests.cpp)
 target_include_directories(powerbass_wrapper_tests PRIVATE Source)
 target_link_libraries(powerbass_wrapper_tests PRIVATE PowerBass juce::juce_audio_utils)
 add_test(NAME powerbass_wrapper_tests COMMAND powerbass_wrapper_tests)
+
+if(APPLE)
+  # Native CoreAudio test: covers the AU queue before AudioProcessor::processBlock.
+  add_executable(powerbass_au_reset_tests Tests/AUResetTests.cpp)
+  target_link_libraries(powerbass_au_reset_tests PRIVATE "-framework AudioToolbox" "-framework AudioUnit" "-framework CoreFoundation")
+endif()
