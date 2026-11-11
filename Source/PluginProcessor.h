@@ -3,6 +3,7 @@
 #include <array>
 
 #include <juce_audio_processors/juce_audio_processors.h>
+#include "DSP/Ducker.h"
 #include "DSP/BassEngine.h"
 #include "Presets.h"
 
@@ -56,6 +57,7 @@ private:
     juce::String presetName { "Reese Core" };
     mutable juce::SpinLock nameLock;
     pb::dsp::BassEngine engine;
+    pb::dsp::Ducker ducker;   // SIDECHAIN on the output, by the host's song position
     int reportedLatency = -1;
     // Latency of each oversampling choice at the prepared rate, for a project restored after prepare.
     std::array<int, 3> latencyByOversampling { -1, -1, -1 };

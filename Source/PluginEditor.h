@@ -212,6 +212,7 @@ public:
 private:
     Segment filterPos, oversample;
     Knob detune, fltDecay, velSens, bend;
+    Segment scRate, scShape;   // SIDECHAIN (2026-11-12)
 };
 }
 
@@ -248,6 +249,7 @@ private:
     pb::ui::Knob dark, bite, punch;
     pb::ui::Knob width, splitFreq, stereoDelay;
     pb::ui::Knob attack, decay, sustain, release, glide, master;
+    pb::ui::Knob scAmount;              // SIDECHAIN (2026-11-12) in AMP; rate and curve in ADVANCED
     pb::ui::Segment filterMode, distType, legato, smooth;
     std::unique_ptr<pb::ui::Segment> analogMode; // DIGITAL | ANALOGUE, in the header (2026-10-28)
     pb::ui::WaveformView waveform;

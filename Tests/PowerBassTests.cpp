@@ -3,6 +3,7 @@
 
 #include <set>
 #include "DSP/BassEngine.h"
+#include "DSP/Ducker.h"
 #include "Presets.h"
 #include <juce_audio_formats/juce_audio_formats.h>
 #include <atomic>
@@ -696,6 +697,57 @@ void testStereoDelay()
     expect (db (bandRmsDft (sb, 48000, 20, 90)) - db (bandRms (mid (b), 48000, 20, 16000)) < -50.0, "DELAY keeps the sub mono");
 }
 
+// SIDECHAIN: the level ducks on every beat of the host and comes back along a curve (as Kickstart 2 does).
+void testSidechain()
+{
+    const double sr = 48000.0, bpm = 120.0;   // a beat = 24000 samples
+    auto run = [&] (double amount, int rate, int shape, bool playing, int block, double ppq0 = 0.0, int total = 96000)
+    {
+        dsp::Ducker d; d.prepare (sr);
+        std::vector<float> l ((size_t) total, 1.0f), r ((size_t) total, 1.0f);
+        for (int pos = 0; pos < total; pos += block)
+        {
+            const int n = std::min (block, total - pos);
+            d.process (l.data() + pos, r.data() + pos, n, ppq0 + pos / sr * bpm / 60.0, bpm, playing, amount, rate, shape);
+        }
+        return l;
+    };
+    const auto off = run (0.0, 0, 0, true, 512);
+    expect (*std::min_element (off.begin(), off.end()) == 1.0f && *std::max_element (off.begin(), off.end()) == 1.0f, "SIDECHAIN 0 leaves the sound untouched");
+    const auto stopped = run (1.0, 0, 0, false, 512);
+    expect (*std::min_element (stopped.begin(), stopped.end()) > 0.999f, "SIDECHAIN does nothing while the host is stopped");
+    const auto a = run (1.0, 0, 0, true, 512);
+    // second beat (24000..48000): down within 5 ms, back by 80 % of the beat, the same on every beat
+    expect (a[24000 + 240] < 0.06f, "SIDECHAIN 100 %: silent 5 ms after the beat (" + juce::String (a[24000 + 240], 3) + ")");
+    expect (a[24000 + 19200] > 0.98f && a[24000 - 48] > 0.98f, "SIDECHAIN: back to full level by 80 % of the beat (" + juce::String (a[24000 + 19200], 3) + ")");
+    expect (a[24000 + 6000] > 0.15f && a[24000 + 6000] < 0.85f, "SIDECHAIN: on the way back a quarter into the beat (" + juce::String (a[24000 + 6000], 3) + ")");
+    double diff = 0.0;
+    for (int i = 0; i < 24000; ++i) diff = std::max (diff, (double) std::abs (a[(size_t) (24000 + i)] - a[(size_t) (48000 + i)]));
+    expect (diff < 1.0e-3, "SIDECHAIN: every beat the same (" + juce::String (diff, 5) + ")");
+    double step = 0.0;
+    for (size_t i = 1; i < a.size(); ++i) step = std::max (step, (double) std::abs (a[i] - a[i - 1]));
+    expect (step < 0.03, "SIDECHAIN: the drop takes over a millisecond, no click (largest step " + juce::String (step, 4) + ")");
+    const auto half = run (0.5, 0, 0, true, 512);
+    expect (std::abs (half[24000 + 480] - 0.5f) < 0.03f, "SIDECHAIN 50 % ducks to half (" + juce::String (half[24000 + 480], 3) + ")");
+    // blocks: the same result with 64 and 512 samples; a start in the middle of the song lands on the grid
+    const auto small = run (1.0, 0, 0, true, 64);
+    diff = 0.0;
+    for (size_t i = 0; i < a.size(); ++i) diff = std::max (diff, (double) std::abs (a[i] - small[i]));
+    expect (diff < 1.0e-6, "SIDECHAIN: block size does not matter (" + juce::String (diff, 7) + ")");
+    const auto mid = run (1.0, 0, 0, true, 512, 16.5);   // starts half a beat in: the next beat is 12000 samples away
+    expect (mid[12000 + 240] < 0.06f && mid[12000 - 48] > 0.98f, "SIDECHAIN follows the song position (" + juce::String (mid[12000 + 240], 3) + ")");
+    // rates: 1/8 ducks twice a beat, 1/2 every second beat
+    const auto eighth = run (1.0, 1, 0, true, 512), halfNote = run (1.0, 2, 0, true, 512);
+    expect (eighth[12000 + 240] < 0.06f && eighth[24000 + 240] < 0.06f, "SIDECHAIN 1/8 ducks on every eighth");
+    expect (halfNote[24000 + 240] > 0.85f && halfNote[48000 + 240] < 0.06f, "SIDECHAIN 1/2 ducks on every second beat ("
+            + juce::String (halfNote[24000 + 240], 2) + " on beat 2, " + juce::String (halfNote[48000 + 240], 3) + " on beat 3)");
+    // curves: SHORT is back sooner than CLASSIC, LONG later; HARD holds the silence longer
+    auto at = [&] (int shape, int offset) { return run (1.0, 0, shape, true, 512)[(size_t) (24000 + offset)]; };
+    expect (at (1, 6000) > at (0, 6000) + 0.1f && at (2, 6000) < at (0, 6000) - 0.1f, "SIDECHAIN curves: SHORT returns sooner, LONG later ("
+            + juce::String (at (1, 6000), 2) + " / " + juce::String (at (0, 6000), 2) + " / " + juce::String (at (2, 6000), 2) + ")");
+    expect (at (3, 3600) < 0.06f && at (0, 3600) > 0.1f, "SIDECHAIN curve HARD keeps the silence longer (75 ms in: " + juce::String (at (3, 3600), 3) + ")");
+}
+
 void testNoAllocation()
 {
     dsp::BassEngine e;
@@ -959,6 +1011,7 @@ int main (int argc, char** argv)
     testDriveSweepIsSmooth();
     testStereoDelay();
     testNoAllocation();
+    testSidechain();
     testLegacyPresetMigration();
     testPresetFiles();
     std::cout << (failures == 0 ? "PASS " : "FAILED ") << (checks - failures) << "/" << checks << " checks\n";
