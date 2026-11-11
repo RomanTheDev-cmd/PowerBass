@@ -49,6 +49,10 @@ namespace id
     inline constexpr const char* stereoDelay = "stereoDelay";
     inline constexpr const char* smoothStart = "smoothStart";
     inline constexpr const char* analog = "analog";
+    // SIDECHAIN (2026-11-12): the level ducks on the host's beat, as Kickstart 2 does (an instance setting, like OVERSAMPLE)
+    inline constexpr const char* scAmount = "scAmount";
+    inline constexpr const char* scRate   = "scRate";
+    inline constexpr const char* scShape  = "scShape";
 }
 
 enum class FilterMode { lp24, lp12, bp, hp };
@@ -93,6 +97,9 @@ struct SynthParams
     float detune = 0.0f;      // 0..1: two extra detuned voices on the analog osc (reese), 0..30 cents
     bool analog = false;      // ANALOGUE: slight pitch drift, per-note spread, warmth, softer top (2026-10-28)
     bool smoothStart = false; // SMOOTH: a note on a still-sounding one continues from its level (the old behaviour)
+    float scAmount = 0.0f;    // SIDECHAIN depth 0..1 (0 = off)
+    int scRate = 0;           // 0 = 1/4, 1 = 1/8, 2 = 1/2
+    int scShape = 0;          // 0 CLASSIC, 1 SHORT, 2 LONG, 3 HARD
 };
 
 juce::AudioProcessorValueTreeState::ParameterLayout createLayout();

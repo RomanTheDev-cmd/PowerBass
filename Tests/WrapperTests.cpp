@@ -800,6 +800,85 @@ int snapshot (const juce::File& dir)
 
 // DIGITAL | ANALOGUE (2026-10-28): a parameter in Digital by default, kept over preset changes like OVERSAMPLE,
 // a two-button switch in the header that overlaps nothing.
+// SIDECHAIN through the processor: the host's song position drives the dip, the plug-in latency is accounted for,
+// presets leave it alone and an old project comes back with it off.
+struct TestHead : juce::AudioPlayHead
+{
+    double ppq = 0.0, bpm = 120.0; bool playing = true;
+    juce::Optional<PositionInfo> getPosition() const override
+    {
+        PositionInfo i; i.setIsPlaying (playing); i.setBpm (bpm); i.setPpqPosition (ppq); return i;
+    }
+};
+void testSidechain()
+{
+    auto render = [] (float amount, bool playing, int os)
+    {
+        PowerBassProcessor p;
+        p.prepareToPlay (48000.0, 512);
+        setPlain (p, pb::id::oversample, (float) os);
+        setPlain (p, pb::id::sustain, 1.0f); setPlain (p, pb::id::release, 5.0f);
+        setPlain (p, pb::id::scAmount, amount);
+        TestHead head; head.playing = playing;
+        p.setPlayHead (&head);
+        std::vector<float> out;
+        juce::AudioBuffer<float> buf (2, 512);
+        for (int b = 0; b < 300; ++b)   // 3.2 s at 120 BPM
+        {
+            head.ppq = b * 512 / 48000.0 * 2.0;
+            juce::MidiBuffer midi;
+            if (b == 0) midi.addEvent (juce::MidiMessage::noteOn (1, 36, 0.9f), 0);
+            buf.clear();
+            p.processBlock (buf, midi);
+            for (int i = 0; i < 512; ++i) out.push_back (std::abs (buf.getSample (0, i)) + std::abs (buf.getSample (1, i)));
+        }
+        p.setPlayHead (nullptr);
+        return std::make_pair (out, p.getLatencySamples());
+    };
+    auto level = [] (const std::vector<float>& x, int from, int len)
+    {
+        double e = 0.0;
+        for (int i = from; i < from + len; ++i) e += (double) x[(size_t) i] * x[(size_t) i];
+        return 10.0 * std::log10 (e / len + 1.0e-20);
+    };
+    for (int os : { 0, 2 })
+    {
+        const auto [dry, lat] = render (0.0f, true, os);
+        const auto [wet, lat2] = render (1.0f, true, os);
+        juce::ignoreUnused (lat2);
+        // beat 3 of the output (ppq 2): the listener hears it at sample 48000 + latency in the host's time,
+        // which is sample 48000 + latency of the plug-in's output
+        const int beat = 48000 + lat;
+        const double dip = level (wet, beat + 96, 384) - level (dry, beat + 96, 384);
+        const double back = level (wet, beat + 19000, 2000) - level (dry, beat + 19000, 2000);
+        const double before = level (wet, beat - 600, 400) - level (dry, beat - 600, 400);
+        expect (dip < -20.0, "SIDECHAIN in the plug-in ducks right after the beat (" + juce::String (dip, 1) + " dB, oversampling " + juce::String (os) + ")");
+        expect (std::abs (back) < 1.0 && std::abs (before) < 1.0, "SIDECHAIN in the plug-in is back before the next beat ("
+                + juce::String (back, 2) + " / " + juce::String (before, 2) + " dB, oversampling " + juce::String (os) + ")");
+    }
+    const auto [dry, l0] = render (0.0f, false, 1);
+    const auto [stopped, l1] = render (1.0f, false, 1);
+    juce::ignoreUnused (l0, l1);
+    double diff = 0.0;
+    for (size_t i = 0; i < dry.size(); ++i) diff = std::max (diff, (double) std::abs (dry[i] - stopped[i]));
+    expect (diff < 1.0e-6, "SIDECHAIN does nothing while the host is stopped (" + juce::String (diff, 7) + ")");
+    // a preset keeps the sidechain; an old project brings it back off
+    PowerBassProcessor p;
+    setPlain (p, pb::id::scAmount, 0.7f); setPlain (p, pb::id::scShape, 2.0f);
+    p.loadPreset (3);
+    expect (std::abs (rawValue (p, pb::id::scAmount) - 0.7f) < 1.0e-3 && juce::roundToInt (rawValue (p, pb::id::scShape)) == 2,
+            "loading a preset keeps SIDECHAIN and its curve");
+    juce::MemoryBlock mb; p.getStateInformation (mb);
+    auto xml = juce::AudioProcessor::getXmlFromBinary (mb.getData(), (int) mb.getSize());
+    for (const char* pid : { pb::id::scAmount, pb::id::scRate, pb::id::scShape })
+        if (auto* e = xml->getChildByAttribute ("id", pid)) xml->removeChildElement (e, true);
+    juce::MemoryBlock old; juce::AudioProcessor::copyXmlToBinary (*xml, old);
+    PowerBassProcessor q;
+    setPlain (q, pb::id::scAmount, 0.5f);
+    q.setStateInformation (old.getData(), (int) old.getSize());
+    expect (rawValue (q, pb::id::scAmount) < 1.0e-6, "a project from before SIDECHAIN opens with it off");
+}
+
 void testAnalogueSwitch()
 {
     PowerBassProcessor p;
@@ -988,6 +1067,7 @@ int main (int argc, char** argv)
     testOversamplingLatency();
     testPresetsKeepOversampling();
     testAnalogueSwitch();
+    testSidechain();
     testPresetFilter();
     testAutomation();
     testMonoBus();

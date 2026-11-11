@@ -40,7 +40,7 @@ const juce::StringArray& allParamIds()
                                          id::distTone, id::distMix, id::dark, id::bite, id::punch, id::width, id::splitFreq,
                                          id::attack, id::decay, id::sustain, id::release, id::glide, id::glideMode, id::master,
                                          id::filterPos, id::oversample, id::fltDecay, id::velSens, id::bendRange, id::detune, id::stereoDelay,
-                                         id::smoothStart, id::analog };
+                                         id::smoothStart, id::analog, id::scAmount, id::scRate, id::scShape };
     return ids;
 }
 
@@ -95,6 +95,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
     l.add (std::make_unique<juce::AudioParameterBool> (juce::ParameterID { id::smoothStart, 1 }, "Smooth Start", false));
     // DIGITAL | ANALOGUE (Roman, 2026-10-28): Digital is the sound as it was; Analogue adds slight drift, warmth and a softer top.
     l.add (std::make_unique<APC> (juce::ParameterID { id::analog, 1 }, "Digital/Analogue", juce::StringArray { "Digital", "Analogue" }, 0));
+    // SIDECHAIN (Roman, 2026-11-12: "like Kickstart 2, so that the volume changes"): off by default, old projects unchanged.
+    addFloat (l, id::scAmount, "Sidechain", Range (0.0f, 1.0f, 0.001f), 0.0f, [] (float v, int) { return juce::String (juce::roundToInt (v * 100.0f)) + " %"; });
+    l.add (std::make_unique<APC> (juce::ParameterID { id::scRate, 1 }, "Sidechain Rate", juce::StringArray { "1/4", "1/8", "1/2" }, 0));
+    l.add (std::make_unique<APC> (juce::ParameterID { id::scShape, 1 }, "Sidechain Curve", juce::StringArray { "Classic", "Short", "Long", "Hard" }, 0));
     addFloat (l, id::master, "Master", Range (-30.0f, 6.0f, 0.1f), -7.9f, [] (float v, int) { return juce::String (v, 1) + " dB"; });
 
     l.add (std::make_unique<APB> (juce::ParameterID { id::filterPos, 1 }, "Filter After Distortion", false));
@@ -150,6 +154,9 @@ SynthParams readParams (const juce::AudioProcessorValueTreeState& s)
     p.stereoDelayMs = v (id::stereoDelay);
     p.smoothStart = v (id::smoothStart) > 0.5f;
     p.analog = v (id::analog) > 0.5f;
+    p.scAmount = v (id::scAmount);
+    p.scRate = juce::jlimit (0, 2, juce::roundToInt (v (id::scRate)));
+    p.scShape = juce::jlimit (0, 3, juce::roundToInt (v (id::scShape)));
     return p;
 }
 }

@@ -21,6 +21,7 @@ void PowerBassProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     preparedRate = sampleRate; // not getSampleRate(): it is only valid if the host set it first
     engine.prepare (sampleRate, std::max (32, std::min (samplesPerBlock, 1024)), pb::readParams (state));
     monoScratch.setSize (1, std::max (512, samplesPerBlock));
+    ducker.prepare (sampleRate);
     for (int i = 0; i < 3; ++i)
         latencyByOversampling[(size_t) i] = engine.getLatencySamplesFor (i);
     reportedLatency = engine.getLatencySamples();
@@ -31,6 +32,7 @@ void PowerBassProcessor::reset()
 {
     // AU Reset can replace the final MIDI note-off. Clear voices AND filter/delay tails.
     engine.reset();
+    ducker.reset();
     previewSamplesLeft = 0;
     previewRequested.store (false);
     meterL.store (0.0f);
@@ -93,6 +95,23 @@ void PowerBassProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
         }
     for (int c = 2; c < buffer.getNumChannels(); ++c)
         buffer.clear (c, 0, n);
+
+    // SIDECHAIN: the host's song position of the sound that leaves now - the plug-in latency earlier than the block
+    // (the host plays the output that much later), so the dip lands on the beat the listener hears.
+    if (params.scAmount > 0.0f || ! ducker.isIdle())
+    {
+        double ppq = 0.0, bpm = 120.0;
+        bool playing = false;
+        if (auto* ph = getPlayHead())
+            if (const auto pos = ph->getPosition())
+            {
+                playing = pos->getIsPlaying();
+                if (const auto b = pos->getBpm()) bpm = *b;
+                if (const auto q = pos->getPpqPosition()) ppq = *q; else playing = false;
+            }
+        ppq -= std::max (0, engine.getLatencySamples()) / preparedRate * bpm / 60.0;
+        ducker.process (l, r, n, ppq, bpm, playing, params.scAmount, params.scRate, params.scShape);
+    }
 
     if (const int lat = engine.getLatencySamples(); lat != reportedLatency)
     {

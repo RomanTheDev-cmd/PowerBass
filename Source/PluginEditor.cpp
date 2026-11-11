@@ -349,9 +349,11 @@ AdvancedPanel::AdvancedPanel (juce::AudioProcessorValueTreeState& s)
       detune (s, pb::id::detune, "DETUNE", "Two extra detuned voices on the analog oscillator: reese movement"),
       fltDecay (s, pb::id::fltDecay, "FILTER DECAY", "Decay of the filter envelope used by ENV AMOUNT"),
       velSens (s, pb::id::velSens, "VELOCITY", "How much note velocity changes the level"),
-      bend (s, pb::id::bendRange, "BEND", "Pitch-bend range in semitones")
+      bend (s, pb::id::bendRange, "BEND", "Pitch-bend range in semitones"),
+      scRate (s, pb::id::scRate, { "1/4", "1/8", "1/2" }, "How often the bass ducks: every beat, every eighth or every second beat"),
+      scShape (s, pb::id::scShape, { "CLASSIC", "SHORT", "LONG", "HARD" }, "The curve: CLASSIC - quick dip and smooth return; SHORT - room for the attack only; LONG - the whole beat pumps; HARD - a longer silence, like a gate")
 {
-    for (auto* c : std::initializer_list<juce::Component*> { &filterPos, &oversample, &detune, &fltDecay, &velSens, &bend })
+    for (auto* c : std::initializer_list<juce::Component*> { &filterPos, &oversample, &detune, &fltDecay, &velSens, &bend, &scRate, &scShape })
         addAndMakeVisible (c);
 }
 
@@ -372,6 +374,8 @@ void AdvancedPanel::paint (juce::Graphics& g)
     g.drawText ("ADVANCED", t.removeFromTop (S (16)), juce::Justification::centredLeft);
     g.drawText ("FILTER POSITION", juce::Rectangle<int> (S (16), S (34), S (160), S (14)), juce::Justification::centredLeft);
     g.drawText ("OVERSAMPLING", juce::Rectangle<int> (S (16), S (84), S (160), S (14)), juce::Justification::centredLeft);
+    g.drawText ("SIDECHAIN RATE", juce::Rectangle<int> (S (16), S (150), S (160), S (14)), juce::Justification::centredLeft);
+    g.drawText ("SIDECHAIN CURVE", juce::Rectangle<int> (S (206), S (150), S (300), S (14)), juce::Justification::centredLeft);
 }
 
 void AdvancedPanel::resized()
@@ -380,7 +384,9 @@ void AdvancedPanel::resized()
     auto S = [s] (float v) { return juce::roundToInt (v * s); };
     filterPos.setBounds (S (14), S (50), S (160), S (26));
     oversample.setBounds (S (14), S (100), S (160), S (26));
-    auto r = getLocalBounds().withTrimmedLeft (S (190)).reduced (S (6), S (28));
+    scRate.setBounds (S (14), S (166), S (160), S (26));
+    scShape.setBounds (S (204), S (166), S (420), S (26));
+    auto r = getLocalBounds().withTrimmedLeft (S (190)).withTrimmedBottom (S (80)).reduced (S (6), S (28));
     const int w = r.getWidth() / 4;
     detune.setBounds (r.removeFromLeft (w));
     fltDecay.setBounds (r.removeFromLeft (w));
@@ -899,6 +905,7 @@ PowerBassEditor::PowerBassEditor (PowerBassProcessor& p)
       release (p.state, pb::id::release, "RELEASE", "Amp envelope release"),
       glide (p.state, pb::id::glide, "GLIDE", "Portamento time"),
       master (p.state, pb::id::master, "MASTER", "Output level"),
+      scAmount (p.state, pb::id::scAmount, "SIDECHAIN", "Ducks the bass on every beat of the song and brings it back along the curve, as Kickstart 2 does: room for the kick. Follows the song position; nothing happens while playback is stopped"),
       filterMode (p.state, pb::id::filterMode, { "LP24", "LP12", "BP", "HP" }, "Filter mode"),
       distType (p.state, pb::id::distType, { "SATURATE", "CLIP", "FOLD", "DESTROY", "CRUSH" }, "Distortion algorithm"),
       legato (p.state, pb::id::glideMode, { "LEGATO" },
@@ -915,6 +922,7 @@ PowerBassEditor::PowerBassEditor (PowerBassProcessor& p)
         k->setPrimary (true);
 
     for (auto* c : std::initializer_list<juce::Component*> {
+             &scAmount,
              &shape, &sub, &oscDrive, &fmAmount, &fmRatio, &fmDecay, &oscMix, &cutoff, &resonance, &envAmount, &distDrive, &distTone,
              &distMix, &dark, &bite, &punch, &width, &splitFreq, &stereoDelay, &attack, &decay, &sustain, &release, &glide, &master, &filterMode,
              &distType, &legato, &smooth, &waveform, &meter, &prevButton, &nextButton, &presetButton, &saveButton, &advancedButton, &menuButton,
@@ -1171,6 +1179,7 @@ void PowerBassEditor::resized()
     const int pw = amp.getWidth() / 4;
     punch.setBounds (amp.removeFromLeft (pw));
     glide.setBounds (amp.removeFromLeft (pw));
+    scAmount.setBounds (amp.removeFromLeft (pw));   // SIDECHAIN (2026-11-12); its rate and curve are in ADVANCED
     auto modes = amp.withSizeKeepingCentre (amp.getWidth() - S (8), S (26) * 2 + S (8));
     legato.setBounds (modes.removeFromTop (S (26)));
     modes.removeFromTop (S (8));
@@ -1179,7 +1188,7 @@ void PowerBassEditor::resized()
     // STEREO: width of the highs above SPLIT (mono below), and the left/right DELAY.
     primaryAndGrid (b[2], width, { &splitFreq, &stereoDelay }, 1);
 
-    advanced.setBounds (getWidth() - S (24) - S (640), S (64), S (640), S (170));
+    advanced.setBounds (getWidth() - S (24) - S (640), S (64), S (640), S (210));
     browser.setBounds (getLocalBounds().withTrimmedTop (S (60)).reduced (S (24), S (14)));
 }
 
