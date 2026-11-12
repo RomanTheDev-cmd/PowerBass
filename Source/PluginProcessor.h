@@ -57,7 +57,14 @@ private:
     juce::String presetName { "Reese Core" };
     mutable juce::SpinLock nameLock;
     pb::dsp::BassEngine engine;
-    pb::dsp::Ducker ducker;   // SIDECHAIN on the output, by the host's song position
+    pb::dsp::Ducker ducker;   // SIDECHAIN on the output, by the host's song position or the kick on the sidechain input
+    juce::AudioBuffer<float> scScratch;
+    bool scConnected = false;
+    // VST3: the input is a sidechain (kAux), not a main input - hosts then offer it as the sidechain of an instrument.
+    struct Vst3Extensions : juce::VST3ClientExtensions { bool getPluginHasMainInput() const override { return false; } } vst3Extensions;
+public:
+    juce::VST3ClientExtensions* getVST3ClientExtensions() override { return &vst3Extensions; }
+private:
     int reportedLatency = -1;
     // Latency of each oversampling choice at the prepared rate, for a project restored after prepare.
     std::array<int, 3> latencyByOversampling { -1, -1, -1 };

@@ -46,7 +46,7 @@ const Snapshot& legacyNeutral()
     // SMOOTH is the exception: projects and presets from before it get it off - a full attack on every note,
     // as Roman asked for (2026-10-23), not the old flowing retrigger.
     static const Snapshot neutral { { id::detune, 0.0f }, { id::stereoDelay, 0.0f }, { id::smoothStart, 0.0f }, { id::analog, 0.0f },
-                                    { id::scAmount, 0.0f }, { id::scRate, 0.0f }, { id::scShape, 0.0f } };
+                                    { id::scAmount, 0.0f }, { id::scRate, 0.0f }, { id::scShape, 0.0f }, { id::scSource, 0.0f } };
     return neutral;
 }
 
@@ -67,7 +67,7 @@ void applySnapshot (juce::AudioProcessorValueTreeState& state, const Snapshot& v
         // back to 4x and change the plug-in latency while the host was playing.
         // DIGITAL | ANALOGUE is kept the same way: a character switch over any preset.
         // SIDECHAIN belongs to the mix (the tempo and the kick of the song), not to a sound: kept the same way.
-        if (pid == id::oversample || pid == id::analog || pid == id::scAmount || pid == id::scRate || pid == id::scShape)
+        if (pid == id::oversample || pid == id::analog || pid == id::scAmount || pid == id::scRate || pid == id::scShape || pid == id::scSource)
             continue;
         auto* param = dynamic_cast<juce::RangedAudioParameter*> (state.getParameter (pid));
         if (param == nullptr)

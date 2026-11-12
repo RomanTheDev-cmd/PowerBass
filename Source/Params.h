@@ -53,6 +53,7 @@ namespace id
     inline constexpr const char* scAmount = "scAmount";
     inline constexpr const char* scRate   = "scRate";
     inline constexpr const char* scShape  = "scShape";
+    inline constexpr const char* scSource = "scSource";   // TEMPO (the song's beat) | KICK (the sidechain input)
 }
 
 enum class FilterMode { lp24, lp12, bp, hp };
@@ -100,6 +101,7 @@ struct SynthParams
     float scAmount = 0.0f;    // SIDECHAIN depth 0..1 (0 = off)
     int scRate = 0;           // 0 = 1/4, 1 = 1/8, 2 = 1/2
     int scShape = 0;          // 0 CLASSIC, 1 SHORT, 2 LONG, 3 HARD
+    int scSource = 0;         // 0 TEMPO, 1 KICK (hits on the sidechain input)
 };
 
 juce::AudioProcessorValueTreeState::ParameterLayout createLayout();

@@ -488,8 +488,16 @@ void testMonoBus()
 {
     PowerBassProcessor p;
     juce::AudioProcessor::BusesLayout mono;
+    mono.inputBuses.add (juce::AudioChannelSet::stereo());   // 1.3: the sidechain input is always part of the layout
     mono.outputBuses.add (juce::AudioChannelSet::mono());
-    expect (p.setBusesLayout (mono), "mono output bus accepted");
+    expect (p.setBusesLayout (mono), "mono output bus accepted (with a stereo sidechain)");
+    {
+        PowerBassProcessor q;
+        juce::AudioProcessor::BusesLayout off;
+        off.inputBuses.add (juce::AudioChannelSet::disabled());
+        off.outputBuses.add (juce::AudioChannelSet::stereo());
+        expect (q.setBusesLayout (off), "a disabled sidechain input is accepted");
+    }
     p.prepareToPlay (48000, 512);
     const auto r = play (p, 30, {}, 1);
     expect (r.finite && r.peak > 0.05 && r.peak <= 1.0, "mono bus plays the bass (" + juce::String (r.peak, 3) + ")");
@@ -879,6 +887,47 @@ void testSidechain()
     expect (rawValue (q, pb::id::scAmount) < 1.0e-6, "a project from before SIDECHAIN opens with it off");
 }
 
+// SIDECHAIN KICK through the processor: the kick arrives on the sidechain input in the same buffer the bass is written
+// to; the bass ducks after each hit (latency accounted), the kick never leaks into the output.
+void testSidechainKickInput()
+{
+    PowerBassProcessor p;
+    expect (p.getBusCount (true) == 1 && p.getChannelCountOfBus (true, 0) == 2, "PowerBass has a stereo sidechain input");
+    p.prepareToPlay (48000.0, 512);
+    setPlain (p, pb::id::sustain, 1.0f); setPlain (p, pb::id::release, 5.0f);
+    setPlain (p, pb::id::scAmount, 1.0f); setPlain (p, pb::id::scSource, 1.0f);
+    const int lat = p.getLatencySamples();
+    std::vector<float> out, kickOnly;
+    juce::AudioBuffer<float> buf (2, 512);
+    for (int b = 0; b < 200; ++b)
+    {
+        juce::MidiBuffer midi;
+        if (b == 0) midi.addEvent (juce::MidiMessage::noteOn (1, 36, 0.9f), 0);
+        for (int i = 0; i < 512; ++i)
+        {
+            const int t = b * 512 + i, since = t - 48000;   // one kick at 1.0 s
+            const float k = since >= 0 && since < 12000 ? (float) (0.9 * std::exp (-since / 2880.0) * std::sin (2.0 * juce::MathConstants<double>::pi * 60.0 * since / 48000.0)) : 0.0f;
+            buf.setSample (0, i, k); buf.setSample (1, i, k);
+        }
+        p.processBlock (buf, midi);
+        for (int i = 0; i < 512; ++i) out.push_back (std::abs (buf.getSample (0, i)) + std::abs (buf.getSample (1, i)));
+    }
+    auto level = [&] (int from, int len) { double e = 0; for (int i = from; i < from + len; ++i) e += (double) out[(size_t) i] * out[(size_t) i]; return 10.0 * std::log10 (e / len + 1e-20); };
+    const double before = level (48000 + lat - 4800, 2400), dip = level (48000 + lat + 480, 480), after = level (48000 + lat + 24000, 2400);
+    expect (dip < before - 20.0, "SIDECHAIN KICK in the plug-in: the bass ducks after the kick on the input (" + juce::String (dip - before, 1) + " dB)");
+    expect (std::abs (after - before) < 1.0, "SIDECHAIN KICK in the plug-in: back half a second later (" + juce::String (after - before, 2) + " dB)");
+    // the kick alone, no note: nothing comes out (the input is not passed through)
+    PowerBassProcessor q; q.prepareToPlay (48000.0, 512);
+    double leak = 0.0;
+    for (int b = 0; b < 20; ++b)
+    {
+        for (int i = 0; i < 512; ++i) { buf.setSample (0, i, 0.5f); buf.setSample (1, i, -0.5f); }
+        juce::MidiBuffer none; q.processBlock (buf, none);
+        leak = std::max (leak, (double) buf.getMagnitude (0, 512));
+    }
+    expect (leak < 1.0e-6, "the sidechain input never reaches the output (" + juce::String (leak, 7) + ")");
+}
+
 void testAnalogueSwitch()
 {
     PowerBassProcessor p;
@@ -1068,6 +1117,7 @@ int main (int argc, char** argv)
     testPresetsKeepOversampling();
     testAnalogueSwitch();
     testSidechain();
+    testSidechainKickInput();
     testPresetFilter();
     testAutomation();
     testMonoBus();
