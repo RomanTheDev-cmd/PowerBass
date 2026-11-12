@@ -350,10 +350,11 @@ AdvancedPanel::AdvancedPanel (juce::AudioProcessorValueTreeState& s)
       fltDecay (s, pb::id::fltDecay, "FILTER DECAY", "Decay of the filter envelope used by ENV AMOUNT"),
       velSens (s, pb::id::velSens, "VELOCITY", "How much note velocity changes the level"),
       bend (s, pb::id::bendRange, "BEND", "Pitch-bend range in semitones"),
+      scSource (s, pb::id::scSource, { "TEMPO", "KICK" }, "TEMPO: the bass ducks on the beat of the song (no routing). KICK: on every hit of the kick sent to the plug-in's sidechain input (in Logic: Side Chain at the top of the plug-in window) - rolls and breaks too"),
       scRate (s, pb::id::scRate, { "1/4", "1/8", "1/2" }, "How often the bass ducks: every beat, every eighth or every second beat"),
       scShape (s, pb::id::scShape, { "CLASSIC", "SHORT", "LONG", "HARD" }, "The curve: CLASSIC - quick dip and smooth return; SHORT - room for the attack only; LONG - the whole beat pumps; HARD - a longer silence, like a gate")
 {
-    for (auto* c : std::initializer_list<juce::Component*> { &filterPos, &oversample, &detune, &fltDecay, &velSens, &bend, &scRate, &scShape })
+    for (auto* c : std::initializer_list<juce::Component*> { &filterPos, &oversample, &detune, &fltDecay, &velSens, &bend, &scSource, &scRate, &scShape })
         addAndMakeVisible (c);
 }
 
@@ -374,8 +375,9 @@ void AdvancedPanel::paint (juce::Graphics& g)
     g.drawText ("ADVANCED", t.removeFromTop (S (16)), juce::Justification::centredLeft);
     g.drawText ("FILTER POSITION", juce::Rectangle<int> (S (16), S (34), S (160), S (14)), juce::Justification::centredLeft);
     g.drawText ("OVERSAMPLING", juce::Rectangle<int> (S (16), S (84), S (160), S (14)), juce::Justification::centredLeft);
-    g.drawText ("SIDECHAIN RATE", juce::Rectangle<int> (S (16), S (150), S (160), S (14)), juce::Justification::centredLeft);
-    g.drawText ("SIDECHAIN CURVE", juce::Rectangle<int> (S (206), S (150), S (300), S (14)), juce::Justification::centredLeft);
+    g.drawText ("SIDECHAIN", juce::Rectangle<int> (S (16), S (150), S (130), S (14)), juce::Justification::centredLeft);
+    g.drawText ("LENGTH", juce::Rectangle<int> (S (172), S (150), S (130), S (14)), juce::Justification::centredLeft);
+    g.drawText ("CURVE", juce::Rectangle<int> (S (330), S (150), S (200), S (14)), juce::Justification::centredLeft);
 }
 
 void AdvancedPanel::resized()
@@ -384,8 +386,9 @@ void AdvancedPanel::resized()
     auto S = [s] (float v) { return juce::roundToInt (v * s); };
     filterPos.setBounds (S (14), S (50), S (160), S (26));
     oversample.setBounds (S (14), S (100), S (160), S (26));
-    scRate.setBounds (S (14), S (166), S (160), S (26));
-    scShape.setBounds (S (204), S (166), S (420), S (26));
+    scSource.setBounds (S (14), S (166), S (142), S (26));
+    scRate.setBounds (S (170), S (166), S (144), S (26));
+    scShape.setBounds (S (328), S (166), S (298), S (26));
     auto r = getLocalBounds().withTrimmedLeft (S (190)).withTrimmedBottom (S (80)).reduced (S (6), S (28));
     const int w = r.getWidth() / 4;
     detune.setBounds (r.removeFromLeft (w));

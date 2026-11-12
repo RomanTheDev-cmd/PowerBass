@@ -1,9 +1,9 @@
-"""Independent sound audit of the INSTALLED PowerBass / PowerKick (the AU Logic loads), through sound_audit_host.
+"""Independent sound audit of the INSTALLED PowerBass / PowerKick / PowerSynth (synth: 2026-11-12) (the AU Logic loads), through sound_audit_host.
 Unlike the unit tests (engine code inside the test binary), everything here goes through the plug-in binary as a
 DAW drives it, and measures what the tests do not: aliasing, true peak, timing, block-size invariance, tuning,
 CPU, long runs, MIDI edge cases, tails, mono compatibility, velocity.
 
-  python3 audit.py <bass|kick> <check> [options]     checks: see CHECKS at the bottom
+  python3 audit.py <bass|kick|synth> <check> [options]     checks: see CHECKS at the bottom
 Env: PK_NUMPY_PATH (numpy), AUDIT_OUT (result folder), AUDIT_WORKERS (8).
 """
 import json, os, re, subprocess, sys, time
@@ -21,8 +21,12 @@ PLUG = {
     "kick": dict(name="PowerKick", au=os.path.expanduser("~/Library/Audio/Plug-Ins/Components/PowerKick.component"),
                  vst3=os.path.expanduser("~/Library/Audio/Plug-Ins/VST3/PowerKick.vst3"),
                  tests=os.path.expanduser("~/Library/Caches/PowerKickBuildUniversal/powerkick_tests_artefacts/Release/powerkick_tests")),
+    "synth": dict(name="PowerSynth", au=os.path.expanduser("~/Library/Audio/Plug-Ins/Components/PowerSynth.component"),
+                  vst3=os.path.expanduser("~/Library/Audio/Plug-Ins/VST3/PowerSynth.vst3"),
+                  tests=os.path.expanduser("~/Library/Caches/PowerSynthBuildUniversal/powersynth_tests_artefacts/Release/powersynth_tests")),
 }
 KICK_NOTE = 36
+SYNTH_CHORDS = ("Pads", "Atmospheres", "Textures", "Stabs")
 
 
 def db(x):
@@ -119,6 +123,18 @@ def factory_presets(which):
     return res
 
 
+def resolve(h, names, k):
+    """The host's parameter name for a parameter id: from Params.cpp, else by the name without spaces (PowerSynth builds
+    some names in helpers: attack -> "Attack", fltAttack -> "Filter Attack")."""
+    if k in names and names[k] in h.params:
+        return names[k]
+    key = k.lower().replace("flt", "filter")
+    for n in h.params:
+        if n.lower().replace(" ", "") == key:
+            return n
+    raise KeyError(k)
+
+
 def apply_preset(h, values, names):
     """Every parameter back to its default, then the preset's values (as the plug-in's own preset load does;
     OVERSAMPLE stays a per-instance setting)."""
@@ -127,7 +143,7 @@ def apply_preset(h, values, names):
             h.setn(name, norm)
             h.params[name]["norm"] = norm
     for k, v in values.items():
-        name = names[k]
+        name = resolve(h, names, k)
         st = h.params[name]["steps"]
         if 1 < st <= 64:
             r = h.setn(name, round(v) / (st - 1))
@@ -153,6 +169,25 @@ def bass_pattern(root, pattern, bpm=150.0, length=3.0, sr=48000):
     ev = []
     for on, off, n in notes:
         ev += [("on", int(on * sr), n, 100), ("off", int(off * sr), n)]
+    return ev
+
+
+def synth_pattern(cat, sr=48000):
+    """Pads, atmospheres, textures: a held minor chord (C3) for 2.5 s; stabs: six chord hits; the rest: a 16th line
+    at 140 BPM (gate 80 %) from C3 - the phrases of the unit tests."""
+    ev = []
+    if cat == "Stabs":
+        for k in range(6):
+            for n in (48, 51, 55):
+                ev += [("on", int((0.2 + k * 0.32) * sr), n, 110), ("off", int((0.32 + k * 0.32) * sr), n)]
+    elif cat in SYNTH_CHORDS:
+        for n in (48, 51, 55, 60):
+            ev += [("on", 0, n, 100), ("off", int(2.5 * sr), n)]
+    else:
+        line = [48, 48, 60, 51, 48, 55, 53, 51, 48, 48, 60, 51, 58, 55, 53, 51]
+        step = 60.0 / 140.0 / 4.0
+        for k, n in enumerate(line):
+            ev += [("on", int(k * step * sr), n, 110), ("off", int((k + 0.8) * step * sr), n)]
     return ev
 
 
@@ -235,6 +270,9 @@ def lib_item(h, item, which, names):
         ev = bass_pattern(36, 0, 150, 2.0)
         x, mx, mean = h.render(int(3.0 * sr), ev)
         body, tail = x[: int(2.0 * sr)], x[int(2.6 * sr):]
+    elif which == "synth":   # long releases, delays and reverbs: the tail is judged 14 s after the notes
+        x, mx, mean = h.render(int(17.0 * sr), synth_pattern(cat, sr))
+        body, tail = x[: int(2.8 * sr)], x[int(16.7 * sr):]
     else:
         ev = kick_hits([0.0, 0.4, 0.8, 1.2])
         x, mx, mean = h.render(int(3.2 * sr), ev)
@@ -252,15 +290,19 @@ def alias_item(h, item, which, names):
     res = {}
     for sr in (44100, 192000):
         h.prepare(sr, 512); apply_preset(h, vals, names)
-        if which == "bass":
-            x = h.render(int(1.0 * sr), [("on", 0, 48, 100), ("off", int(0.9 * sr), 48)])[0]; f, P = spectrum(x, sr, 0.15, 0.85)
+        if which in ("bass", "synth"):
+            n = 48 if which == "bass" else 72   # the synth plays leads high: C5
+            x = h.render(int(1.0 * sr), [("on", 0, n, 100), ("off", int(0.9 * sr), n)])[0]; f, P = spectrum(x, sr, 0.15, 0.85)
         else:
             x = h.render(int(0.6 * sr), kick_hits([0.0]))[0]; f, P = spectrum(x, sr, 0.0, 0.5)
-        res[sr] = (f, P / np.sum(P))
-    f44, P44 = res[44100]; f192, P192 = res[192000]
-    m = f44 < 20000
-    Q = np.interp(f44[m], f192, P192)
-    excess = np.sum(np.maximum(P44[m] - 10 * Q, 0))  # bins 10 dB louder at 44.1 kHz than at 192 kHz
+        # 2026-11-12: both spectra on a common 10 Hz grid, smoothed over 60 Hz, each normalised by its energy BELOW 20 kHz.
+        # (Normalised by the whole band, a bright or noisy sound - energy above 20 kHz at 192 kHz only - looked aliased.)
+        g = np.arange(20.0, 20000.0, 10.0)
+        Pg = np.interp(g, f, P)
+        Pg = np.convolve(Pg, np.ones(6) / 6, mode="same")
+        res[sr] = (g, Pg / np.sum(Pg))
+    g, P44 = res[44100]; _, P192 = res[192000]
+    excess = np.sum(np.maximum(P44 - 10 * P192, 0))  # energy 10 dB louder at 44.1 kHz than at 192 kHz
     h.prepare(48000, 512)
     return dict(name=name, alias=10 * np.log10(max(excess, 1e-15)))
 
@@ -287,7 +329,7 @@ def run_all(which):
     al = parallel(which, presets, lambda h, it: alias_item(h, it, which, names))
     json.dump(al, open(os.path.join(o, "aliasing.json"), "w"), indent=0, ensure_ascii=False)
     av = np.array([r["alias"] for r in al])
-    rep.append("Алиасинг (44,1 против 192 кГц, %s): медиана %.0f дБ; хуже −40 дБ — %d, хуже −30 — %d; худшие: %s" % ("нота C3" if which == "bass" else "удар", np.median(av), int(np.sum(av > -40)), int(np.sum(av > -30)), ", ".join("%s %.0f" % (r["name"], r["alias"]) for r in sorted(al, key=lambda r: -r["alias"])[:5])))
+    rep.append("Алиасинг (44,1 против 192 кГц, %s): медиана %.0f дБ; хуже −40 дБ — %d, хуже −30 — %d; худшие: %s" % ({"bass": "нота C3", "synth": "нота C5"}.get(which, "удар"), np.median(av), int(np.sum(av > -40)), int(np.sum(av > -30)), ", ".join("%s %.0f" % (r["name"], r["alias"]) for r in sorted(al, key=lambda r: -r["alias"])[:5])))
     rep += special(which, names, presets)
     rep.append("время: %.0f с" % (time.time() - t0))
     open(os.path.join(o, "ОТЧЁТ.txt"), "w", encoding="utf-8").write("\n".join(rep) + "\n")
@@ -335,7 +377,9 @@ def special(which, names, presets):
     rep.append("Velocity 1…127: пик %s дБ — %s" % (" ".join("%.1f" % v for v in pk), "растёт монотонно" if mono else "НЕ монотонно"))
     # CPU at the heaviest setting: 8x oversampling, 64-sample blocks, a busy pattern.
     h.setn("Oversampling", 1.0); h.prepare(48000, 64)
-    ev = bass_pattern(36, 0, 170, 8.0) if which == "bass" else kick_hits([i * 60 / 170 / 4 for i in range(110)])
+    ev = (bass_pattern(36, 0, 170, 8.0) if which == "bass" else
+          [e for k in range(16) for e in (("on", int(k * 0.5 * 48000), 48 + (k % 4) * 3, 100), ("off", int((k * 0.5 + 0.45) * 48000), 48 + (k % 4) * 3))]
+          if which == "synth" else kick_hits([i * 60 / 170 / 4 for i in range(110)]))
     x, mx, mean = h.render(8 * 48000, ev, block=64)
     budget = 64 / 48000 * 1e6
     rep.append("CPU при 8x и блоке 64: в среднем %.0f %% реального времени, самый тяжёлый блок %.0f %%" % (100 * mean / budget, 100 * mx / budget))
@@ -366,7 +410,7 @@ def special(which, names, presets):
         rep.append("Строй (синус, ноты E1…E4): отклонение %s центов; pitch bend ±2 полутона: ошибка %s центов" % (" ".join("%+.1f" % c for c in cents), " ".join("%+.0f" % c for c in bend)))
     # State restore while playing (a project reload mid-play).
     apply_preset(h, presets[1][2], names); h.cmd("save"); apply_preset(h, presets[0][2], names)
-    ev = bass_pattern(36, 0, 150, 1.0) if which == "bass" else kick_hits([0.0, 0.2, 0.4])
+    ev = bass_pattern(36, 0, 150, 1.0) if which in ("bass", "synth") else kick_hits([0.0, 0.2, 0.4])
     h.render(12000, ev[:6]); h.cmd("load")
     x = h.render(48000, ev)[0]
     rep.append("Загрузка состояния во время игры: числа %s, пик %.1f дБ, щелчок-оценка %.0f" % ("в порядке" if np.all(np.isfinite(x)) else "NaN!", db(np.max(np.abs(x))), click_score(x, 48000)[0]))

@@ -2,7 +2,9 @@
 #include "PluginEditor.h"
 
 PowerBassProcessor::PowerBassProcessor()
-    : AudioProcessor (BusesProperties().withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
+    // 1.3: a sidechain input (the kick, for SIDECHAIN KICK); marked auxiliary for VST3 hosts (see vst3Extensions)
+    : AudioProcessor (BusesProperties().withInput ("Sidechain", juce::AudioChannelSet::stereo(), true)
+                                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
       state (*this, nullptr, "PowerBass", pb::createLayout())
 {
     if (const int i = library.indexOf (getPresetName()); i >= 0)
@@ -12,7 +14,9 @@ PowerBassProcessor::PowerBassProcessor()
 bool PowerBassProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
     const auto out = layouts.getMainOutputChannelSet();
-    return out == juce::AudioChannelSet::stereo() || out == juce::AudioChannelSet::mono();
+    const auto sc = layouts.getMainInputChannelSet();
+    return (out == juce::AudioChannelSet::stereo() || out == juce::AudioChannelSet::mono())
+        && (sc.isDisabled() || sc == juce::AudioChannelSet::stereo() || sc == juce::AudioChannelSet::mono());
 }
 
 void PowerBassProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
@@ -22,6 +26,7 @@ void PowerBassProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     engine.prepare (sampleRate, std::max (32, std::min (samplesPerBlock, 1024)), pb::readParams (state));
     monoScratch.setSize (1, std::max (512, samplesPerBlock));
     ducker.prepare (sampleRate);
+    scScratch.setSize (2, std::max (512, samplesPerBlock));
     for (int i = 0; i < 3; ++i)
         latencyByOversampling[(size_t) i] = engine.getLatencySamplesFor (i);
     reportedLatency = engine.getLatencySamples();
@@ -80,6 +85,21 @@ void PowerBassProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     }
 
     const auto params = pb::readParams (state);
+    // The sidechain arrives in the same buffer the bass is written to: kept aside first, then the output cleared.
+    {
+        // the input bus's channels, as far as the host's buffer has them (a host may pass fewer channels than the bus)
+        const int scCh = getBusCount (true) > 0 && getBus (true, 0)->isEnabled()
+                             ? juce::jlimit (0, 2, std::min (getChannelCountOfBus (true, 0), buffer.getNumChannels())) : 0;
+        const int m = std::min (n, scScratch.getNumSamples());
+        scConnected = scCh > 0 && scScratch.getNumChannels() == 2 && m > 0;
+        if (scScratch.getNumChannels() == 2 && m > 0)
+            for (int c = 0; c < 2; ++c)
+            {
+                if (scConnected) scScratch.copyFrom (c, 0, buffer, std::min (c, scCh - 1), 0, m);
+                else scScratch.clear (c, 0, m);
+            }
+        for (int c = 0; c < buffer.getNumChannels(); ++c) buffer.clear (c, 0, n);
+    }
     float* l = buffer.getWritePointer (0);
     float* r = buffer.getNumChannels() > 1 ? buffer.getWritePointer (1) : nullptr;
     if (r != nullptr)
@@ -98,7 +118,17 @@ void PowerBassProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
 
     // SIDECHAIN: the host's song position of the sound that leaves now - the plug-in latency earlier than the block
     // (the host plays the output that much later), so the dip lands on the beat the listener hears.
-    if (params.scAmount > 0.0f || ! ducker.isIdle())
+    if (params.scSource == 1)   // KICK: every hit of the kick on the sidechain input
+    {
+        double bpm = 120.0;
+        if (auto* ph = getPlayHead())
+            if (const auto pos = ph->getPosition())
+                if (const auto b = pos->getBpm()) bpm = *b;
+        const int m = scScratch.getNumChannels() == 2 ? std::min (n, scScratch.getNumSamples()) : 0;
+        ducker.processKick (l, r, m, scConnected ? scScratch.getReadPointer (0) : nullptr, scConnected ? scScratch.getReadPointer (1) : nullptr,
+                            std::max (0, engine.getLatencySamples()), bpm, params.scAmount, params.scRate, params.scShape);
+    }
+    else if (params.scAmount > 0.0f || ! ducker.isIdle())
     {
         double ppq = 0.0, bpm = 120.0;
         bool playing = false;

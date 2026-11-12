@@ -697,6 +697,70 @@ void testStereoDelay()
     expect (db (bandRmsDft (sb, 48000, 20, 90)) - db (bandRms (mid (b), 48000, 20, 16000)) < -50.0, "DELAY keeps the sub mono");
 }
 
+// ALIASING (1.3, 2026-11-12): a harmonic bass note through each stage must stay harmonic; energy between the harmonics
+// is folded back from above the Nyquist frequency. C3 and C4 (the top of a bass line); CRUSH aliases on purpose.
+double offHarmonic (const juce::AudioBuffer<float>& a, double f0)
+{
+    juce::dsp::FFT fft (15);
+    std::vector<float> buf (65536, 0.0f);
+    for (int i = 0; i < 32768; ++i)
+        buf[(size_t) i] = 0.5f * (a.getSample (0, 4800 + i) + a.getSample (1, 4800 + i)) * (0.5f - 0.5f * std::cos (2.0f * juce::MathConstants<float>::pi * (float) i / 32768.0f));
+    fft.performFrequencyOnlyForwardTransform (buf.data());
+    double off = 0.0, all = 0.0;
+    for (int k = 2; k < 16384; ++k)
+    {
+        const double hz = k * 48000.0 / 32768.0, pw = (double) buf[(size_t) k] * buf[(size_t) k];
+        all += pw;
+        const double h = hz / f0;
+        if (std::abs (h - std::round (h)) * f0 > 6.0) off += pw;
+    }
+    return all > 0.0 ? off / all : 0.0;
+}
+// The same notes with different host block sizes must give the same sound (the independent audit: -24 dB difference
+// between blocks of 512 and 64 on Reese Core, 2026-10-24 and 2026-11-12).
+void testBlockSizeInvariance()
+{
+    const Preset* pr = nullptr;
+    for (const auto& f : factoryPresets()) if (f.name == "Reese Core") pr = &f;
+    if (pr == nullptr) return;
+    const auto p = paramsFromSnapshot (pr->values);
+    const std::vector<Note> notes { { 0.0, 0.3, 36 }, { 0.4, 0.7, 39 }, { 0.8, 1.1, 36 } };
+    const auto a = render (p, notes, 1.4, 48000.0, 512), b = render (p, notes, 1.4, 48000.0, 64);
+    double d = 0.0, e = 0.0;
+    for (int c = 0; c < 2; ++c)
+        for (int i = 0; i < a.getNumSamples(); ++i) { d += std::pow (a.getSample (c, i) - b.getSample (c, i), 2.0); e += std::pow (a.getSample (c, i), 2.0); }
+    expect (10.0 * std::log10 (d / e + 1e-30) < -60.0, "block 512 and 64 give the same sound (difference " + juce::String (10.0 * std::log10 (d / e + 1e-30), 1) + " dB)");
+}
+
+void testAliasing()
+{
+    struct Case { const char* name; std::function<void (SynthParams&)> set; };
+    const std::vector<Case> cases {
+        { "saw", [] (SynthParams&) {} },
+        { "OSC DRIVE", [] (SynthParams& p) { p.oscDrive = 1.0f; } },
+        { "FM x2", [] (SynthParams& p) { p.fmAmount = 1.0f; p.oscMix = 0.5f; p.fmRatio = 5; } },
+        { "SATURATE", [] (SynthParams& p) { p.distType = DistType::saturate; p.distDrive = 1.0f; p.distMix = 1.0f; } },
+        { "CLIP", [] (SynthParams& p) { p.distType = DistType::hardClip; p.distDrive = 1.0f; p.distMix = 1.0f; } },
+        { "FOLD", [] (SynthParams& p) { p.distType = DistType::fold; p.distDrive = 1.0f; p.distMix = 1.0f; } },
+        { "DESTROY", [] (SynthParams& p) { p.distType = DistType::destroy; p.distDrive = 1.0f; p.distMix = 1.0f; } },
+        { "BITE", [] (SynthParams& p) { p.bite = 1.0f; } },
+        { "RESONANCE", [] (SynthParams& p) { p.resonance = 0.95f; p.cutoffHz = 2000.0f; } },
+    };
+    for (const auto& [note, f0] : { std::pair<int, double> { 48, 130.8128 }, { 60, 261.6256 } })
+        for (const auto& c : cases)
+        {
+            SynthParams p;
+            p.shape = 2.0f; p.sub = 0.0f; p.fmAmount = 0.0f; p.oscMix = 0.0f; p.distDrive = 0.0f; p.distMix = 0.0f; p.oscDrive = 0.0f;
+            p.cutoffHz = 18000.0f; p.resonance = 0.0f; p.envAmount = 0.0f; p.dark = p.bite = p.punch = 0.0f; p.width = 0.0f;
+            p.sustain = 1.0f; p.attackMs = 1.0f; p.masterDb = -12.0f;
+            c.set (p);
+            const auto a = render (p, { { 0.0, 1.2, note } }, 1.3);
+            const double off = offHarmonic (a, f0);
+            expect (off < 0.003, juce::String ("no aliasing at ") + (note == 48 ? "C3: " : "C4: ") + c.name + " (" + juce::String (100.0 * off, 3)
+                    + " % between the harmonics, " + juce::String (10.0 * std::log10 (std::max (off, 1.0e-12)), 1) + " dB)");
+        }
+}
+
 // SIDECHAIN: the level ducks on every beat of the host and comes back along a curve (as Kickstart 2 does).
 void testSidechain()
 {
@@ -746,6 +810,54 @@ void testSidechain()
     expect (at (1, 6000) > at (0, 6000) + 0.1f && at (2, 6000) < at (0, 6000) - 0.1f, "SIDECHAIN curves: SHORT returns sooner, LONG later ("
             + juce::String (at (1, 6000), 2) + " / " + juce::String (at (0, 6000), 2) + " / " + juce::String (at (2, 6000), 2) + ")");
     expect (at (3, 3600) < 0.06f && at (0, 3600) > 0.1f, "SIDECHAIN curve HARD keeps the silence longer (75 ms in: " + juce::String (at (3, 3600), 3) + ")");
+}
+
+// SIDECHAIN KICK mode: the dip follows the hits of the kick on the sidechain input (rolls and breaks too).
+void testSidechainKick()
+{
+    const double sr = 48000.0;
+    const int total = 96000;
+    // a kick: 60 Hz with a fast decay, at irregular times; 0.62 s is a quick second hit, 1.0..1.4 s a break
+    std::vector<float> kick ((size_t) total, 0.0f);
+    const std::vector<double> hits { 0.0, 0.5, 0.62, 1.4, 1.5, 1.6, 1.7 };
+    for (double t : hits)
+        for (int i = 0; i < (int) (0.25 * sr) && (int) (t * sr) + i < total; ++i)
+            kick[(size_t) ((int) (t * sr) + i)] += (float) (0.9 * std::exp (-i / (0.06 * sr)) * std::sin (2.0 * juce::MathConstants<double>::pi * 60.0 * i / sr));
+    auto run = [&] (bool withKick, int block, int latency = 0, double amount = 1.0)
+    {
+        dsp::Ducker d; d.prepare (sr);
+        std::vector<float> l ((size_t) total, 1.0f), r ((size_t) total, 1.0f), silent ((size_t) total, 0.0f);
+        const auto& sc = withKick ? kick : silent;
+        for (int pos = 0; pos < total; pos += block)
+        {
+            const int n = std::min (block, total - pos);
+            d.processKick (l.data() + pos, r.data() + pos, n, sc.data() + pos, sc.data() + pos, latency, 120.0, amount, 0, 0);
+        }
+        return l;
+    };
+    const auto none = run (false, 512);
+    expect (*std::min_element (none.begin(), none.end()) > 0.999f, "SIDECHAIN KICK without a kick on the input does nothing");
+    const auto a = run (true, 512);
+    for (double t : hits)
+    {
+        const int i = (int) (t * sr);
+        expect (a[(size_t) (i + 384)] < 0.15f, "SIDECHAIN KICK ducks within 8 ms of the hit at " + juce::String (t, 2) + " s (" + juce::String (a[(size_t) (i + 384)], 3) + ")");
+    }
+    expect (a[(size_t) (1.2 * sr)] > 0.98f, "SIDECHAIN KICK: back to full level in the break (" + juce::String (a[(size_t) (1.2 * sr)], 3) + ")");
+    expect (a[(size_t) (0.5 * sr) - 48] > 0.95f, "SIDECHAIN KICK: back before a hit a beat later");
+    expect (a[(size_t) (0.62 * sr) - 48] < 0.6f, "SIDECHAIN KICK: a quick second hit catches the curve on its way back");
+    double step = 0.0;
+    for (size_t i = 1; i < a.size(); ++i) step = std::max (step, (double) std::abs (a[i] - a[i - 1]));
+    expect (step < 0.03, "SIDECHAIN KICK: no click (largest step " + juce::String (step, 4) + ")");
+    const auto small = run (true, 64);
+    double diff = 0.0;
+    for (size_t i = 0; i < a.size(); ++i) diff = std::max (diff, (double) std::abs (a[i] - small[i]));
+    expect (diff < 1.0e-6, "SIDECHAIN KICK: block size does not matter (" + juce::String (diff, 7) + ")");
+    // the plug-in latency: the output is that much later than the kick on the input, so the dip is too
+    const auto late = run (true, 512, 100);
+    expect (late[(size_t) (0.5 * sr) + 100 + 384] < 0.15f && late[(size_t) (0.5 * sr) + 60] > 0.95f, "SIDECHAIN KICK waits for the plug-in latency");
+    const auto half = run (true, 512, 0, 0.5);
+    expect (std::abs (half[(size_t) (0.5 * sr) + 480] - 0.5f) < 0.05f, "SIDECHAIN KICK 50 % ducks to half (" + juce::String (half[(size_t) (0.5 * sr) + 480], 3) + ")");
 }
 
 void testNoAllocation()
@@ -1012,6 +1124,9 @@ int main (int argc, char** argv)
     testStereoDelay();
     testNoAllocation();
     testSidechain();
+    testAliasing();
+    testBlockSizeInvariance();
+    testSidechainKick();
     testLegacyPresetMigration();
     testPresetFiles();
     std::cout << (failures == 0 ? "PASS " : "FAILED ") << (checks - failures) << "/" << checks << " checks\n";

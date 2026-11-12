@@ -212,7 +212,7 @@ public:
 private:
     Segment filterPos, oversample;
     Knob detune, fltDecay, velSens, bend;
-    Segment scRate, scShape;   // SIDECHAIN (2026-11-12)
+    Segment scSource, scRate, scShape;   // SIDECHAIN (2026-11-12)
 };
 }
 
